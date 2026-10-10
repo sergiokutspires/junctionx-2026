@@ -82,7 +82,7 @@ def cmd_score(args) -> None:
 
 def cmd_dashboard(args) -> None:
     from .dashboard import build, make_zip
-    print(build(args.details, args.data, args.out))
+    print(build(args.details, args.data, args.out, detections=args.detections, detect=args.detect))
     if args.zip:
         print(make_zip(args.out))
 
@@ -182,6 +182,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--data", default=None)
     p.add_argument("--out", required=True)
     p.add_argument("--zip", action="store_true")
+    p.add_argument("--detections", default=None,
+                   help="OWLv2 product boxes: .zip holding owl_detections.json, or that .json (optional)")
+    p.add_argument("--detect", action="store_true",
+                   help="run OWLv2 locally on the shown frames lacking boxes (free; slow on CPU)")
     p.set_defaults(func=cmd_dashboard)
 
     p = sub.add_parser("label", help="export contact sheets + labelling page")

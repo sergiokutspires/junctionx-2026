@@ -6,7 +6,12 @@ to ``img/frames/<cam>_<ts>.jpg`` and a perspective-corrected crop of every area 
 ``img/areas/<cam>_<ts>_<area>.jpg``. Only the latest frame of each camera is shown (the history of
 earlier frames feeds the per-area sparkline through ``timeline``). No network, no build step.
 
-Usage: ``python -m sensei.dashboard --details details.json --data data/raw --out dashboard/ [--zip]``
+Optional product boxes: ``--detections <zip|json>`` (OWLv2 output, see ``load_detections``) or ``--detect``
+(runs OWLv2 locally on the shown frames) add a "Show detections" toggle to the gondola view; without
+either the toggle is hidden.
+
+Usage: ``python -m sensei.dashboard --details details.json --data data/raw --out dashboard/ [--zip]
+[--detections cache/colab/sensei_colab_features.zip] [--detect]``
 Google Colab (free, CPU is enough): ``!python -m sensei.dashboard --details details.json --data data/raw/images
 --out dashboard --zip`` then ``from google.colab import files; files.download("dashboard.zip")``.
 """
@@ -16,8 +21,9 @@ import argparse
 import json
 import logging
 import shutil
+import zipfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 from PIL import Image
@@ -34,6 +40,27 @@ JPEG_QUALITY = 80
 CROP_LONG_SIDE = (200, 360)  # min / max long side of an area crop (px)
 LEVELS = ("empty", "half", "full")
 STATUS_ORDER = ("wrong", "empty", "low", "ok")
+
+# product boxes (OWLv2): chosen by eye on frames 6215 (bananas) and 6491 (oranges, peaches, crates)
+DET_MIN_SCORE = 0.28         # chosen by eye: below ~0.25 the 60-box cap fills with tiny duplicates in one tray
+DET_MAX_BOXES = 60           # per frame, best score first
+DET_NMS_IOU = 0.40           # class-agnostic overlap limit
+DET_CONTAIN = 0.80           # a box mostly inside a better one is dropped
+DET_MAX_AREA = 0.03          # share of the frame: larger boxes cover a whole shelf, not a product
+DET_NON_PRODUCT = frozenset({"a person's hand", "a shopping basket"})   # distractor queries
+OWL_MODEL = "google/owlv2-base-patch16-ensemble"
+OWL_QUERIES = (
+    "bananas", "oranges", "net bags of oranges", "lemons", "limes", "clementines", "apples", "green apples",
+    "red apples", "yellow apples", "pears", "kiwis", "packs of kiwis", "melons", "watermelons", "cantaloupes",
+    "mangoes", "pineapples", "papayas", "passion fruits", "dragon fruits", "guavas", "white grapes", "red grapes",
+    "packs of cherries", "packs of strawberries", "apricots", "peaches", "flat peaches", "nectarines", "tomatoes",
+    "tomatoes on the vine", "packs of cherry tomatoes", "oxheart tomatoes", "plum tomatoes", "potatoes",
+    "bags of potatoes", "red potatoes", "sweet potatoes", "onions", "red onions", "bags of onions", "garlic",
+    "packs of garlic", "pumpkins", "ginger", "bagged lettuce", "avocados", "green peppers", "red peppers",
+    "cabbages", "red cabbages", "broccoli", "cauliflowers", "kale", "zucchini", "eggplants", "chayotes",
+    "green beans", "cucumbers", "shallots", "a plastic package of fruit", "a net bag", "a person's hand",
+    "a shopping basket",
+)
 
 
 # --------------------------------------------------------------------------- row helpers
@@ -165,6 +192,129 @@ def _crop_area(rgb: np.ndarray, quad: np.ndarray, path: Path, quality: int = JPE
     return True
 
 
+# --------------------------------------------------------------------------- product boxes (optional)
+
+def load_detections(source: str | Path | dict | None) -> dict:
+    """Normalise a detections source to ``{"queries": [...], "detections": {"<cam>|<image>": [[x0, y0, x1, y1, label, score], ...]}}``.
+
+    ``source`` is that dict, a ``.json`` file, or a ``.zip`` holding ``owl_detections.json`` (the
+    Colab feature bundle). Boxes are pixel coordinates of the original frame. ``None`` gives an empty set.
+    """
+    if source is None:
+        return {"queries": [], "detections": {}}
+    if isinstance(source, dict):
+        data = source
+    else:
+        path = Path(source)
+        if path.suffix.lower() == ".zip":
+            with zipfile.ZipFile(path) as z:
+                names = [i for i in z.infolist() if i.filename.lower().endswith(".json")]
+                pick = next((i for i in names if Path(i.filename).name == "owl_detections.json"), None)
+                if pick is None:
+                    pick = next((i for i in names if "detections" in Path(i.filename).name.lower()), None)
+                if pick is None:
+                    raise FileNotFoundError(f"no owl_detections.json inside {path}")
+                if pick.file_size > 400 * 1024 * 1024:
+                    raise ValueError(f"{pick.filename} is unreasonably large")
+                data = json.loads(z.read(pick).decode("utf-8-sig"))
+        else:
+            data = json.loads(path.read_text(encoding="utf-8-sig"))
+    return {"queries": list(data.get("queries") or []), "detections": dict(data.get("detections") or {})}
+
+
+def _det_lookup(dets: dict) -> dict[tuple[str, str], list]:
+    """(camera, image stem) -> boxes, so '.JPG' vs '.jpg' names still match."""
+    out: dict[tuple[str, str], list] = {}
+    for key, boxes in (dets.get("detections") or {}).items():
+        cam, _, name = str(key).partition("|")
+        out[(cam, Path(name).stem)] = boxes
+    return out
+
+
+def select_detections(boxes: list, quads: list, frame_shape: tuple[int, int], *,
+                      min_score: float = DET_MIN_SCORE, max_boxes: int = DET_MAX_BOXES,
+                      nms_iou: float = DET_NMS_IOU, contain: float = DET_CONTAIN,
+                      max_area: float = DET_MAX_AREA) -> list[list]:
+    """Boxes worth drawing: score >= ``min_score``, centre inside a planogram quad, not shelf-sized,
+    not a distractor query, thinned by overlap, best ``max_boxes`` by score.
+
+    ``boxes`` are ``[x0, y0, x1, y1, label, score]`` in frame pixels, ``quads`` the camera's planogram
+    quads in the same pixels, ``frame_shape`` (h, w). Returns the same layout, best first.
+    """
+    import cv2  # noqa: PLC0415
+
+    h, w = frame_shape[:2]
+    polys = [np.asarray(q, dtype=np.float32).reshape(-1, 1, 2) for q in quads if q is not None]
+    cand = []
+    for b in boxes or []:
+        try:
+            x0, y0, x1, y1, label, score = float(b[0]), float(b[1]), float(b[2]), float(b[3]), str(b[4]), float(b[5])
+        except (TypeError, ValueError, IndexError):
+            continue
+        if x1 < x0:
+            x0, x1 = x1, x0
+        if y1 < y0:
+            y0, y1 = y1, y0
+        if score < min_score or label in DET_NON_PRODUCT or (x1 - x0) < 2 or (y1 - y0) < 2:
+            continue
+        if (x1 - x0) * (y1 - y0) > max_area * w * h:
+            continue
+        c = ((x0 + x1) / 2.0, (y0 + y1) / 2.0)
+        if not any(cv2.pointPolygonTest(p, c, False) >= 0 for p in polys):
+            continue
+        cand.append([x0, y0, x1, y1, label, score])
+    cand.sort(key=lambda b: -b[5])
+    keep: list[list] = []
+    for b in cand:
+        area = (b[2] - b[0]) * (b[3] - b[1])
+        dup = False
+        for k in keep:
+            inter = max(0.0, min(b[2], k[2]) - max(b[0], k[0])) * max(0.0, min(b[3], k[3]) - max(b[1], k[1]))
+            if inter <= 0:
+                continue
+            karea = (k[2] - k[0]) * (k[3] - k[1])
+            if inter / (area + karea - inter) > nms_iou or inter / min(area, karea) > contain:
+                dup = True
+                break
+        if not dup:
+            keep.append(b)
+            if len(keep) >= max_boxes:
+                break
+    return keep
+
+
+def make_owl_detector(queries: list[str] | tuple[str, ...] = OWL_QUERIES, device: str | None = None,
+                      model_name: str = OWL_MODEL) -> Callable[[np.ndarray], list]:
+    """Return ``run(rgb) -> [[x0, y0, x1, y1, label, score], ...]`` backed by a local OWLv2 (free, CPU works).
+
+    The processor pads the frame to a square, so boxes come back in a ``max(h, w)`` square and
+    ``target_sizes`` is that side. Raw boxes (score >= 0.1) are returned; ``select_detections`` thins them.
+    """
+    import torch  # noqa: PLC0415
+    from transformers import Owlv2ForObjectDetection, Owlv2Processor  # noqa: PLC0415
+
+    dev = device or ("cuda" if torch.cuda.is_available() else "cpu")
+    processor = Owlv2Processor.from_pretrained(model_name)
+    model = Owlv2ForObjectDetection.from_pretrained(model_name).to(dev).eval()
+    texts = [list(queries)]
+
+    def run(rgb: np.ndarray) -> list:
+        h, w = rgb.shape[:2]
+        side = max(h, w)
+        inputs = processor(text=texts, images=Image.fromarray(rgb), return_tensors="pt").to(dev)
+        with torch.no_grad():
+            out = model(**inputs)
+        res = processor.post_process_grounded_object_detection(
+            out, threshold=0.1, target_sizes=torch.tensor([[side, side]]), text_labels=texts)[0]
+        boxes = []
+        for box, score, label in zip(res["boxes"].tolist(), res["scores"].tolist(), res["text_labels"]):
+            x0, y0, x1, y1 = (min(max(v, 0.0), float(w if i % 2 == 0 else h)) for i, v in enumerate(box))
+            boxes.append([round(x0, 1), round(y0, 1), round(x1, 1), round(y1, 1), str(label), round(float(score), 3)])
+        return boxes
+
+    return run
+
+
 # --------------------------------------------------------------------------- build
 
 def _load_details(details: str | Path | dict) -> dict:
@@ -194,9 +344,19 @@ def _frame_stem(cam: str, ts: int, image_name: str) -> str:
 
 
 def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str | Path,
-          cfg: Config | None = None) -> Path:
-    """Write the static dashboard into ``out_dir`` and return the path of its ``index.html``."""
+          cfg: Config | None = None, detections: str | Path | dict | None = None,
+          detect: bool | Callable[[np.ndarray], list] = False) -> Path:
+    """Write the static dashboard into ``out_dir`` and return the path of its ``index.html``.
+
+    ``detections`` (zip / json / dict, see ``load_detections``) and ``detect`` (True runs a local OWLv2 on
+    the shown frames that the source lacks; a callable ``rgb -> boxes`` replaces OWLv2) are optional: with
+    neither, the pages carry no product boxes and the "Show detections" toggle stays hidden.
+    """
     cfg = cfg or Config()
+    dets = load_detections(detections)
+    det_by_frame = _det_lookup(dets)
+    detector = detect if callable(detect) else None
+    det_labels: list[str] = []
     max_w = min(MAX_FRAME_W, int(cfg.extra.get("dashboard_frame_width", MAX_FRAME_W)))   # spec: <= 1280 px
     quality = int(cfg.extra.get("dashboard_jpeg_quality", JPEG_QUALITY))
     d = _load_details(details)
@@ -260,6 +420,22 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
             entry["w"], entry["h"] = _save_frame(rgb, out / "img" / "frames" / f"{stem}.jpg", max_w, quality)
             entry["frame"] = f"img/frames/{stem}.jpg"
             scale = entry["w"] / entry["ow"]
+            boxes = det_by_frame.get((cam, Path(image_name).stem))
+            if boxes is None and detect:
+                if detector is None:
+                    detector = _try_owl_detector(dets["queries"])
+                    detect = detector or False
+                if detector is not None:
+                    boxes = detector(rgb)
+            if boxes is not None:
+                quads = [r.get("quad") for r in cam_rows]
+                sel = select_detections(boxes, quads, rgb.shape[:2])
+                if sel:
+                    for lab in dict.fromkeys(b[4] for b in sel):
+                        if lab not in det_labels:
+                            det_labels.append(lab)
+                    entry["det"] = [[round(b[0] * scale, 1), round(b[1] * scale, 1), round(b[2] * scale, 1),
+                                     round(b[3] * scale, 1), det_labels.index(b[4]), round(b[5], 3)] for b in sel]
         cameras.append(entry)
 
         for r in sorted(cam_rows, key=lambda r: _natural(str(r["area_id"]))):
@@ -300,12 +476,24 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
         "oldest_ts": min((c["ts"] for c in cameras if not c.get("unreadable")), default=None),
         "counts": counts,
         "cameras": cameras,
+        "det_labels": det_labels,
         "areas": areas,
     }
     text = "window.SHELF_DATA = " + json.dumps(payload, ensure_ascii=True, separators=(",", ":")) + ";\n"
     (out / "data.js").write_text(text, encoding="utf-8")
     log.info("dashboard: %d cameras, %d areas %s -> %s", len(cameras), len(areas), counts, out / "index.html")
     return out / "index.html"
+
+
+def _try_owl_detector(queries: list[str]) -> Callable[[np.ndarray], list] | None:
+    """Local OWLv2, or None (with a warning) when torch / transformers / the weights are unavailable."""
+    try:
+        log.info("dashboard: loading %s for product boxes (first run downloads it, then it is cached)", OWL_MODEL)
+        return make_owl_detector(queries or OWL_QUERIES)
+    except Exception as exc:  # noqa: BLE001 - optional extra, never block the dashboard
+        log.warning("dashboard: --detect unavailable (%s: %s); building without product boxes",
+                    type(exc).__name__, exc)
+        return None
 
 
 def make_zip(out_dir: str | Path) -> Path:
@@ -330,9 +518,13 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--data", default=None, help="image root (any layout) used when image_path is missing")
     ap.add_argument("--out", required=True)
     ap.add_argument("--zip", action="store_true", help="also write <out>.zip (handy on Colab)")
+    ap.add_argument("--detections", default=None,
+                    help="OWLv2 product boxes: a .zip holding owl_detections.json, or that .json (optional)")
+    ap.add_argument("--detect", action="store_true",
+                    help="run OWLv2 locally on shown frames without boxes (free; slow on CPU)")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-    index = build(args.details, args.data, args.out)
+    index = build(args.details, args.data, args.out, detections=args.detections, detect=args.detect)
     print(index)
     if args.zip:
         print(make_zip(args.out))

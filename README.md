@@ -146,6 +146,26 @@ phone. It shows counters (Empty / Low / Wrong product / OK), a "Do now" list ord
 sparkline, a per-product view, an EN/PT toggle, and works from 375 px wide in light and dark mode.
 `--data` must be the folder that holds the images listed in `details.json`.
 
+**Product boxes (optional, brief task 1 "detect and classify").** The gondola view can draw what an
+open-vocabulary detector (OWLv2, free, local) finds on the shelf, behind a **Show detections** button
+(off by default; hover or tap a box for its name and score, EN/PT names). Two ways to feed it:
+
+```powershell
+# boxes cached by the Colab notebook (owl_detections.json inside the features zip, or that json)
+.venv\Scripts\python -m sensei dashboard --details details_val.json --data data/val --out dashboard `
+    --detections cache/colab/sensei_colab_features.zip
+# or run OWLv2 here on the shown frames that have no cached boxes (google/owlv2-base-patch16-ensemble,
+# about 8 s per frame on CPU, cached by Hugging Face after the first download)
+.venv\Scripts\python -m sensei dashboard --details details_val.json --data data/val --out dashboard --detect
+```
+
+Only the latest frame of each camera is shown, so only those frames need boxes. Boxes are kept when
+the score is at least 0.28, the centre lies inside a planogram area of that camera, the box is not
+shelf-sized, overlaps are thinned and the best 60 per frame are drawn (`DET_*` constants in
+`sensei/dashboard.py`; hands and baskets are never drawn). Without `--detections` or `--detect`
+the button does not exist. A link such as `index.html#/gondola/6491/6491_1/det` opens a gondola with the
+boxes already on. Pitch screenshots live in `pitch/assets/dash_*.png`.
+
 ## Synthetic data
 
 `python -m sensei synth --out data_synth` writes `planogram.json`, `images/<cam>/<ts>.jpg` (a

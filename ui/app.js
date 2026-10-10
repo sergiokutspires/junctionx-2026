@@ -52,6 +52,8 @@
       avg_stock: 'Average stock', elsewhere: 'Found in the wrong place', no_products: 'No product matches.',
       foot: 'Made automatically from camera pictures ({b}). When it says "check by eye", look before you move stock.',
       spark_alt: 'Stock during the day: {a}',
+      det_show: 'Show detections', det_n: '{n} products found by the camera model. Hover or tap a box for its name.',
+      det_one: '{p} · {c} sure', det_alt: 'Product boxes',
     },
     pt: {
       skip: 'Saltar para o conteúdo', title: 'Controlo de prateleiras', tab_tasks: 'Fazer agora', tab_gondola: 'Gôndolas', tab_products: 'Produtos',
@@ -83,7 +85,29 @@
       avg_stock: 'Stock médio', elsewhere: 'Encontrado no sítio errado', no_products: 'Nenhum produto corresponde.',
       foot: 'Feito automaticamente a partir de imagens das câmaras ({b}). Quando diz "confirmar à vista", veja antes de mexer no stock.',
       spark_alt: 'Stock ao longo do dia: {a}',
+      det_show: 'Mostrar deteções', det_n: '{n} produtos encontrados pelo modelo. Passe o rato ou toque numa caixa para ver o nome.',
+      det_one: '{p} · {c} de certeza', det_alt: 'Caixas de produtos',
     },
+  };
+
+  /* Product-box labels are the English detector queries; staff in PT mode get Portuguese names. */
+  const DET_PT = {
+    'bananas': 'bananas', 'oranges': 'laranjas', 'net bags of oranges': 'sacos de laranjas', 'lemons': 'limões', 'limes': 'limas',
+    'clementines': 'clementinas', 'apples': 'maçãs', 'green apples': 'maçãs verdes', 'red apples': 'maçãs vermelhas',
+    'yellow apples': 'maçãs amarelas', 'pears': 'peras', 'kiwis': 'quivis', 'packs of kiwis': 'embalagens de quivis',
+    'melons': 'melões', 'watermelons': 'melancias', 'cantaloupes': 'melões cantalupe', 'mangoes': 'mangas', 'pineapples': 'ananases',
+    'papayas': 'papaias', 'passion fruits': 'maracujás', 'dragon fruits': 'pitaias', 'guavas': 'goiabas', 'white grapes': 'uvas brancas',
+    'red grapes': 'uvas tintas', 'packs of cherries': 'embalagens de cerejas', 'packs of strawberries': 'embalagens de morangos',
+    'apricots': 'alperces', 'peaches': 'pêssegos', 'flat peaches': 'pêssegos planos', 'nectarines': 'nectarinas', 'tomatoes': 'tomates',
+    'tomatoes on the vine': 'tomates em ramo', 'packs of cherry tomatoes': 'embalagens de tomate cherry',
+    'oxheart tomatoes': 'tomates coração de boi', 'plum tomatoes': 'tomates pera', 'potatoes': 'batatas', 'bags of potatoes': 'sacos de batatas',
+    'red potatoes': 'batatas vermelhas', 'sweet potatoes': 'batatas-doces', 'onions': 'cebolas', 'red onions': 'cebolas roxas',
+    'bags of onions': 'sacos de cebolas', 'garlic': 'alho', 'packs of garlic': 'embalagens de alho', 'pumpkins': 'abóboras',
+    'ginger': 'gengibre', 'bagged lettuce': 'alface em saco', 'avocados': 'abacates', 'green peppers': 'pimentos verdes',
+    'red peppers': 'pimentos vermelhos', 'cabbages': 'couves', 'red cabbages': 'couves roxas', 'broccoli': 'brócolos',
+    'cauliflowers': 'couves-flores', 'kale': 'couve kale', 'zucchini': 'curgetes', 'eggplants': 'beringelas', 'chayotes': 'chuchus',
+    'green beans': 'feijão-verde', 'cucumbers': 'pepinos', 'shallots': 'chalotas', 'a plastic package of fruit': 'embalagem de plástico com fruta',
+    'a net bag': 'saco de rede',
   };
 
   /* ------------------------------------------------------------------ state */
@@ -97,9 +121,13 @@
   const areas = D.areas;
   const areaById = Object.fromEntries(areas.map((a) => [a.id, a]));
   const camById = Object.fromEntries(D.cameras.map((c) => [c.id, c]));
+  const detLabels = D.det_labels || [];
+  const hasDet = (c) => !!(c && c.frame && c.det && c.det.length);
+  const detName = (i) => { const en = detLabels[i] || ''; return cap(st.lang === 'pt' ? (DET_PT[en] || en) : en); };
   const st = {
     view: 'tasks', lang: store.get('sensei.lang', 'en'), theme: store.get('sensei.theme', 'auto'),
     status: null, full: false, cam: 'all', q: '', sort: 'priority', gcam: null, sel: null, psort: 'attention', pdir: 1,
+    det: false, dsel: null, dcam: null,   // product boxes: toggle, tapped box index, camera it belongs to
   };
   if (!T[st.lang]) st.lang = 'en';
   let done = store.get('sensei.done.v1', {});
@@ -369,6 +397,48 @@
       <dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
       ${a.status !== 'ok' ? `<label class="done"><input type="checkbox" data-act="done" data-key="${esc(key)}"${isDone ? ' checked' : ''}> ${t('mark_done')}</label>` : ''}`;
   }
+  /* Product boxes: pointer-events are off on the boxes (area polygons stay tappable), so the box under the pointer is found by hand. */
+  function detReadout(dets) {
+    const b = st.dsel != null ? dets[st.dsel] : null;
+    return b ? t('det_one', { p: `<b>${esc(detName(b[4]))}</b>`, c: pct(b[5]) }) : t('det_n', { n: dets.length });
+  }
+  function detAt(e) {
+    const wrap = e.target.closest ? e.target.closest('.frame-wrap') : null;
+    const svg = wrap && $('svg.overlay', wrap); const cam = camById[st.gcam];
+    if (!svg || !st.det || !hasDet(cam)) return null;
+    const r = svg.getBoundingClientRect(); const vb = svg.viewBox.baseVal;
+    if (!r.width || !r.height) return null;
+    const x = vb.x + ((e.clientX - r.left) / r.width) * vb.width; const y = vb.y + ((e.clientY - r.top) / r.height) * vb.height;
+    let best = -1; let bestA = Infinity;
+    cam.det.forEach((b, i) => {
+      if (x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3]) { const ar = (b[2] - b[0]) * (b[3] - b[1]); if (ar < bestA) { bestA = ar; best = i; } }
+    });
+    return { i: best, wrap, r };
+  }
+  function paintDet(hot) {
+    const cam = camById[st.gcam]; if (!hasDet(cam) || !st.det) return;
+    $$('.dbox').forEach((n) => {
+      const i = +n.dataset.i;
+      n.classList.toggle('sel', i === st.dsel);
+      n.classList.toggle('hot', hot != null && i === hot && i !== st.dsel);
+    });
+    const ro = $('#det-readout'); if (ro) ro.innerHTML = detReadout(cam.det);
+  }
+  document.addEventListener('pointermove', (e) => {
+    const tip = $('#dtip');
+    if (!st.det || e.pointerType === 'touch') { if (tip) tip.hidden = true; return; }
+    const h = detAt(e);
+    if (!h || h.i < 0) { if (tip) tip.hidden = true; paintDet(null); return; }
+    const b = camById[st.gcam].det[h.i];
+    paintDet(h.i);
+    if (!tip) return;
+    tip.textContent = `${detName(b[4])} · ${pct(b[5])}`; tip.hidden = false;
+    const left = e.clientX - h.r.left + 14; const top = e.clientY - h.r.top + 14;
+    tip.style.left = Math.min(left, h.wrap.clientWidth - tip.offsetWidth - 4) + 'px';
+    tip.style.top = Math.min(top, h.wrap.clientHeight - tip.offsetHeight - 4) + 'px';
+  });
+  document.addEventListener('mouseout', (e) => { if (!e.relatedTarget) { const tip = $('#dtip'); if (tip) tip.hidden = true; paintDet(null); } });   // pointer left the window
+
   function renderGondola() {
     const el = $('#view-gondola');
     if (!D.cameras.length) { el.innerHTML = `<p class="muted">${t('no_picture')}</p>`; return; }
@@ -390,14 +460,23 @@
     let frame;
     if (cam.frame) {
       const vb = viewBoxFor(cam, camAreas); const zoomed = vb[2] < cam.w;
+      const dets = st.det && hasDet(cam) ? cam.det : [];
+      if (st.dcam !== cam.id) { st.dcam = cam.id; st.dsel = null; }
+      if (st.dsel != null && !dets[st.dsel]) st.dsel = null;
+      const boxes = dets.length ? `<g class="dets" aria-hidden="true">${dets.map((b, i) => {
+        const g = `x="${b[0]}" y="${b[1]}" width="${(b[2] - b[0]).toFixed(1)}" height="${(b[3] - b[1]).toFixed(1)}" data-i="${i}"`;
+        return `<rect class="dbox-h" ${g}/><rect class="dbox${i === st.dsel ? ' sel' : ''}" ${g}/>`;
+      }).join('')}</g>` : '';
       const polys = camAreas.filter((a) => a.quad).map((a) => `<polygon class="poly s-${a.status}${a.status === 'ok' ? ' ok' : ''}${a.id === st.sel ? ' sel' : ''}${matches(a, true) ? '' : ' dim'}" data-act="area" data-id="${esc(a.id)}" points="${a.quad.map((p) => p.join(',')).join(' ')}"/>`).join('');
       const pins = camAreas.filter((a) => a.quad).map((a) => {
         const [px, py] = pinPos(a, vb);
         return `<button type="button" class="pin s-${a.status}${a.id === st.sel ? ' sel' : ''}${matches(a, true) ? '' : ' dim'}" data-act="area" data-id="${esc(a.id)}" style="left:${px.toFixed(2)}%;top:${py.toFixed(2)}%" aria-pressed="${a.id === st.sel}" aria-label="${esc(`${t('area')} ${a.num}, ${nm(a).main}, ${t('s_' + a.status)}`)}">${icon(S_ICON[a.status])}<span>${esc(a.num)}</span></button>`;
       }).join('');
-      frame = `<div class="frame-wrap" role="group" aria-label="${t('camera')} ${esc(cam.id)}, ${fmtTime(cam.ts)}" style="aspect-ratio:${vb[2].toFixed(1)}/${vb[3].toFixed(1)}">
-        <svg class="overlay" viewBox="${vb.map((v) => v.toFixed(1)).join(' ')}" preserveAspectRatio="none"><image href="${esc(cam.frame)}" x="0" y="0" width="${cam.w}" height="${cam.h}"/>${polys}</svg>${pins}</div>
-        <button type="button" class="chip zoom" data-act="zoom" aria-pressed="${st.full}">${t(st.full ? 'zoom_in' : 'zoom_out')}</button>`;
+      frame = `<div class="frame-wrap${dets.length ? ' det-on' : ''}" role="group" aria-label="${t('camera')} ${esc(cam.id)}, ${fmtTime(cam.ts)}" style="aspect-ratio:${vb[2].toFixed(1)}/${vb[3].toFixed(1)}">
+        <svg class="overlay" viewBox="${vb.map((v) => v.toFixed(1)).join(' ')}" preserveAspectRatio="none"><image href="${esc(cam.frame)}" x="0" y="0" width="${cam.w}" height="${cam.h}"/>${polys}${boxes}</svg>${pins}<div class="dtip" id="dtip" hidden></div></div>
+        <div class="frame-tools"><button type="button" class="chip zoom" data-act="zoom" aria-pressed="${st.full}">${t(st.full ? 'zoom_in' : 'zoom_out')}</button>${
+  hasDet(cam) ? `<button type="button" class="chip" data-act="det" aria-pressed="${st.det}">${icon('i-box')}${t('det_show')}</button>` : ''}</div>
+        ${dets.length ? `<p class="det-readout" id="det-readout" aria-live="polite">${detReadout(dets)}</p>` : ''}`;
     } else {
       frame = `<div class="frame-wrap noframe">${t(cam.unreadable ? 'unreadable' : 'no_picture')}</div>`;
     }
@@ -528,6 +607,7 @@
     if (st.view === 'gondola') {
       if (p[1] && camById[p[1]]) st.gcam = p[1];
       if (p[2] && areaById[p[2]]) { st.sel = p[2]; st.gcam = areaById[p[2]].cam; }
+      if (p[3] === 'det' && D.cameras.some(hasDet)) st.det = true;   // shareable link: .../gondola/<cam>/<area>/det
     }
   }
   let skipHash = false;
@@ -563,6 +643,7 @@
   }
 
   document.addEventListener('click', (e) => {
+    if (st.det && e.target.closest && e.target.closest('.frame-wrap')) { const h = detAt(e); if (h) { st.dsel = h.i >= 0 ? h.i : null; paintDet(null); } }
     const b = e.target.closest('[data-act]'); if (!b) return;
     const act = b.dataset.act; const v = b.dataset.v;
     if (act === 'lang') { st.lang = v; store.set('sensei.lang', v); render(); return; }
@@ -575,6 +656,7 @@
     else if (act === 'cam') { st.gcam = v; st.sel = null; setHash(`#/gondola/${encodeURIComponent(v)}`, true); renderGondola(); }
     else if (act === 'area') { selectArea(b.dataset.id); }
     else if (act === 'zoom') { st.full = !st.full; renderGondola(); }
+    else if (act === 'det') { st.det = !st.det; st.dsel = null; renderGondola(); }
     restoreFocus(b);
   });
   document.addEventListener('change', (e) => {

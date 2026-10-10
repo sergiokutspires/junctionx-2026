@@ -1,0 +1,1817 @@
+{
+"6386|1751040333.jpg|6386_1": {
+"seen": "basket full of broccoli",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751040333.jpg|6386_2": {
+"seen": "white cabbages filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751040333.jpg|6386_3": {
+"seen": "red cabbages filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751040333.jpg|6386_4": {
+"seen": "cauliflower heads filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751040333.jpg|6386_5": {
+"seen": "dark green zucchini, basket well covered",
+"confidence": "medium",
+"occluded": false
+},
+"6386|1751040333.jpg|6386_6": {
+"seen": "white cabbages filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751044440.jpg|6386_1": {
+"seen": "broccoli, basket mostly covered",
+"confidence": "medium",
+"occluded": false
+},
+"6386|1751044440.jpg|6386_2": {
+"seen": "white cabbages filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751044440.jpg|6386_3": {
+"seen": "red cabbages filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751044440.jpg|6386_4": {
+"seen": "cauliflower heads filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751044440.jpg|6386_5": {
+"seen": "about five zucchini bunched left, right side of basket bare",
+"confidence": "medium",
+"occluded": false
+},
+"6386|1751044440.jpg|6386_6": {
+"seen": "white cabbages filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751048137.jpg|6386_1": {
+"seen": "depleted broccoli, a few heads at edges, basket bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+"6386|1751048137.jpg|6386_2": {
+"seen": "white cabbages filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751048137.jpg|6386_3": {
+"seen": "red cabbages filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751048137.jpg|6386_4": {
+"seen": "cauliflower heads filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751048137.jpg|6386_5": {
+"seen": "completely empty wicker basket",
+"confidence": "high",
+"occluded": false
+},
+"6386|1751048137.jpg|6386_6": {
+"seen": "white cabbages filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751044017.jpg|6385_1": {
+"seen": "red Fuji apples packed in crate, nearly all covered",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751044017.jpg|6385_2": {
+"seen": "red Fuji apples filling crate, tiny gaps at bottom",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751044017.jpg|6385_3": {
+"seen": "empty crate with two small cardboard packs of red apples at bottom",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751044017.jpg|6385_4": {
+"seen": "one bag of apples in otherwise empty crate",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751044017.jpg|6385_5": {
+"seen": "Fuji apples in ring around empty white tray centre",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751044017.jpg|6385_6": {
+"seen": "red Fuji apples completely filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751044017.jpg|6385_7": {
+"seen": "green Granny Smith apples, small white tray gap lower right",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751044017.jpg|6385_8": {
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751044017.jpg|6385_9": {
+"seen": "russet Reineta apples filling crate",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751047832.jpg|6385_1": {
+"seen": "Fuji apples scattered, much white tray visible",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751047832.jpg|6385_2": {
+"seen": "red Fuji apples filling crate, some white tray between rows",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751047832.jpg|6385_3": {
+"seen": "empty crate with two small cardboard packs of red apples at bottom",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751047832.jpg|6385_4": {
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751047832.jpg|6385_5": {
+"seen": "Fuji apples in ring around empty white tray centre",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751047832.jpg|6385_6": {
+"seen": "red Fuji apples completely filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751047832.jpg|6385_7": {
+"seen": "green Granny Smith apples, small white tray gap lower right",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751047832.jpg|6385_8": {
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751047832.jpg|6385_9": {
+"seen": "russet Reineta apples filling crate",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751051814.jpg|6385_1": {
+"seen": "sparse Fuji apples, large white and grey tray visible",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751051814.jpg|6385_2": {
+"seen": "red Fuji apples filling crate, some white tray at bottom",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751051814.jpg|6385_3": {
+"seen": "empty crate with two small cardboard packs of red apples at bottom",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751051814.jpg|6385_4": {
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751051814.jpg|6385_5": {
+"seen": "few Fuji apples around top and sides, most of tray bare",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751051814.jpg|6385_6": {
+"seen": "red Fuji apples completely filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751051814.jpg|6385_7": {
+"seen": "green Granny Smith apples, small white tray gap lower right",
+"confidence": "medium",
+"occluded": false
+},
+"6385|1751051814.jpg|6385_8": {
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+"6385|1751051814.jpg|6385_9": {
+"seen": "russet Reineta apples filling crate",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751040186.jpg|6462_1": {
+"seen": "two small berry packs at front of otherwise bare crate (one red strawberries, one darker pack)",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751040186.jpg|6462_2": {
+"seen": "tray mostly covered with ripe mangoes",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751040186.jpg|6462_3": {
+"seen": "about six mangoes on paper lining, paper clearly visible",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751040186.jpg|6462_4": {
+"seen": "six paper bags of white grapes filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751040186.jpg|6462_5": {
+"seen": "stacked pink packs of white grapes covering crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751040186.jpg|6462_6": {
+"seen": "pink packs of white grapes filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751040186.jpg|6462_7": {
+"seen": "four paper bags of red grapes, top-right of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751040186.jpg|6462_8": {
+"seen": "wrapped packs of dark cherries filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751040186.jpg|6462_9": {
+"seen": "wrapped cherry packs covering crate",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751043841.jpg|6462_1": {
+"seen": "bare crate with a single small dark berry pack",
+"confidence": "low",
+"occluded": false
+},
+"6462|1751043841.jpg|6462_2": {
+"seen": "about ten mangoes on right, patterned cardboard visible at left",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751043841.jpg|6462_3": {
+"seen": "five mangoes on paper lining, lots of paper visible",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751043841.jpg|6462_4": {
+"seen": "six paper bags of white grapes filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751043841.jpg|6462_5": {
+"seen": "pink white-grape packs only in bottom half, upper crate bare",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751043841.jpg|6462_6": {
+"seen": "pink packs of white grapes filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751043841.jpg|6462_7": {
+"seen": "four paper bags of red grapes, top part of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751043841.jpg|6462_8": {
+"seen": "wrapped packs of dark cherries filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751043841.jpg|6462_9": {
+"seen": "several cherry packs, gaps and bare crate on left and top",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751047858.jpg|6462_1": {
+"seen": "completely empty crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751047858.jpg|6462_2": {
+"seen": "about ten mangoes on right side, cardboard visible at left",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751047858.jpg|6462_3": {
+"seen": "five mangoes on paper lining, lots of paper visible",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751047858.jpg|6462_4": {
+"seen": "five paper bags of white grapes, one tipped, gaps at top",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751047858.jpg|6462_5": {
+"seen": "one pink white-grape pack in an otherwise bare crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751047858.jpg|6462_6": {
+"seen": "pink packs of white grapes filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751047858.jpg|6462_7": {
+"seen": "four paper bags of red grapes, top of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6462|1751047858.jpg|6462_8": {
+"seen": "wrapped packs of dark cherries filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6462|1751047858.jpg|6462_9": {
+"seen": "two cherry packs at bottom of otherwise bare crate",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_1": {
+"seen": "loose yellow onions filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_2": {
+"seen": "orange net bags of onions packed in lower bin",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_3": {
+"seen": "red 3kg bags of red potatoes filling crate",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_4": {
+"seen": "3kg bags of white potatoes plus loose net",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_5": {
+"seen": "two rows of white potato 3kg bags",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_6": {
+"seen": "white potato 3kg bags stacked",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_7": {
+"seen": "white potato 3kg bags stacked in lower bin",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_8": {
+"seen": "white potato 3kg bags filling bin",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_9": {
+"seen": "one white potato bag on left, rest of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751041407.jpg|6781_10": {
+"seen": "loose red potatoes in single layer, well stocked",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_1": {
+"seen": "loose yellow onions filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_2": {
+"seen": "orange net bags of onions packed in lower bin",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_3": {
+"seen": "red potato bags on left half, right half of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_4": {
+"seen": "3kg bags of white potatoes plus loose net",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_5": {
+"seen": "two rows of white potato 3kg bags",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_6": {
+"seen": "white potato 3kg bags stacked",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_7": {
+"seen": "white potato 3kg bags stacked in lower bin",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_8": {
+"seen": "white potato 3kg bags filling bin",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_9": {
+"seen": "one white potato bag on left, rest of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751045840.jpg|6781_10": {
+"seen": "loose red potatoes in single layer, well stocked",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_1": {
+"seen": "loose yellow onions, a few gaps at back, front dense",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_2": {
+"seen": "orange net bags of onions packed in lower bin",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_3": {
+"seen": "single red potato bag, much of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_4": {
+"seen": "3kg bags of white potatoes plus loose net",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_5": {
+"seen": "two rows of white potato 3kg bags",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_6": {
+"seen": "white potato 3kg bags stacked",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_7": {
+"seen": "white potato 3kg bags stacked in lower bin",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_8": {
+"seen": "white potato 3kg bags filling bin",
+"confidence": "high",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_9": {
+"seen": "one white potato bag on left, rest of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6781|1751049846.jpg|6781_10": {
+"seen": "loose red potatoes, sparser with green crate showing",
+"confidence": "low",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_1": {
+"seen": "loose round red tomatoes heaped",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_2": {
+"seen": "red vine tomatoes, crate well covered",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_3": {
+"seen": "large red loose tomatoes (looks like Zero%d crate), not Tasty packs",
+"confidence": "low",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_4": {
+"seen": "packed cherry tomato punnets, some red tomatoes at edge",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_5": {
+"seen": "large red tomatoes filling crate",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_6": {
+"seen": "orange-red oxheart tomatoes heaped",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_7": {
+"seen": "cherry tomato packs filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_8": {
+"seen": "red oxheart tomatoes heaped",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_9": {
+"seen": "narrow strip of mini plum tomato packs",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_10": {
+"seen": "packed mini plum tomato bags",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_11": {
+"seen": "crate nearly empty, ~10 plum tomatoes at front",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_12": {
+"seen": "cherry-on-vine packs covering crate",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751036374.jpg|6443_13": {
+"seen": "loose round red tomatoes",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_1": {
+"seen": "loose round red tomatoes heaped",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_2": {
+"seen": "red vine tomatoes, crate well covered",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_3": {
+"seen": "large red loose tomatoes (looks like Zero%d crate), not Tasty packs",
+"confidence": "low",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_4": {
+"seen": "packed cherry tomato punnets, some red tomatoes at edge",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_5": {
+"seen": "large red tomatoes filling crate",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_6": {
+"seen": "orange-red oxheart tomatoes",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_7": {
+"seen": "cherry tomato packs, small green gaps",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_8": {
+"seen": "red oxheart tomatoes",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_9": {
+"seen": "narrow strip of mini plum packs, green crate visible at top",
+"confidence": "low",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_10": {
+"seen": "packed mini plum tomato bags",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_11": {
+"seen": "crate nearly empty, ~10 plum tomatoes at front",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_12": {
+"seen": "cherry-on-vine packs covering crate",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751040209.jpg|6443_13": {
+"seen": "loose round red tomatoes",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_1": {
+"seen": "loose round red tomatoes heaped",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_2": {
+"seen": "red vine tomatoes, some green visible at back",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_3": {
+"seen": "large red loose tomatoes, green crate visible at left, not Tasty packs",
+"confidence": "low",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_4": {
+"seen": "packed cherry tomato punnets, some red tomatoes at edge",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_5": {
+"seen": "large red tomatoes, thinner than before, green visible",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_6": {
+"seen": "orange-red oxheart tomatoes, a few gaps",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_7": {
+"seen": "cherry tomato packs with visible green gaps",
+"confidence": "low",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_8": {
+"seen": "red oxheart tomatoes",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_9": {
+"seen": "narrow strip of mini plum packs, green crate visible at top",
+"confidence": "low",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_10": {
+"seen": "packed mini plum tomato bags",
+"confidence": "high",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_11": {
+"seen": "crate nearly empty, ~10 plum tomatoes at front",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_12": {
+"seen": "cherry-on-vine packs, minor gaps",
+"confidence": "medium",
+"occluded": false
+},
+"6443|1751044079.jpg|6443_13": {
+"seen": "loose round red tomatoes",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_1": {
+"seen": "tray packed with apricots",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_2": {
+"seen": "tray of apricots, tiny gaps",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_3": {
+"seen": "flat peaches filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_4": {
+"seen": "red peaches, small gap in middle",
+"confidence": "medium",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_5": {
+"seen": "about 8 nectarines on mostly bare tray",
+"confidence": "low",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_6": {
+"seen": "peaches in cup tray, few gaps",
+"confidence": "medium",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_7": {
+"seen": "about 7 nectarines on bare tray",
+"confidence": "low",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_8": {
+"seen": "peaches filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_9": {
+"seen": "flat peaches packed",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751040739.jpg|6491_10": {
+"seen": "peaches filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_1": {
+"seen": "tray packed with apricots",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_2": {
+"seen": "tray of apricots, tiny gaps",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_3": {
+"seen": "flat peaches, small gaps at top",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_4": {
+"seen": "red peaches, small gap in middle",
+"confidence": "medium",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_5": {
+"seen": "about 5 nectarines on bare tray",
+"confidence": "low",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_6": {
+"seen": "peaches in cup tray, few gaps",
+"confidence": "medium",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_7": {
+"seen": "3 nectarines at top of bare tray",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_8": {
+"seen": "peaches filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_9": {
+"seen": "flat peaches packed",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751044356.jpg|6491_10": {
+"seen": "peaches with empty cups showing",
+"confidence": "low",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_1": {
+"seen": "tray packed with apricots",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_2": {
+"seen": "tray of apricots, few gaps",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_3": {
+"seen": "flat peaches, some gaps, top of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_4": {
+"seen": "red peaches, cup tray showing",
+"confidence": "low",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_5": {
+"seen": "empty green plastic crate",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_6": {
+"seen": "peaches in cup tray, some gaps",
+"confidence": "medium",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_7": {
+"seen": "empty green plastic crates",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_8": {
+"seen": "peaches, some cups visible",
+"confidence": "medium",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_9": {
+"seen": "flat peaches, bare paper at top",
+"confidence": "high",
+"occluded": false
+},
+"6491|1751048611.jpg|6491_10": {
+"seen": "about 10 peaches on mostly bare tray",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_1": {
+"seen": "loose lemons filling crate",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_2": {
+"seen": "five galia melons in crate",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_3": {
+"seen": "kiwi packs in cardboard trays",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_4": {
+"seen": "narrow slot with kiwi packs",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_5": {
+"seen": "dark kiwi pack with label in narrow slot",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_6": {
+"seen": "loose limes filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_7": {
+"seen": "net bags of oranges",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_8": {
+"seen": "net bags of oranges",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_9": {
+"seen": "net bag of oranges",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_10": {
+"seen": "loose kiwis filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_11": {
+"seen": "loose oranges filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_12": {
+"seen": "loose clementines filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_13": {
+"seen": "1.5kg orange bags piled in crate",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_14": {
+"seen": "loose clementines heaped",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_15": {
+"seen": "loose oranges nearly filling crate",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751041136.jpg|6376_16": {
+"seen": "orange bags with teal crate bottom visible at right",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_1": {
+"seen": "loose lemons, somewhat spaced",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_2": {
+"seen": "five galia melons in crate",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_3": {
+"seen": "kiwi packs in cardboard trays",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_4": {
+"seen": "narrow slot with kiwi packs",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_5": {
+"seen": "dark kiwi pack with label in narrow slot",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_6": {
+"seen": "loose limes filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_7": {
+"seen": "net bags of oranges",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_8": {
+"seen": "net bags of oranges",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_9": {
+"seen": "net bag of oranges",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_10": {
+"seen": "loose kiwis filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_11": {
+"seen": "loose oranges filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_12": {
+"seen": "loose clementines filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_13": {
+"seen": "1.5kg orange bags in crate",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_14": {
+"seen": "loose clementines heaped",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_15": {
+"seen": "loose oranges, top of crate slightly bare",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751044933.jpg|6376_16": {
+"seen": "orange bags with teal crate bottom visible at right",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_1": {
+"seen": "lemons only in lower half of crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_2": {
+"seen": "five galia melons in crate",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_3": {
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_4": {
+"seen": "teal slot with one kiwi pack visible",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_5": {
+"seen": "dark kiwi pack with label in narrow slot",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_6": {
+"seen": "loose limes filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_7": {
+"seen": "empty teal crate, oranges only at neighbour edge",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_8": {
+"seen": "net bag of oranges",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_9": {
+"seen": "net bag of oranges",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_10": {
+"seen": "loose kiwis filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_11": {
+"seen": "loose oranges filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_12": {
+"seen": "loose clementines filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_13": {
+"seen": "few orange bags and loose oranges, crate bottom showing",
+"confidence": "low",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_14": {
+"seen": "loose clementines heaped",
+"confidence": "high",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_15": {
+"seen": "loose oranges spaced out, top of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6376|1751049028.jpg|6376_16": {
+"seen": "1.5kg orange bags filling crate",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_1": {
+"seen": "orange hokaido pumpkins filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_2": {
+"seen": "red net bags of red potatoes stacked",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_3": {
+"seen": "red net bags of red potatoes",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_4": {
+"seen": "heaped loose yellow onions",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_5": {
+"seen": "netted onion bags with labels",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_6": {
+"seen": "many small onions in orange net bags (bagged, planogram is loose)",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_7": {
+"seen": "packed purple garlic bulbs in packs, teal visible at back",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_8": {
+"seen": "loose white garlic covering front half of crate",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_9": {
+"seen": "garlic packs filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_10": {
+"seen": "heaped loose red onions",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_11": {
+"seen": "two stacked bags of red onions in narrow crate",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_12": {
+"seen": "small orange onions in net bags, narrow crate",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751041681.jpg|6594_13": {
+"seen": "yellow net bags of onions with paper labels",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_1": {
+"seen": "orange hokaido pumpkins filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_2": {
+"seen": "red net bags of red potatoes stacked",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_3": {
+"seen": "red net bags of red potatoes",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_4": {
+"seen": "loose onions spread out, teal crate visible between them",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_5": {
+"seen": "netted onion bags with labels",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_6": {
+"seen": "many small onions in orange net bags (bagged, planogram is loose)",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_7": {
+"seen": "packed purple garlic bulbs in packs, teal visible at back",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_8": {
+"seen": "loose white garlic covering front half of crate",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_9": {
+"seen": "garlic packs filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_10": {
+"seen": "loose red onions, small teal gap top-left",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_11": {
+"seen": "stacked bags of red onions in narrow crate",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_12": {
+"seen": "small orange onions in net bags, narrow crate",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751045458.jpg|6594_13": {
+"seen": "yellow net bags of onions with paper labels",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_1": {
+"seen": "orange hokaido pumpkins filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_2": {
+"seen": "red net bags of red potatoes stacked",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_3": {
+"seen": "red net bags of red potatoes",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_4": {
+"seen": "about ten loose onions, much teal crate visible",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_5": {
+"seen": "netted onion bags with labels",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_6": {
+"seen": "many small onions in orange net bags (bagged, planogram is loose)",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_7": {
+"seen": "packed purple garlic bulbs in packs, teal visible at back",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_8": {
+"seen": "loose white garlic only along front third of crate",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_9": {
+"seen": "garlic packs filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_10": {
+"seen": "loose red onions, teal gap top-left",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_11": {
+"seen": "single bag of red onions at bottom, upper crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_12": {
+"seen": "small orange onions in net bags, some teal at top",
+"confidence": "medium",
+"occluded": false
+},
+"6594|1751049768.jpg|6594_13": {
+"seen": "yellow net bags of onions with paper labels",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_1": {
+"seen": "loose red potatoes, dense pile",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_2": {
+"seen": "bagged potatoes (roasting bags), crate full",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_3": {
+"seen": "large paper bags of red potatoes",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_4": {
+"seen": "red-net 3kg red potato bags stacked",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_5": {
+"seen": "red potato 3kg bags, crate bottom visible in left-center",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_6": {
+"seen": "about five loose sweet potatoes, lots of crate visible",
+"confidence": "low",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_7": {
+"seen": "loose ginger pile",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_8": {
+"seen": "thin brown sweet-potato-like tubers sharing with ginger",
+"confidence": "low",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_9": {
+"seen": "yellow potatoes in net bags with dark labels",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751040216.jpg|6591_10": {
+"seen": "yellow potato net bags with dark labels",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_1": {
+"seen": "loose red potatoes, fewer, crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_2": {
+"seen": "bagged potatoes (roasting bags), crate full",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_3": {
+"seen": "large paper bags of red potatoes",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_4": {
+"seen": "red 3kg potato bags stacked",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_5": {
+"seen": "red potato 3kg bags, teal bottom visible left",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_6": {
+"seen": "two or three sweet potatoes at bottom, crate mostly bare",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_7": {
+"seen": "loose ginger pile",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_8": {
+"seen": "thin brown sweet-potato-like tubers sharing with ginger",
+"confidence": "low",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_9": {
+"seen": "yellow potato net bags, teal bottom visible at right",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751044047.jpg|6591_10": {
+"seen": "yellow potato net bags with dark labels",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_1": {
+"seen": "loose red potatoes, about half the crate covered",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_2": {
+"seen": "fewer potato bags, gap at top-left of crate",
+"confidence": "low",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_3": {
+"seen": "large paper bags of red potatoes",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_4": {
+"seen": "red 3kg potato bags stacked",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_5": {
+"seen": "red 3kg bags only on right and top, bare crate bottom-left",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_6": {
+"seen": "two sweet potatoes in bottom corner, crate bare",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_7": {
+"seen": "loose ginger pile",
+"confidence": "high",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_8": {
+"seen": "thin brown sweet-potato-like tubers sharing with ginger",
+"confidence": "low",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_9": {
+"seen": "yellow potatoes in net bags with dark labels",
+"confidence": "medium",
+"occluded": false
+},
+"6591|1751048487.jpg|6591_10": {
+"seen": "yellow potato net bags with dark labels",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_1": {
+"seen": "crate packed with wrapped pineapples",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_2": {
+"seen": "crate mostly covered with wrapped pineapples",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_3": {
+"seen": "wrapped pineapples covering most of crate, back wall visible",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_4": {
+"seen": "red dragon fruit packed to the top",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_5": {
+"seen": "yellow dragon fruit in packs filling the compartment",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_6": {
+"seen": "single layer of green guavas on front, back of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_7": {
+"seen": "dark purple passion fruit filling crate section",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_8": {
+"seen": "orange granadilla fruits filling crate section",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_9": {
+"seen": "four large papayas across two cardboard trays, space left",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_10": {
+"seen": "mostly empty crate with 3 small yellow papayas at front",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_11": {
+"seen": "crate full of green plantain bananas",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_12": {
+"seen": "green plantain bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_13": {
+"seen": "small box covered with mangoes",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_14": {
+"seen": "mangoes filling narrow box, outline partly over crate edge",
+"confidence": "low",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_15": {
+"seen": "two trays well stocked with red-green mangoes",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751041038.jpg|6468_16": {
+"seen": "two trays of red mangoes well stocked",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_1": {
+"seen": "crate packed with wrapped pineapples",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_2": {
+"seen": "crate mostly covered with wrapped pineapples",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_3": {
+"seen": "wrapped pineapples covering most of crate, back wall visible",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_4": {
+"seen": "red dragon fruit, small gap at top",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_5": {
+"seen": "yellow dragon fruit in packs filling the compartment",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_6": {
+"seen": "single layer of green guavas on front, back of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_7": {
+"seen": "dark purple passion fruit filling crate section",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_8": {
+"seen": "orange granadilla fruits filling crate section",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_9": {
+"seen": "three papayas, one in upper tray two in lower tray, lots of bare space",
+"confidence": "low",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_10": {
+"seen": "mostly empty crate with 3 small yellow papayas at front",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_11": {
+"seen": "crate full of green plantain bananas",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_12": {
+"seen": "green plantain bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_13": {
+"seen": "small box covered with mangoes",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_14": {
+"seen": "mangoes filling narrow box, outline partly over crate edge",
+"confidence": "low",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_15": {
+"seen": "mangoes thinner, upper tray sparse, lower tray mostly covered",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751044824.jpg|6468_16": {
+"seen": "two trays of red mangoes well stocked",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_1": {
+"seen": "about four pineapples, cardboard bottom visible on left",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_2": {
+"seen": "pineapples toward back, front bottom visible",
+"confidence": "low",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_3": {
+"seen": "five pineapples with bare cardboard right and front",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_4": {
+"seen": "red dragon fruit thinned out, gaps at top",
+"confidence": "low",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_5": {
+"seen": "yellow dragon fruit in packs filling the compartment",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_6": {
+"seen": "single layer of green guavas on front, back of crate bare",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_7": {
+"seen": "dark purple passion fruit filling crate section",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_8": {
+"seen": "orange granadilla fruits filling crate section",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_9": {
+"seen": "three papayas in lower tray, upper tray empty",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_10": {
+"seen": "mostly empty crate with 3 small yellow papayas at front",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_11": {
+"seen": "crate full of green plantain bananas",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_12": {
+"seen": "green plantain bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_13": {
+"seen": "small box covered with mangoes",
+"confidence": "medium",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_14": {
+"seen": "mangoes filling narrow box, empty teal crate to right",
+"confidence": "low",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_15": {
+"seen": "depleted mangoes, few at top and three at bottom, cardboard visible",
+"confidence": "low",
+"occluded": false
+},
+"6468|1751048837.jpg|6468_16": {
+"seen": "two trays of red mangoes well stocked",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751040853.jpg|6383_1": {
+"seen": "bagged curly green lettuce covering left half of basket",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751040853.jpg|6383_2": {
+"seen": "Hass avocados piled in basket, some netted",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751040853.jpg|6383_3": {
+"seen": "heaped green bell peppers",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751040853.jpg|6383_4": {
+"seen": "large pale green kale/cabbage leaves filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751040853.jpg|6383_5": {
+"seen": "red bell peppers filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751040853.jpg|6383_6": {
+"seen": "eggplants with green calyxes filling basket",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751040853.jpg|6383_7": {
+"seen": "two pale green chayotes in small basket, bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751040853.jpg|6383_8": {
+"seen": "pile of flat green beans filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751040853.jpg|6383_9": {
+"seen": "about seven cucumbers heaped in basket",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751044960.jpg|6383_1": {
+"seen": "nearly empty basket, thin remnant of lettuce bag at back",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751044960.jpg|6383_2": {
+"seen": "Hass avocados piled in basket, some netted",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751044960.jpg|6383_3": {
+"seen": "heaped green bell peppers",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751044960.jpg|6383_4": {
+"seen": "large pale green kale/cabbage leaves filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751044960.jpg|6383_5": {
+"seen": "red bell peppers covering most of basket",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751044960.jpg|6383_6": {
+"seen": "eggplants with calyxes, basket weave visible at front",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751044960.jpg|6383_7": {
+"seen": "basket nearly bare with one or two stray eggplants, no chayote",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751044960.jpg|6383_8": {
+"seen": "pile of flat green beans filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751044960.jpg|6383_9": {
+"seen": "five cucumbers scattered, much weave visible",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751048924.jpg|6383_1": {
+"seen": "empty basket, shopping cart handle in front",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751048924.jpg|6383_2": {
+"seen": "Hass avocados in basket, cart handle at lower left",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751048924.jpg|6383_3": {
+"seen": "heaped green bell peppers",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751048924.jpg|6383_4": {
+"seen": "large pale green kale/cabbage leaves filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751048924.jpg|6383_5": {
+"seen": "about five red peppers on left, right side of basket bare",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751048924.jpg|6383_6": {
+"seen": "dense dark eggplants with calyxes",
+"confidence": "medium",
+"occluded": false
+},
+"6383|1751048924.jpg|6383_7": {
+"seen": "basket empty except one stray eggplant, no chayote",
+"confidence": "low",
+"occluded": false
+},
+"6383|1751048924.jpg|6383_8": {
+"seen": "flat green beans filling basket",
+"confidence": "high",
+"occluded": false
+},
+"6383|1751048924.jpg|6383_9": {
+"seen": "only three cucumbers in otherwise bare basket",
+"confidence": "low",
+"occluded": false
+}
+}

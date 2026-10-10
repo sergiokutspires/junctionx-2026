@@ -1,0 +1,9932 @@
+{
+"6215|1751001268.jpg|6215_1": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack, one Madeira banana bunch at right edge",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough, one banana bunch only at right edge",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "mostly empty black tray, one banana bunch at right edge",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751001268.jpg|6215_2": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751001268.jpg|6215_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751001268.jpg|6215_4": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751001268.jpg|6215_5": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751001268.jpg|6215_6": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751001268.jpg|6215_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751001268.jpg|6215_8": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751001268.jpg|6215_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate, some crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate, some crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate, some gaps",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751001268.jpg|6215_10": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue tape",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue bands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded banana bunches (Madeira)",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_1": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack, one Madeira banana bunch at right edge",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough, one banana bunch only at right edge",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "mostly empty black tray, one banana bunch at right edge",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_2": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_4": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_5": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_6": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_8": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black rack",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black trough",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate, some crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate, some crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose oranges in teal crate, some gaps",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751005412.jpg|6215_10": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue tape",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue bands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded banana bunches (Madeira)",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue tape",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue bands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded banana bunches (Madeira)",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_2": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana hands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "green bananas in plastic-lined box",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in lined banana box",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in shipping box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana hands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_5": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in plastic-lined box",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in lined banana box",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in shipping box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana hands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in plastic-lined box instead of oranges",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in lined banana box (not oranges)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in shipping box instead of oranges",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana hands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in plastic-lined box instead of oranges",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in lined banana box (not oranges)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in shipping box instead of oranges",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751009590.jpg|6215_10": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue tape",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue bands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded banana bunches (Madeira)",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue tape",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue bands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded banana bunches (Madeira)",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_2": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana hands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "green bananas in plastic-lined box",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in lined banana box",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in shipping box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana hands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_5": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in plastic-lined box",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in lined banana box",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in shipping box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana hands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in box instead of oranges, a little paper visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in banana box, a little liner paper visible (not oranges)",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in shipping box instead of oranges",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana hands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_9": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "partly depleted box of bananas, brown paper visible, instead of oranges",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "partly depleted banana box, brown liner paper visible (not oranges)",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in box, small gap showing paper, instead of oranges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751013250.jpg|6215_10": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue tape",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira banana bunches with blue bands",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded banana bunches (Madeira)",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches filling the tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira bananas with blue tape, tray covered",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped bunches of Madeira bananas",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose banana bunches, black bin visible centre-right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose banana bunches, some black tray visible",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose banana bunches, some black tray visible at right",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "box full of loose bananas",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas filling bag-lined crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling lined crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches covering most of bin, small black gap on right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches covering tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches, small gap at right",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "box full of loose bananas",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas filling bag-lined crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling lined crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_6": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black bin, only tips of bananas from row above",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray, only overhanging bananas from above",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray, only overhanging bananas from row above",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "box of loose bananas instead of oranges",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in crate instead of oranges",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas instead of oranges",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_8": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "two banana bunches, left part of black bin visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "two banana bunches covering most of tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "two-three banana bunches covering most of tray",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_9": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "loose bananas partly covering box instead of oranges",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "bananas in crate instead of oranges, cardboard partly visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "loose bananas instead of oranges, brown bag partly visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751033683.jpg|6215_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches filling the tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira bananas with blue tape, tray covered",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped bunches of Madeira bananas",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches filling the tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira bananas with blue tape, tray covered",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped bunches of Madeira bananas",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "banana bunches at left and right, black bin visible in centre",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "two banana bunches, black tray visible in middle",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few banana bunches, black tray visible in middle",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "box full of loose bananas",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas filling bag-lined crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling lined crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_4": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few banana bunches, black bin visible upper right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "banana bunch plus a few bananas, black tray visible on right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "banana bunches, black tray visible upper right",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "box full of loose bananas",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas filling bag-lined crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling lined crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_6": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "mostly empty black bin, one banana bunch in lower right corner",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "mostly empty black tray, one bunch at right edge and overhang",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "one banana bunch plus overhang, most of black tray visible",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_7": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "loose bananas in two rows instead of oranges, brown liner visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "bananas in crate instead of oranges, narrow cardboard gap",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas instead of oranges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_8": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "banana bunches covering centre, left part of bin visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "banana bunches covering most of tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "several banana bunches covering tray",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_9": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "some loose bananas on brown liner instead of oranges",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "some bananas in crate instead of oranges, cardboard visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "some loose bananas instead of oranges, brown bag visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751037607.jpg|6215_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches filling the tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira bananas with blue tape, tray covered",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped bunches of Madeira bananas",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches filling the tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira bananas with blue tape, tray covered",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped bunches of Madeira bananas",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "few banana bunches, much of black bin visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "two small banana bunches, much black tray visible",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "two-three banana bunches, much black tray visible",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "box full of loose bananas",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas filling bag-lined crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling lined crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_4": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "one banana bunch in mostly empty black bin",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single banana bunch on mostly empty black tray",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single banana bunch on mostly empty black tray",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "box full of loose bananas",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas filling bag-lined crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling lined crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_6": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "mostly empty black bin, one bunch at right edge",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray, bunch at edge and overhang only",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "mostly empty black tray, bananas only at edges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_7": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "loose bananas instead of oranges, brown liner visible on left",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "bananas in crate instead of oranges, cardboard visible upper left",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "loose bananas instead of oranges, brown bag visible at left",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_8": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "one or two banana bunches, upper right of bin visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "two banana bunches, black tray visible between and right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "two banana bunches, black tray visible at right",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_9": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": false,
+"seen": "mostly empty box with brown liner, a few stray bananas",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": false,
+"seen": "few bananas in mostly empty cardboard crate (oranges expected)",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": false,
+"seen": "few bananas on mostly bare brown bag, no oranges",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751041465.jpg|6215_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches with a small gap",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira bananas with blue tape, small gap",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches, small gap",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches filling the tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira bananas with blue tape",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped bunches of Madeira bananas",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_2": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "mostly empty black bin, one bunch at left edge",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "one bunch at left edge, mostly empty black tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "one banana bunch at edge, mostly empty black tray",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "box of loose bananas, small liner patch visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bananas in bag-lined crate, small cardboard corner visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas, small bare patch bottom left",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_4": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "one banana bunch in mostly empty black bin",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single banana bunch on mostly empty black tray",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single banana bunch on mostly empty black tray",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_5": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose bananas, upper right brown liner visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "bananas in crate, right part cardboard visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose bananas, brown bag visible upper right",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_6": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black bin",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_7": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "loose bananas instead of oranges, brown liner visible upper left",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "bananas in crate instead of oranges, cardboard visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "loose bananas instead of oranges, brown bag visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_8": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black bin",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_9": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": false,
+"seen": "mostly empty box with brown liner, a few stray bananas",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": false,
+"seen": "few bananas in mostly empty cardboard crate (oranges expected)",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": false,
+"seen": "few bananas on mostly bare brown bag, no oranges",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751045755.jpg|6215_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches with a small gap",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "Madeira bananas with blue tape, gap center-left",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped Madeira banana bunches, small gap",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped banana bunches (Madeira style) filling tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_2": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches covering shelf",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green-yellow bananas in crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose greenish bananas in crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches, some black backing visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches, some black shelf visible",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches, small black shelf gaps",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas in crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches covering shelf",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches covering shelf",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges, some brown liner visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges, some bag visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "bananas partly filling crate, plastic/brown liner visible; no oranges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751017244.jpg|6215_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped banana bunches (Madeira style) filling tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped banana bunches (Madeira style) filling tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "banana bunches on right, black tray visible on left",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose banana bunches on right, black shelf visible at left",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose bananas, left part of black shelf visible",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green-yellow bananas in crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose greenish bananas in crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches with gaps showing black backing",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few loose banana bunches, black shelf visible in middle",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose banana bunches with black shelf gap in middle",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas in crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches covering shelf",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches covering shelf",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges, some brown liner visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges, some bag visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "bananas partly filling crate, liner visible; no oranges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751021396.jpg|6215_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped banana bunches (Madeira style) filling tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped banana bunches (Madeira style) filling tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "one banana bunch on right, mostly black tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "one banana bunch on right, mostly black shelf",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "one banana bunch at right, most of black shelf visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green-yellow bananas in crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose greenish bananas in crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_4": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "two banana bunches at edges, black tray visible in middle",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "two banana bunches at sides, black shelf in middle",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "two banana bunches at edges, black shelf visible in middle",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas in crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches covering most of shelf",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches, small gap top-right",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_8": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "two banana bunches, mostly black tray",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "one or two banana bunches, mostly black shelf visible",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "one-two banana bunches, much black shelf visible",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges, brown liner visible in middle",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges, some bag visible",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "bananas partly filling crate, brown liner visible; no oranges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751025596.jpg|6215_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped banana bunches (Madeira style) filling tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped banana bunches (Madeira style) filling tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_2": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray, only bananas from tier above overhanging top edge",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black shelf",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black banana shelf",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_3": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "right compartment full of bananas, left compartment only a few bananas",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "bananas in right compartment, left compartment mostly bare",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "bananas in crate, left half partly depleted with liner visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_4": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black tray, bananas only at top edge",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black shelf",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty black banana shelf",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bananas in crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches, small black gap at right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches covering most of shelf",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose banana bunches, some black shelf top-right",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges, some brown liner at top-left",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose bananas in crate instead of oranges, some bag visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "bananas in crate, left side partly depleted; no oranges",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_8": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single banana bunch on mostly empty black tray",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single banana bunch on mostly empty black shelf",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single banana bunch on mostly empty black shelf",
+"confidence": "low",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_9": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "some loose bananas in crate instead of oranges, brown liner visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "a few bananas in crate instead of oranges, bag largely visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "a few banana bunches in crate, brown liner visible; no oranges",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6215|1751029718.jpg|6215_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "taped banana bunches (Madeira style) filling tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "banded Madeira banana bunches",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751001169.jpg|6371_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751001169.jpg|6371_2": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751001169.jpg|6371_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "green melons (2 front, 1 behind)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "2-3 large whole melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large elongated netted melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751001169.jpg|6371_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751001169.jpg|6371_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "green melons (2-3)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "2-3 large green whole melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 elongated green netted melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751001169.jpg|6371_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751001169.jpg|6371_7": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single cantaloupe in otherwise empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate with one cantaloupe",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single cantaloupe in empty teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751001169.jpg|6371_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "5 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 small striped mini watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751001169.jpg|6371_9": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini watermelons, part of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini striped watermelons, part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3-4 small striped mini watermelons, some crate visible at back",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751005865.jpg|6371_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751005865.jpg|6371_2": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751005865.jpg|6371_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "green melons (2 front, 1 behind)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "2-3 large whole melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large elongated netted melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751005865.jpg|6371_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751005865.jpg|6371_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "green melons (2-3)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "2-3 large green whole melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 elongated green netted melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751005865.jpg|6371_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751005865.jpg|6371_7": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single cantaloupe in otherwise empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate with one cantaloupe",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single cantaloupe in empty teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751005865.jpg|6371_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "5 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 small striped mini watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751005865.jpg|6371_9": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini watermelons, part of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini striped watermelons, part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3-4 small striped mini watermelons, some crate visible at back",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751009975.jpg|6371_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751009975.jpg|6371_2": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751009975.jpg|6371_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "green melons (2 front, 1 behind)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "2-3 large whole melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large elongated netted melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751009975.jpg|6371_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751009975.jpg|6371_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "green melons (2-3)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "2-3 large green whole melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 elongated green netted melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751009975.jpg|6371_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751009975.jpg|6371_7": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "6 cantaloupes, upper-right part of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "5 cantaloupes, about half the crate covered",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "6 cantaloupes, much crate bottom visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751009975.jpg|6371_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "5 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 small striped mini watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751009975.jpg|6371_9": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini watermelons, part of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini striped watermelons, part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3-4 small striped mini watermelons, some crate visible at back",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751013806.jpg|6371_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751013806.jpg|6371_2": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751013806.jpg|6371_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "green melons (2 front, 1 behind)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "2-3 large whole melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large elongated netted melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751013806.jpg|6371_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751013806.jpg|6371_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "green melons (2-3)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "2-3 large green whole melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 elongated green netted melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751013806.jpg|6371_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751013806.jpg|6371_7": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "6 cantaloupes, upper-right part of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "5 cantaloupes, about half the crate covered",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "6 cantaloupes, much crate bottom visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751013806.jpg|6371_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "5 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 small striped mini watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751013806.jpg|6371_9": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini watermelons, part of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini striped watermelons, part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3-4 small striped mini watermelons, some crate visible at back",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751017761.jpg|6371_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751017761.jpg|6371_2": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751017761.jpg|6371_3": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "1 green melon on left, right half of crate empty",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "one large melon on left, right half of crate empty",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "1 elongated netted melon, rest of crate empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751017761.jpg|6371_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark/black watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark (black) watermelons, small gap at corner",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751017761.jpg|6371_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "green melons (2-3)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "2-3 large green whole melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 elongated green netted melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751017761.jpg|6371_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4+ large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751017761.jpg|6371_7": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "6 cantaloupes, upper-right part of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "5 cantaloupes, about half the crate covered",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "6 cantaloupes, much crate bottom visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751017761.jpg|6371_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "5 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 small striped mini watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751017761.jpg|6371_9": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini watermelons, part of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 mini striped watermelons, part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3-4 small striped mini watermelons, some crate visible at back",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751040755.jpg|6371_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751040755.jpg|6371_2": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark-skinned watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "dark black watermelons, 3-4 large",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark-skinned watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751040755.jpg|6371_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 green/yellow elongated melons (piel de sapo)",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 green piel de sapo melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 green/yellow melons (piel de sapo type)",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751040755.jpg|6371_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark-skinned watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "dark black watermelons, 3 large",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751040755.jpg|6371_5": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "single elongated green melon, most of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "single green melon, most of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "single green melon in mostly empty crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751040755.jpg|6371_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "5 striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 striped watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751040755.jpg|6371_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons, some crate visible between",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons, some gaps",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751040755.jpg|6371_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "about 8 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons, about 7",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "about 8 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751040755.jpg|6371_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "about 5 mini striped watermelons, some crate visible top right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons, about 4-5",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 mini striped watermelons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751044440.jpg|6371_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751044440.jpg|6371_2": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark-skinned watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "dark black watermelons, 3-4 large",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark-skinned watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751044440.jpg|6371_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 green/yellow elongated melons (piel de sapo)",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 green piel de sapo melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 green/yellow melons (piel de sapo type)",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751044440.jpg|6371_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark-skinned watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "dark black watermelons, 3 large",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751044440.jpg|6371_5": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "single elongated green melon, most of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "single green melon, most of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "single green melon in mostly empty crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751044440.jpg|6371_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "5 striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 striped watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751044440.jpg|6371_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons, some crate visible between",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons, some gaps",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751044440.jpg|6371_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "about 8 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons, about 7",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "about 8 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751044440.jpg|6371_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "about 5 mini striped watermelons, some crate visible top right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons, about 4-5",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 mini striped watermelons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751048342.jpg|6371_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751048342.jpg|6371_2": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark-skinned watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "dark black watermelons, 3-4 large",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark-skinned watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751048342.jpg|6371_3": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "single elongated green melon, most of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "single green melon, most of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "single green melon in mostly empty crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751048342.jpg|6371_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark-skinned watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "dark black watermelons, 3 large",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751048342.jpg|6371_5": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "single elongated green melon, most of crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "single green melon, most of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "single green melon in mostly empty crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751048342.jpg|6371_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "5 striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons, about 5",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 striped watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751048342.jpg|6371_7": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "4 cantaloupe melons in lower part, upper crate bottom visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "4 cantaloupes in front half, back half empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3 cantaloupes at front, back half of crate empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751048342.jpg|6371_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "about 8 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons, about 7",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "about 8 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751048342.jpg|6371_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "about 5 mini striped watermelons, some crate visible top right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons, about 4-5",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 mini striped watermelons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751021365.jpg|6371_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751021365.jpg|6371_2": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons covering most of crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons, small corner gap",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons, small corner visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751021365.jpg|6371_3": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green piel de sapo melon, mostly empty crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green melon, mostly empty teal crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green melon in mostly empty teal crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751021365.jpg|6371_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons covering most of crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751021365.jpg|6371_5": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 green melons, right part of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 large melons, right part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "2 large green melons covering most of crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751021365.jpg|6371_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751021365.jpg|6371_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 pale netted cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751021365.jpg|6371_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751021365.jpg|6371_9": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini striped watermelons, right part of area empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini watermelons, upper crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "4 mini striped watermelons, part of crate empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751025172.jpg|6371_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751025172.jpg|6371_2": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons covering most of crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons, small corner gap",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons, small corner visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751025172.jpg|6371_3": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green piel de sapo melon, mostly empty crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green melon, mostly empty teal crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green melon in mostly empty teal crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751025172.jpg|6371_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons covering most of crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751025172.jpg|6371_5": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 green melons, right part of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 large melons, right part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "2 large green melons covering most of crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751025172.jpg|6371_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751025172.jpg|6371_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 pale netted cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751025172.jpg|6371_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751025172.jpg|6371_9": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini striped watermelons, right part of area empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini watermelons, upper crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "4 mini striped watermelons, part of crate empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751028797.jpg|6371_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751028797.jpg|6371_2": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons covering most of crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons, small corner gap",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons, small corner visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751028797.jpg|6371_3": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green piel de sapo melon, mostly empty crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green melon, mostly empty teal crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green melon in mostly empty teal crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751028797.jpg|6371_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons covering most of crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751028797.jpg|6371_5": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 green melons, right part of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 large melons, right part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "2 large green melons covering most of crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751028797.jpg|6371_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751028797.jpg|6371_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 pale netted cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751028797.jpg|6371_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751028797.jpg|6371_9": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini striped watermelons, right part of area empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini watermelons, upper crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "4 mini striped watermelons, part of crate empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751032728.jpg|6371_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751032728.jpg|6371_2": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 dark watermelons, upper-left of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 dark watermelons, half crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 dark watermelons in lower half, upper crate empty",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751032728.jpg|6371_3": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green piel de sapo melon, mostly empty crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green melon, mostly empty teal crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "single green melon in mostly empty teal crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751032728.jpg|6371_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons, some crate visible at top",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons, top of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons, top of crate partly visible",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751032728.jpg|6371_5": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 green melons, right part of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 large melons, right part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "2 large green melons covering most of crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751032728.jpg|6371_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751032728.jpg|6371_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 pale netted cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751032728.jpg|6371_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751032728.jpg|6371_9": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini striped watermelons, right part of area empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini watermelons, upper crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "4 mini striped watermelons, part of crate empty; neighbouring packs at edge",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751036943.jpg|6371_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 large striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751036943.jpg|6371_2": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons covering most of crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons, restocked",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons covering crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751036943.jpg|6371_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 green piel de sapo melons filling crate (restocked)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 yellow-green melons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "4 green/yellow piel de sapo melons filling crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751036943.jpg|6371_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons covering most of crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 dark watermelons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "3 large dark watermelons, some bottom visible",
+"confidence": "low",
+"occluded": false
+}
+],
+"6371|1751036943.jpg|6371_5": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 green melons on left, right half of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "2 dark green melons on left, right half of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "1-2 green melons on left, right half of crate empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751036943.jpg|6371_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "4-5 striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751036943.jpg|6371_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 pale netted cantaloupe melons",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6371|1751036943.jpg|6371_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "7 mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "6 mini striped watermelons",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "mini striped watermelons filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6371|1751036943.jpg|6371_9": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini striped watermelons, right part of area empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "3-4 mini watermelons, upper crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "4 mini striped watermelons, part of crate empty; neighbouring packs at edge",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples on tray, a few empty pockets",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples in pink tray, several empty cells",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose red Gala apples in tray, several empty tray cells in middle",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_2": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "two 1kg bags of yellow-green apples (Golden-style bags) in mostly empty crate",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "2-3 bags of yellow-green apples (look like Golden bags) in mostly empty crate",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "two 1kg bags of yellow-green (Golden-like) apples in mostly empty teal crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples, full tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Pink Lady apples filling pink tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_4": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples, many tray pockets visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples, right part of tray empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples, right side and bottom of tray empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_5": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "1kg bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_6": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples in lower part, upper tray empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples on lower half, upper tray cells empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples in lower part, upper tray cells empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples in white box, mostly covered",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples filling box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples on tray, few pockets visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in tray, few gaps",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_10": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears in lower half, empty tray above",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "some loose green Packham pears, grey tray largely visible",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears in lower half, empty tray upper half",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_11": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full, few dark fruits at edge",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green Packham pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears filling crate, a few dark fruits at left",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751001172.jpg|6373_12": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples on tray, a few empty pockets",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples in pink tray, several empty cells",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose red Gala apples in tray, several empty tray cells in middle",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_2": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "two 1kg bags of yellow-green apples (Golden-style bags) in mostly empty crate",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "2-3 bags of yellow-green apples (look like Golden bags) in mostly empty crate",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "two 1kg bags of yellow-green (Golden-like) apples in mostly empty teal crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples, full tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Pink Lady apples filling pink tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_4": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples, many tray pockets visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples, right part of tray empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples, right side and bottom of tray empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_5": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "1kg bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_6": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples in lower part, upper tray empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples on lower half, upper tray cells empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "loose golden apples in lower part, upper tray cells empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples in white box, mostly covered",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples filling box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples on tray, few pockets visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in tray, few gaps",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_10": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears in lower half, empty tray above",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "some loose green Packham pears, grey tray largely visible",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears in lower half, empty tray upper half",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_11": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full, few dark fruits at edge",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green Packham pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears filling crate, a few dark fruits at left",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751005793.jpg|6373_12": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, heaped full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "heaped loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "heaped loose Conference pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples, full tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "tray packed with loose red Gala apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples filling tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_2": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "two 1kg bags of yellow-green apples (Golden-style bags) in mostly empty crate",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "2-3 bags of yellow-green apples (look like Golden bags) in mostly empty crate",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "two 1kg bags of yellow-green (Golden-like) apples in mostly empty teal crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Pink Lady apples filling pink tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples, full crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "crate packed with loose golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_5": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "1kg bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples, full crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "crate packed with loose golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples filling box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples filling box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples, full tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples filling tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_10": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears in lower half, empty tray above",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "some loose green Packham pears, grey tray largely visible",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears in lower half, empty tray upper half",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_11": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full, few dark fruits at edge",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green Packham pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears filling crate, a few dark fruits at left",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751009946.jpg|6373_12": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "heaped loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples, full tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "tray packed with loose red Gala apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples filling tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_2": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "several 1kg bags of yellow-green apples (Golden-style bags) on right side, left of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "4-5 bags of yellow-green apples (look like Golden bags), left part of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "several 1kg bags of yellow-green (Golden-like) apples on right half of crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Pink Lady apples filling pink tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples, full crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "crate packed with loose golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_5": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "1kg bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples, full crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "crate packed with loose golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples filling box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples filling box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples, full tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples filling tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_10": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, restocked full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "crate restocked with loose green Packham pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_11": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green Packham pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751013720.jpg|6373_12": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "heaped loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples, full tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "tray packed with loose red Gala apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples filling tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_2": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "several 1kg bags of yellow-green apples (Golden-style bags) on right side, left of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "4-5 bags of yellow-green apples (look like Golden bags), left part of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "several 1kg bags of yellow-green (Golden-like) apples on right half of crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Pink Lady apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Pink Lady apples filling pink tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples, full crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "crate packed with loose golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_5": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "1kg bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples, full crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "crate packed with loose golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples filling box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red Cosmic Crisp apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples filling box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples, full tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples filling tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_10": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "crate full of loose green Packham pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_11": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green Packham pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751017645.jpg|6373_12": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "heaped loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears filling crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples in pink tray, nearly full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples in pink box, small gaps",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like the Golden bags in area 5), left part of crate empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like Golden bags) in right half of crate, left half empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "few bags of yellow-green apples (look like Golden bags), left part of crate empty",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose pink/red apples in pink tray, some gaps at top",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "1kg bags of yellow-green apples",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of green-yellow apples with red labels filling crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of yellow-green apples piled in teal crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Golden apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples with stickers, full",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green Packham pears, mostly full",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, some tray visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_11": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751021302.jpg|6373_12": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples in pink box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like the Golden bags in area 5), left part of crate empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like Golden bags) in right half of crate, left half empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "few bags of yellow-green apples (look like Golden bags), left part of crate empty",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose pink/red apples, a few gaps at top",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Golden apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_5": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "1kg bags of yellow-green apples",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of green-yellow apples filling crate",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "bags of yellow-green apples piled in teal crate",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Golden apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples with stickers, full",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, a little paper visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, some paper visible on right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, some tray visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_11": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751024937.jpg|6373_12": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples in pink tray, small gap",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples, a couple of empty cups top right",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples in pink box, small gaps",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like the Golden bags in area 5), left part of crate empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like Golden bags) in right half of crate, left half empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "few bags of yellow-green apples (look like Golden bags), left part of crate empty",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose pink/red apples, some empty cups at top",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Golden apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_5": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few 1kg bags of yellow-green apples, upper part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "fewer bags of green-yellow apples, top and left of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "about four bags of yellow-green apples lying flat, upper part of teal crate visible",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Golden apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, small gap",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, small gap in middle",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, a little tray visible",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples with stickers, full",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, a little paper visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, some paper visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, some tray visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_11": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751028561.jpg|6373_12": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples, a few gaps showing tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples, a few empty cups in middle/top right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples in pink box, a gap in the middle",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like the Golden bags in area 5), left part of crate empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like Golden bags) in right half of crate, left half empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "few bags of yellow-green apples (look like Golden bags), left part of crate empty",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose pink/red apples, some gaps at top",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples with a visible gap in the middle",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Golden apples with a gap of empty cups left-centre",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples, gap in centre showing tray",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_5": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few 1kg bags of yellow-green apples, upper part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "bags of green-yellow apples in lower part, top of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "about four bags of yellow-green apples lying flat, upper part of teal crate visible",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Golden apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples with stickers, full",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, a little paper visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, some paper visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, some tray visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_11": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751032836.jpg|6373_12": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_1": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala-type apples, a few gaps showing tray",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples, a few empty cups centre-right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples in pink box, some gaps",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_2": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like the Golden bags in area 5), left part of crate empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": false,
+"seen": "bags of yellow-green apples (look like Golden bags) in right half of crate, left half empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "few bags of yellow-green apples (look like Golden bags), left part of crate empty",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_3": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose pink/red apples, some gaps at top",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_4": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples, restocked",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Golden apples, full (restocked)",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples, restocked",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_5": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few 1kg bags of yellow-green apples, upper part of crate visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "bags of green-yellow apples in lower part, top of crate empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": true,
+"seen": "about four bags of yellow-green apples lying flat, upper part of teal crate visible",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_6": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples, small gap in the centre",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Golden apples, small gap of empty cups",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green Golden apples, small gap in centre",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_7": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_8": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_9": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples with stickers, full",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose bright red apples with stickers",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_10": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, mostly full",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, some tray visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_11": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751037118.jpg|6373_12": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears, full",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose Conference pears",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_1": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in pink tray, a few empty cups",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red Gala apples in pink tray, a few empty pockets",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_2": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": false,
+"seen": "mostly empty teal crate with a couple of bags of yellow-green produce (likely golden apple bags)",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate with a single bag of apples",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose pink/red apples in pink tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden/green apples in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_5": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_10": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_11": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751040770.jpg|6373_12": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose conference pears on paper",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "heaped Conference pears in black crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_1": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "red apples, top rows of tray cups empty",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "red Gala apples, upper part of tray empty pockets",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_2": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": false,
+"seen": "mostly empty teal crate with a couple of bags of yellow-green produce (likely golden apple bags)",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate with a single bag of apples",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose pink/red apples, small gap on left",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_5": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_6": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples, a few empty cups",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples, a few empty pockets",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, small gap in middle",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples, small gap in centre",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_9": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white tray",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_10": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_11": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose green pears, empty dark tray cells on left side",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears, empty dark pockets on left side",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751044463.jpg|6373_12": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose conference pears, some paper visible",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "Conference pears single layer, brown paper visible between",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_1": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "red apples in lower-left, upper half of tray cups empty",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "red Gala apples in lower part, upper half empty tray pockets",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_2": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "empty teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_3": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red/pink apples in pink tray",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose pink/red apples, small gap on left",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_4": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose yellow-green golden apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose golden apples in teal crate",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_5": [
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "teal crate with 2-3 bags of golden apples at the front, mostly empty",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few net bags of golden apples at bottom of teal crate",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_6": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "golden apples with empty cups visible in middle/right",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "golden apples with many empty pockets visible",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_7": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples in white box",
+"confidence": "high",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_8": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose dark red apples, small gap in middle",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose red apples, small gap in centre",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_9": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "scattered red apples, many empty white tray cups",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "red apples in upper part, lower half white tray empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_10": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears in lower part, empty dark tray at top",
+"confidence": "medium",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears, upper part grey pocket tray empty",
+"confidence": "medium",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_11": [
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears, empty dark tray cells on left and bottom",
+"confidence": "low",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "green pears, empty dark pockets on left side",
+"confidence": "low",
+"occluded": false
+}
+],
+"6373|1751048467.jpg|6373_12": [
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "loose conference pears on paper",
+"confidence": "high",
+"occluded": false
+},
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "Conference pears single layer, paper visible at top and edges",
+"confidence": "low",
+"occluded": false
+}
+]
+}

@@ -313,3 +313,24 @@ def test_labeler_script_parses(tmp_path):
     js.write_text(scripts[0], encoding="utf-8")
     res = subprocess.run(["node", "--check", str(js)], capture_output=True, text=True)
     assert res.returncode == 0, res.stderr
+
+
+def test_band_fills_rows_then_columns():
+    codes = np.full((2, 16), 0)
+    codes[0, :8] = 1            # top half of a 4x4 grid is surface (code 1), bottom is product
+    codes[1] = -1               # nothing visible
+    bf = calibrate.band_fills(codes, np.array([1.0, 0.0]), 2)
+    assert bf.shape == (2, 4)
+    assert np.allclose(bf[0], [0.0, 1.0, 0.5, 0.5]) and np.allclose(bf[1], 0.5)
+
+
+def test_heads_with_band_fills_save_load(data, tmp_path):
+    feats, fill, labels, *_ = data
+    prod = np.linspace(0, 1, int(feats.patch_codes.max()) + 1)
+    heads = fit_heads(feats, fill, labels, CFG, productness=prod)
+    assert heads.layout["fill_bands"] == 4
+    p = heads.stock_proba(feats, fill)
+    heads.save(tmp_path / "heads")
+    back = Heads.load(tmp_path / "heads")
+    assert np.allclose(back.stock_proba(feats, fill), p, atol=1e-5)
+    assert "fill_bands" not in fit_heads(feats, fill, labels, CFG).layout   # no productness: old layout

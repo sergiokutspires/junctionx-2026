@@ -5,8 +5,9 @@ Three parts, all usable without the rest of the pipeline:
 * ``export_sheets``  : contact sheets + ``manifest.json/.js`` + crops + ``labeler.html`` for
   labelling by eye. ``labels_from_tiles`` turns tile labels back into annotations format.
 * ``fit_heads``      : cost-sensitive heads on [fill, fill^2, visible, PCA(CLIP), PCA(DINO cls),
-  handcrafted] (multinomial logistic regression for the stock level, logistic regression for
-  compliance). ``Heads.save`` / ``Heads.load`` use json + npz (no pickle).
+  handcrafted, patch-cluster band histograms, per-band fills (stock only)] (multinomial
+  logistic regression for the stock level, logistic regression for compliance).
+  ``Heads.save`` / ``Heads.load`` use json + npz (no pickle).
 * ``cross_validate`` : leave-one-camera-out and time-blocked scores computed with ``scoring.score``.
 
 Labels are always in annotations format: ``{camera: {image_name: {area_id: {...}}}}``.
@@ -20,6 +21,7 @@ import json
 import logging
 import shutil
 import time
+import warnings
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -396,6 +398,10 @@ class HeadParams:
     w_small: float = 1.0        # penalty weight of [fill, fill^2, visible] (> 1 = lighter L2 on them)
     w_zs: float = 4.0           # same for the unsupervised inputs (zs_stock / zs_comp)
     w_codes: float = 1.0        # same for the patch-cluster histogram
+    fill_bands: int = 4         # stock head: fill (mean patch productness) of this many row bands and
+    #                             as many column bands (depletion starts at one side of the crate;
+    #                             0 = unused; needs patch_codes and the coder's productness)
+    w_fill_bands: float = 4.0   # penalty weight of those band fills
     c_stock: float = 0.03       # inverse L2 strength of the stock model
     c_comp: float = 10.0        # same for compliance (few features, so nearly unregularised)
     stock_class_weight: str | None = None   # None keeps probabilities calibrated for best_stock
@@ -432,6 +438,31 @@ def code_histograms(codes: np.ndarray, n_codes: int, bands: int) -> np.ndarray:
             out[:, b, k] = (part == k).sum(axis=1)
         out[:, b] /= np.maximum((part >= 0).sum(axis=1, keepdims=True), 1)
     return out.reshape(n, -1)
+
+
+def band_fills(codes: np.ndarray, productness: np.ndarray, bands: int) -> np.ndarray:
+    """(N, 2 * bands): mean productness of the visible patches (code >= 0) in each horizontal band
+    (top to bottom) then each vertical band (left to right). A band with nothing visible gets the
+    mean of the crop's other bands (0.5 when nothing is visible at all)."""
+    codes = np.asarray(codes)
+    prod = np.asarray(productness, np.float64)
+    n, cells = codes.shape
+    g = int(round(cells ** 0.5))
+    grid = codes.reshape(n, g, g)
+    edges = np.linspace(0, g, bands + 1).round().astype(int)
+    out = np.zeros((n, 2 * bands))
+    for ax, gr in enumerate((grid, grid.transpose(0, 2, 1))):
+        for b in range(bands):
+            part = gr[:, edges[b]:edges[b + 1]].reshape(n, -1)
+            vis = part >= 0
+            cnt = vis.sum(axis=1)
+            tot = (prod[np.where(vis, part, 0)] * vis).sum(axis=1)
+            out[:, ax * bands + b] = np.where(cnt > 0, tot / np.maximum(cnt, 1), np.nan)
+    with warnings.catch_warnings():   # nanmean warns on all-NaN rows
+        warnings.simplefilter("ignore", RuntimeWarning)
+        fallback = np.nanmean(out, axis=1, keepdims=True)
+    fallback = np.where(np.isfinite(fallback), fallback, 0.5)
+    return np.where(np.isfinite(out), out, fallback)
 
 
 def _logit(p: np.ndarray) -> np.ndarray:
@@ -508,6 +539,11 @@ class Heads:
             if zs_comp is None:
                 raise ValueError("these heads were fitted with zs_comp: pass the same p_compliant")
             blocks.append((_logit(zs_comp)[:, None], P.w_zs))
+        if which == "stock" and self.layout.get("fill_bands"):
+            if feats.patch_codes is None:
+                raise ValueError("heads were fitted with band fills but the input has no patch_codes")
+            blocks.append((band_fills(feats.patch_codes, np.asarray(self.layout["productness"]),
+                                      int(self.layout["fill_bands"])), P.w_fill_bands))
         x = np.concatenate([b for b, _ in blocks], axis=1)
         w = np.concatenate([np.full(b.shape[1], wt) for b, wt in blocks])
         return x, w
@@ -626,12 +662,14 @@ class Heads:
 
 def fit_heads(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Config,
               params: HeadParams | None = None, zs_stock: np.ndarray | None = None,
-              zs_comp: np.ndarray | None = None) -> Heads:
+              zs_comp: np.ndarray | None = None, productness: np.ndarray | None = None) -> Heads:
     """Fit both heads on the rows of ``feats`` that have an entry in ``labels``.
 
     Stock: multinomial logistic regression (decide with ``scoring.best_stock``). Compliance:
     logistic regression with class weights; a constant prior when one class has fewer than
-    ``params.min_class`` examples. ``zs_*`` (optional) add the unsupervised outputs as features.
+    ``params.min_class`` examples. ``zs_*`` (optional) add the unsupervised outputs as features;
+    ``productness`` (the patch coder's per-cluster weights, optional) adds per-band fills to the
+    stock head (``params.fill_bands``).
     """
     params = params or HeadParams()
     idx, ys, yc = label_arrays(feats, labels)
@@ -649,6 +687,9 @@ def fit_heads(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Config,
               "comp_small": params.comp_features == "zs" and zs_comp is not None,
               "code_bands": int(params.code_bands) if use_codes else 0,
               "n_codes": int(feats.patch_codes.max()) + 1 if use_codes else 0}
+    if params.fill_bands > 0 and feats.patch_codes is not None and productness is not None:
+        layout["fill_bands"] = int(params.fill_bands)
+        layout["productness"] = [float(v) for v in np.asarray(productness).ravel()]
     heads = Heads(params, layout, pca, {"kind": "constant", "prior": [1 / 3] * 3}, {"kind": "constant", "prior": 0.5})
     sub = feats.subset(idx)
     zs_s = None if zs_stock is None else np.asarray(zs_stock)[idx]
@@ -735,7 +776,8 @@ def _summ(res: dict) -> dict:
 def cross_validate(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Config,
                    baseline: dict | None = None, zs_stock: np.ndarray | None = None,
                    zs_comp: np.ndarray | None = None, params: HeadParams | None = None,
-                   schemes: Iterable[str] = ("camera", "time"), holdout_frames: int = 2) -> dict:
+                   schemes: Iterable[str] = ("camera", "time"), holdout_frames: int = 2,
+                   productness: np.ndarray | None = None) -> dict:
     """Held-out challenge scores (``scoring.score``) for the heads and simple references.
 
     Schemes: ``"camera"`` = leave one camera out; ``"time"`` = the last ``holdout_frames`` labelled
@@ -767,7 +809,7 @@ def cross_validate(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Con
             tr_feats, te_feats = feats.subset(train), feats.subset(test)
             heads = fit_heads(tr_feats, fill[train], labels, cfg, params,
                               None if zs_stock is None else np.asarray(zs_stock)[train],
-                              None if zs_comp is None else np.asarray(zs_comp)[train])
+                              None if zs_comp is None else np.asarray(zs_comp)[train], productness)
             preds = {
                 "heads": (heads.stock_proba(te_feats, fill[test], None if zs_stock is None else np.asarray(zs_stock)[test]),
                           heads.compliance_proba(te_feats, fill[test], None if zs_comp is None else np.asarray(zs_comp)[test])),

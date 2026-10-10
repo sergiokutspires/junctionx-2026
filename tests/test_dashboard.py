@@ -209,3 +209,150 @@ def test_cfg_frame_width_cli_and_zip(fake, tmp_path):
         names = set(z.namelist())
     assert {"index.html", "app.js", "style.css", "data.js"} <= names
     assert any(n.startswith("img/frames/") for n in names) and any(n.startswith("img/areas/") for n in names)
+
+
+# --------------------------------------------------------------------------- optional product boxes (OWLv2)
+
+Q_BANANA = [[100, 100], [500, 110], [490, 300], [110, 290]]      # same quad as area 1001_1 of the ``fake`` fixture
+
+
+def det(x0, y0, x1, y1, label="bananas", score=0.5):
+    return [x0, y0, x1, y1, label, score]
+
+
+def test_select_detections_rules():
+    sel = dashboard.select_detections
+    shape = (900, 1600)
+    good = det(120, 120, 220, 220, "bananas", 0.60)
+    boxes = [
+        good,
+        det(130, 130, 215, 215, "oranges", 0.40),             # almost the same box: suppressed (overlap), best score wins
+        det(300, 150, 400, 250, "bananas", 0.20),             # below the score threshold
+        det(900, 600, 1000, 700, "bananas", 0.90),            # centre outside every planogram quad
+        det(150, 120, 480, 280, "bananas", 0.70),             # shelf-sized (> 3% of the frame): not a product
+        det(250, 120, 300, 170, "a person's hand", 0.90),     # distractor query, never drawn
+        det(380, 200, 470, 280, "pears", 0.35),
+        [1, 2, 3],                                            # malformed
+    ]
+    out = sel(boxes, [Q_BANANA], shape)
+    assert [(b[4], b[5]) for b in out] == [("bananas", 0.60), ("pears", 0.35)]
+    assert 0.20 in [b[5] for b in sel(boxes, [Q_BANANA], shape, min_score=0.1)]          # the threshold is a parameter
+    assert sel([], [Q_BANANA], shape) == [] and sel(boxes, [], shape) == []
+    many = [det(105 + 12 * i, 105, 115 + 12 * i, 115, "apples", 0.5 + i / 1000) for i in range(30)]
+    assert len(sel(many, [Q_BANANA], shape, max_boxes=7)) == 7
+    inner = [det(110, 110, 300, 200, "a", 0.9), det(120, 120, 150, 150, "b", 0.5)]    # one inside the other
+    assert [b[4] for b in sel(inner, [Q_BANANA], shape)] == ["a"]
+
+
+def test_load_detections_from_dict_json_and_zip(tmp_path):
+    import zipfile
+
+    payload = {"queries": ["bananas"], "detections": {"1001|1.jpg": [det(1, 2, 30, 40)]}}
+    assert dashboard.load_detections(None) == {"queries": [], "detections": {}}
+    assert dashboard.load_detections(payload)["detections"]["1001|1.jpg"][0][4] == "bananas"
+    js = tmp_path / "d.json"
+    js.write_text(json.dumps(payload), encoding="utf-8")
+    assert dashboard.load_detections(js)["queries"] == ["bananas"]
+    zp = tmp_path / "bundle.zip"
+    with zipfile.ZipFile(zp, "w") as z:
+        z.writestr("meta.json", "{}")
+        z.writestr("owl_detections.json", json.dumps(payload))
+    assert dashboard.load_detections(zp)["detections"].keys() == payload["detections"].keys()
+    empty = tmp_path / "empty.zip"
+    with zipfile.ZipFile(empty, "w") as z:
+        z.writestr("readme.txt", "x")
+    with pytest.raises(FileNotFoundError):
+        dashboard.load_detections(empty)
+
+
+def test_build_with_detections_scales_and_labels(fake, tmp_path):
+    src = {"queries": ["bananas", "pears"], "detections": {
+        f"1001|{TS_NEW}.jpg": [det(120, 120, 220, 220, "bananas", 0.6), det(380, 200, 470, 280, "pears", 0.35),
+                               det(1000, 800, 1100, 880, "bananas", 0.9)],        # centre outside the areas
+        f"1001|{TS_OLD}.jpg": [det(120, 120, 220, 220, "limes", 0.9)],            # not the shown frame
+    }}
+    out = tmp_path / "site"
+    dashboard.build(fake, tmp_path / "raw", out, detections=src)
+    d = read_data_js(out)
+    cam = d["cameras"][0]
+    assert d["det_labels"] == ["bananas", "pears"]
+    assert cam["det"] == [[96.0, 96.0, 176.0, 176.0, 0, 0.6], [304.0, 160.0, 376.0, 224.0, 1, 0.35]]   # x 0.8 (1280/1600)
+    assert all(b[2] <= cam["w"] and b[3] <= cam["h"] for b in cam["det"])
+
+
+def test_build_without_detections_has_no_toggle_data(fake, tmp_path):
+    out = tmp_path / "site"
+    dashboard.build(fake, tmp_path / "raw", out)
+    d = read_data_js(out)
+    assert d["det_labels"] == [] and all("det" not in c for c in d["cameras"])
+    # frames the source does not cover stay without boxes too
+    dashboard.build(fake, tmp_path / "raw", out, detections={"queries": [], "detections": {"9999|1.jpg": [det(1, 1, 9, 9)]}})
+    assert all("det" not in c for c in read_data_js(out)["cameras"])
+
+
+def test_detect_runs_the_detector_only_where_boxes_are_missing(fake, tmp_path, monkeypatch):
+    calls = []
+
+    def fake_detector(rgb):
+        calls.append(rgb.shape)
+        return [det(120, 120, 220, 220, "pears", 0.8)]
+
+    out = tmp_path / "a"
+    dashboard.build(fake, tmp_path / "raw", out, detect=fake_detector)
+    assert calls == [(900, 1600, 3)] and read_data_js(out)["cameras"][0]["det"][0][5] == 0.8
+
+    cached = {"queries": [], "detections": {f"1001|{TS_NEW}.jpg": [det(130, 130, 230, 230, "bananas", 0.7)]}}
+    out = tmp_path / "b"
+    dashboard.build(fake, tmp_path / "raw", out, detections=cached, detect=fake_detector)
+    assert len(calls) == 1 and read_data_js(out)["det_labels"] == ["bananas"]         # cache wins, detector idle
+
+    monkeypatch.setattr(dashboard, "_try_owl_detector", lambda queries: fake_detector)   # detect=True builds one lazily
+    out = tmp_path / "c"
+    dashboard.build(fake, tmp_path / "raw", out, detect=True)
+    assert len(calls) == 2 and read_data_js(out)["det_labels"] == ["pears"]
+
+    monkeypatch.setattr(dashboard, "_try_owl_detector", lambda queries: None)            # no torch / weights: still builds
+    out = tmp_path / "d"
+    dashboard.build(fake, tmp_path / "raw", out, detect=True)
+    assert "det" not in read_data_js(out)["cameras"][0]
+
+
+def test_cli_detections_flag(fake, tmp_path):
+    from sensei.__main__ import main as sensei_main
+
+    details = tmp_path / "details.json"
+    details.write_text(json.dumps(fake), encoding="utf-8")
+    dets = tmp_path / "dets.json"
+    dets.write_text(json.dumps({"queries": ["bananas"], "detections": {
+        f"1001|{TS_NEW}.jpg": [det(120, 120, 220, 220, "bananas", 0.6)]}}), encoding="utf-8")
+    for with_dets in (True, False):
+        out = tmp_path / f"cli_{with_dets}"
+        extra = ["--detections", str(dets)] if with_dets else []
+        sensei_main(["dashboard", "--details", str(details), "--data", str(tmp_path / "raw"), "--out", str(out), *extra])
+        assert bool(read_data_js(out)["det_labels"]) == with_dets
+    out = tmp_path / "mod"
+    dashboard.main(["--details", str(details), "--data", str(tmp_path / "raw"), "--out", str(out),
+                    "--detections", str(dets)])
+    assert read_data_js(out)["cameras"][0]["det"]
+
+
+def test_ui_has_detection_toggle_in_both_languages():
+    js = (UI / "app.js").read_text(encoding="utf-8")
+    assert 'data-act="det"' in js and "Show detections" in js and "Mostrar deteções" in js
+    assert "hasDet" in js and "det_labels" in js                      # toggle only exists when the data has boxes
+    assert ".dbox" in (UI / "style.css").read_text(encoding="utf-8")
+
+
+REAL_DETS = Path(__file__).resolve().parents[1] / "cache" / "colab" / "sensei_colab_features.zip"
+
+
+@pytest.mark.skipif(not REAL_DETS.is_file(), reason="Colab feature bundle not cached")
+def test_real_owl_detections_are_selectable():
+    d = dashboard.load_detections(REAL_DETS)
+    assert len(d["queries"]) > 30 and len(d["detections"]) >= 100
+    key, boxes = next(iter(d["detections"].items()))
+    full = [[0, 0], [1280, 0], [1280, 720], [0, 720]]
+    sel = dashboard.select_detections(boxes, [full], (720, 1280))
+    assert 0 < len(sel) <= dashboard.DET_MAX_BOXES
+    assert all(b[5] >= dashboard.DET_MIN_SCORE and b[4] not in dashboard.DET_NON_PRODUCT for b in sel)
+    assert [b[5] for b in sel] == sorted((b[5] for b in sel), reverse=True)

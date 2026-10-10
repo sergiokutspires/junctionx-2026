@@ -500,12 +500,14 @@ def calibrate(model_dir: str | Path, label_paths: Sequence[str | Path], cv: bool
         raise FileNotFoundError(f"{model_dir}/fit_feats.npz missing: refit the model")
     labels = load_labels(*label_paths)
     fill, p_lv, p_comp, _ = zero_shot(model, feats)
+    coder = getattr(model.stock, "coder", None)
+    prod = None if coder is None else getattr(coder, "productness", None)   # per-band fills of the stock head
     report: dict = {}
     if cv:
-        report = cross_validate(feats, fill, labels, model.cfg, zs_stock=p_lv, zs_comp=p_comp)
+        report = cross_validate(feats, fill, labels, model.cfg, zs_stock=p_lv, zs_comp=p_comp, productness=prod)
         log.info("cross-validation:\n%s", format_report(report))
         (Path(model_dir) / "calibration_cv.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
-    heads = fit_heads(feats, fill, labels, model.cfg, zs_stock=p_lv, zs_comp=p_comp)
+    heads = fit_heads(feats, fill, labels, model.cfg, zs_stock=p_lv, zs_comp=p_comp, productness=prod)
     heads.save(Path(model_dir) / "heads")
     log.info("heads saved to %s", Path(model_dir) / "heads")
     return report
