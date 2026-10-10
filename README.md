@@ -7,8 +7,8 @@ there (`stock_level` empty / half / full, `stock_value` 0 / 0.5 / 1). It also bu
 prioritised "Do now" list, a gondola view with product boxes and visible-unit counts, and an Insights tab
 (running out soon, sales speed, planogram adherence). The core pipeline is **unsupervised**: it needs no
 labels to fit, and everything is free and local (Hugging Face weights, CPU is enough, CUDA is used if present,
-no paid APIs). A 756-area answer key written by independent AI labellers is used to **measure** it and to
-lightly **calibrate** two small heads on top (see Results). Held out, it scores 1.19 to 1.41 points per area
+no paid APIs). A 1,240-area answer key written by independent AI labellers is used to **measure** it and to
+lightly **calibrate** two small heads on top (see Results). Held out, it scores 1.25 to 1.40 points per area
 (maximum 2); the hidden validation set is the real judge.
 
 ## Validation day
@@ -39,16 +39,17 @@ Scored with the challenge rules (`scoring.py`): identification +1 right / -2 wro
 
 | Held-out test | Areas | Points per area (max 2) |
 |---|---:|---:|
-| Unseen cameras (leave one camera out) | 756 | **1.19** |
-| Last two labelled frames of every camera | 304 | **1.21** |
-| Last labelled frame of every camera | 152 | **1.41** |
+| Unseen cameras (leave one camera out) | 756 | **1.25** |
+| Last two labelled frames of every camera | 304 | **1.30** |
+| Last labelled frame of every camera | 152 | **1.40** |
 | Baseline: always "compliant" and "full" | 756 | 0.70 |
 
 How to read it, and what it is **not**:
 
-- **The answer key is AI-labelled, not the store's truth.** 756 areas (the labelled frames of the 14 cameras,
-  `data/labels/teacher_labels*.json`) labelled by independent AI labellers: three votes per area, 94%
-  unanimous; 42 of the 756 areas show a wrong product. It ranks models and calibrates the heads; it cannot replace the hidden
+- **The answer key is AI-labelled, not the store's truth.** 1,240 areas over 115 frames of the 14 cameras
+  (`data/labels/teacher_labels*.json`) labelled by independent AI labellers (three votes per area on 3 cameras, 94%
+  unanimous; one vote elsewhere); 72 of the 1,240 areas show a wrong product. The scores above are measured on the
+  original 756-area part of the key so they stay comparable; heads are trained on the rest of each fold. It ranks models and calibrates the heads; it cannot replace the hidden
   annotations, so every number here is an estimate.
 - **The core pipeline is unsupervised.** Patch clustering, product recognition and the decision rule never see a
   label at fit time. The labels are used (a) to measure, and (b) to fit two small heads (stock, compliance) on
@@ -56,14 +57,14 @@ How to read it, and what it is **not**:
   part's defaults (thresholds, priors) were chosen while looking at this same key, so the rows are optimistic to
   that extent.
 - **Late frames matter most.** The hidden frames are later in the day than every labelled one, so the "last
-  frames" rows are the closest rehearsal. Times the 289 hidden areas that is roughly 345 to 400 of 578 points
+  frames" rows are the closest rehearsal. Times the 289 hidden areas that is roughly 360 to 400 of 578 points
   (the brief's worked example scores 320).
 - **The baseline is the generous figure.** On the last two frames and on the last frame, answering "compliant" and
   "full" everywhere scores only 0.36 and 0.06, because shelves empty out during the day.
-- On the unseen-camera and last-two-frames tests identification is right on 97.6% and 99.3% of areas and stock
-  level on 79.5% and 80.3%: stock level is the weaker half.
+- On the unseen-camera and last-two-frames tests identification is right on 98% and 99% of areas and stock
+  level on 81% and 82%: stock level is the weaker half.
 
-The shipped model is `models/real_v1_cal` (unsupervised model plus heads fitted on all 756 labelled areas). Choose
+The shipped model is `models/real_v1_cal` (unsupervised model plus heads fitted on all 1,240 labelled areas). Choose
 models only on the late-frame fold of `calibrate` (the `[time]` block of `models/<m>/calibration_cv.json`). Per-camera
 numbers are in that file.
 

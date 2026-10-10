@@ -61,7 +61,9 @@ def pick_model(key: str, wanted: str | None) -> str:
     names = [m["name"].split("/")[-1] for m in call(f"{API}/models?pageSize=200", key).get("models", [])
              if "generateContent" in m.get("supportedGenerationMethods", [])]
     stable = [n for n in names if n.startswith("gemini-") and not any(t in n for t in ("exp", "lite", "tts", "image", "live", "embedding"))]
-    for tier in ("pro", "flash"):
+    if "gemini-flash-latest" in names:  # free tier: pro models have 0 quota, other flash aliases vary
+        return "gemini-flash-latest"
+    for tier in ("flash", "pro"):
         cands = sorted((n for n in stable if tier in n), key=lambda n: (("preview" not in n), n), reverse=True)
         if cands:
             return cands[0]
@@ -93,12 +95,12 @@ def frames_to_do(which: str) -> list[tuple[str, str]]:
     return todo
 
 
-def run(which: str, model_arg: str | None, rpm: float) -> None:
+def run(which: str, model_arg: str | None, rpm: float, limit: int | None = None) -> None:
     key = api_key()
     model = pick_model(key, model_arg)
     areas = {cam: v for cam, v in json.loads((TEACHER / "manifest.json").read_text(encoding="utf-8"))["areas"].items()}
     OUT.mkdir(parents=True, exist_ok=True)
-    todo = [(c, t) for c, t in frames_to_do(which) if not (OUT / f"{c}_{t}.json").exists()]
+    todo = [(c, t) for c, t in frames_to_do(which) if not (OUT / f"{c}_{t}.json").exists()][:limit]
     print(f"model {model}: {len(todo)} frames to label ({which})")
     for i, (cam, ts) in enumerate(todo, 1):
         for attempt in range(6):
@@ -114,7 +116,7 @@ def run(which: str, model_arg: str | None, rpm: float) -> None:
                 wait = 20 * (attempt + 1) if e.code in (429, 500, 503) else None
                 if wait is None:
                     sys.exit(f"HTTP {e.code}: {msg}")
-                print(f"  HTTP {e.code}, retry in {wait}s", flush=True)
+                print(f"  HTTP {e.code}, retry in {wait}s: {msg[:160]}", flush=True)
                 time.sleep(wait)
             except (json.JSONDecodeError, KeyError, IndexError, TimeoutError, urllib.error.URLError) as e:
                 print(f"  bad answer ({e.__class__.__name__}), retry", flush=True)
@@ -159,9 +161,10 @@ if __name__ == "__main__":
     ap.add_argument("--frames", choices=["labelled", "unlabelled", "all"])
     ap.add_argument("--model", help="Gemini model id (default: newest available pro, else flash)")
     ap.add_argument("--rpm", type=float, default=4.0, help="requests per minute (free tier is low)")
+    ap.add_argument("--limit", type=int, help="label at most this many frames")
     ap.add_argument("--report", action="store_true")
     a = ap.parse_args()
     if a.frames:
-        run(a.frames, a.model, a.rpm)
+        run(a.frames, a.model, a.rpm, a.limit)
     if a.report or not a.frames:
         report()

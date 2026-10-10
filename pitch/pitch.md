@@ -24,7 +24,7 @@ must learn to see the shelf without being told what is right.
 ## 3. What we found (0:30 - 0:52)
 
 This is camera 6215 at 6:14 in the morning. Areas 3 and 5 are planned for banana and hold oranges; the banana
-trays beside them are empty. In our labelled sample, 42 of 756 areas show the wrong product, so the planogram
+trays beside them are empty. In our labelled sample, 72 of 1,240 areas show the wrong product, so the planogram
 is the question, not the answer. *(cut if short: And empty trays look the same under every product.)*
 
 ## 4. How it works (0:52 - 1:20)
@@ -36,10 +36,10 @@ points, too low two, so we lean low when unsure. *(cut if short: OWLv2 boxes fee
 
 ## 5. Honest calibration (1:20 - 1:56)
 
-The pipeline needs no labels, but we needed a ruler: a **756-area answer key** from independent AI labellers,
-three votes per area. We use it to measure, and to calibrate small heads on top. Held out, we score **1.19
-points per area** on cameras it never saw, **1.21** on late frames, **1.41** on the last frame, against
-**0.70** for always answering compliant and full. On the hidden set that projects to **about 345 to 400 out
+The pipeline needs no labels, but we needed a ruler: a **1,240-area answer key** from independent AI labellers
+(a second AI, Gemini, agreed with every wrong-product call it checked). We use it to measure, and to calibrate small heads on top. Held out, we score **1.25
+points per area** on cameras it never saw, **1.30** on late frames, **1.40** on the last frame, against
+**0.70** for always answering compliant and full. On the hidden set that projects to **about 360 to 400 out
 of 578**. The key is AI-labelled, so it is an estimate: the hidden set decides.
 
 ## 6. The staff app (1:56 - 2:09)
@@ -74,14 +74,14 @@ Thank you. No labels, no new hardware, and staff know what to do first. Question
 
 | Claim | Number | Where it comes from |
 |---|---|---|
-| Answer key | 756 areas, 3 votes, 94% unanimous | `data/labels/teacher_labels.json` |
-| Wrong product in the key | 42 of 756 areas | count of `planogram_compliant: false` in that file |
-| Held-out, cameras unseen | 1.19 points per area (max 2) | leave-one-camera-out, `models/real_v1_cal/calibration_cv.json` |
-| Held-out, late frames | 1.21 points per area | last two labelled frames of every camera, same file |
-| Held-out, last frame | 1.41 points per area | last labelled frame of every camera (`calibrate` with `holdout_frames=1`, 152 areas, 1.408) |
+| Answer key | 1,240 areas over 115 frames (3 votes on 3 cameras, 94% unanimous) | `data/labels/teacher_labels*.json` |
+| Wrong product in the key | 72 of 1,240 areas | count of `planogram_compliant: false` in that file |
+| Held-out, cameras unseen | 1.25 points per area (max 2) | leave-one-camera-out, `models/real_v1_cal/calibration_cv.json` |
+| Held-out, late frames | 1.30 points per area | last two labelled frames of every camera, same file |
+| Held-out, last frame | 1.40 points per area | last labelled frame of every camera (152 areas, 1.395) |
 | Baseline | 0.70 points per area | always "compliant" and "full", all 756 areas; it scores 0.36 and 0.06 on the last two frames and the last frame |
 | Hidden set | 289 areas, max 578, brief example 320 | the brief |
-| Projection | about 345 to 400 | roughly 1.19 to 1.41 times 289, rounded down |
+| Projection | about 360 to 400 | roughly 1.25 to 1.40 times 289, rounded |
 | Speed | 26 s for 14 frames (152 areas) on a laptop CPU; product boxes add about a minute (about 4 s per camera) | measured `submit` dry runs |
 | Expected hidden input | 26 images, 289 areas | the brief; `submit` only warns on a different count |
 
