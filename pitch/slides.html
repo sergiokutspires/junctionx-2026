@@ -393,20 +393,20 @@
 </section>
 
 <!-- 8 · Runs anywhere -->
-<section class="slide" id="s8" data-title="One command">
-  <div class="kicker">08 &middot; Runs anywhere</div>
-  <h2>Free models, one command, no new hardware</h2>
+<section class="slide" id="s8" data-title="Cost per image">
+  <div class="kicker">08 &middot; Cost &amp; efficiency</div>
+  <h2>About $0.00009 per image analysed</h2>
   <div class="tiles">
-    <div class="card tile"><div class="big">Free</div><h3>Open weights only</h3><p>CLIP, DINOv2 and OWLv2 from Hugging Face. No paid API, no keys.</p></div>
-    <div class="card tile"><div class="big">26 s</div><h3>14 frames on a laptop CPU</h3><p>152 areas. Product boxes add about a minute. A free Colab GPU is optional.</p></div>
-    <div class="card tile"><div class="big">1 command</div><h3>Pictures in, file out</h3><p>Unpacks, predicts, checks its own file, builds the static staff app. No server, no network.</p></div>
+    <div class="card tile"><div class="big">~7 CPU-s</div><h3>per image, measured</h3><p>One CPU core, all ~11 areas of a frame, no GPU, 1.1 GB RAM. At $0.045 per vCPU-hour (on-demand cloud) that is ~$0.00009, or ~9 cents per 1,000 images.</p></div>
+    <div class="card tile"><div class="big">~$6/month</div><h3>per 14-camera store</h3><p>One picture per camera every 5 minutes, 14 h a day = 2,352 images a day: a third of one CPU core. Or $0 extra on a PC the store already has.</p></div>
+    <div class="card tile"><div class="big">Free</div><h3>Open weights, no API calls</h3><p>Small CLIP + DINOv2 models chosen over bigger ones that did not score better. Product boxes are optional (+~$0.0002 per image).</p></div>
   </div>
   <div class="cmd mono">
     <span class="dim">$</span> <span class="c">SUBMIT.bat</span> "validation.zip" <span class="dim">&nbsp;&nbsp;# or: python -m sensei submit --images &lt;folder or .zip&gt;</span><br>
     <span class="go">SENSEI SUBMISSION CHECK: PASSED</span><br>
     <span class="go">HAND IN THIS FILE: submission\predictions.json</span> <span class="dim">&nbsp;&nbsp;# staff app: submission\dashboard\index.html</span>
   </div>
-  <p class="newstore hl-blue">New store? Point it at the camera pictures and switch it on the same day.</p>
+  <p class="newstore hl-blue">Next: fixed cameras, so re-analyse only areas that changed.</p>
 </section>
 
 <!-- 9 · Next -->

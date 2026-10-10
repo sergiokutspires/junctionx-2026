@@ -44,6 +44,21 @@ Scored with the challenge rules (`scoring.py`): identification +1 right / -2 wro
 | Last labelled frame of every camera | 152 | **1.40** |
 | Baseline: always "compliant" and "full" | 756 | 0.70 |
 
+### Cost per image (Sensei's resource-efficiency criterion)
+
+Measured with `tools/benchmark_cost.py` (no feature cache; model loading excluded, ~6 s once per process):
+
+| Setup | Wall time per image | CPU-seconds per image | Peak RAM |
+|---|---:|---:|---:|
+| 1 CPU core (`SENSEI_THREADS=1`), all ~11 areas of a frame | 5.5-7.1 s | **5.6-7.0** | 1.1 GB |
+| 16 threads (fast, less efficient) | 1.4 s | 18.2 | |
+| Optional OWLv2 product boxes (staff app only, 1 core) | +15.9 s | +15.5 | |
+
+At ~$0.045 per vCPU-hour (AWS c7i.large on-demand, $0.0892/h for 2 vCPU, us-east-1) that is **~$0.00009 per
+image analysed** (~$0.09 per 1,000), or ~$6 a month for a 14-camera section at one picture per camera every
+5 minutes for 14 hours a day (a third of one core). No GPU and no paid API are needed. Bigger models (CLIP-L,
+SigLIP, DINOv2-base) were tested and did not score better, so the small ones ship.
+
 How to read it, and what it is **not**:
 
 - **The answer key is AI-labelled, not the store's truth.** 1,240 areas over 115 frames of the 14 cameras

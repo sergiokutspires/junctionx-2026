@@ -102,3 +102,16 @@ fruit decides, variety needs a clear margin.
   "empty in about N minutes" warning is the seed), and label a small sample from a second store.
 - **Who labelled the key?** Independent AI labellers, three votes per area; not people, not the
   store.
+
+
+## Q. What does it cost per image? (new Sensei criterion)
+
+**About $0.00009 per image, measured.** One CPU core spends about 7 CPU-seconds on a frame (all ~11 areas;
+5.6-7.1 s across runs, `tools/benchmark_cost.py`), peak RAM 1.1 GB, no GPU. At on-demand cloud prices
+(AWS c7i.large, $0.0892/h for 2 vCPU, so ~$0.045 per vCPU-hour) that is ~$0.00009 per image, ~9 cents per
+thousand. A 14-camera section photographed every 5 minutes for 14 hours is 2,352 images a day: ~$0.20 a day,
+~$6 a month, a third of one core, or nothing extra on a PC the store already runs. Using all 16 cores is faster
+(1.4 s per image) but burns 18 CPU-seconds, so for cost we run one core per stream. The optional product boxes
+(OWLv2) cost ~15 CPU-seconds more and only feed the staff app, not the score. Cheaper still, next: cameras
+never move, so only re-analyse areas whose pixels changed. We also tested bigger models (CLIP-L, SigLIP,
+DINOv2-base on a free Colab GPU): they did not score better, so we kept the small, cheap ones.

@@ -184,8 +184,8 @@ class Extractor:
     def _torch_mod(self):
         if self._torch is None:
             import torch  # noqa: PLC0415 - optional dependency
-            if self.device == "cpu":
-                torch.set_num_threads(os.cpu_count() or 1)
+            if self.device == "cpu":  # SENSEI_THREADS caps the cores (e.g. 1 per camera stream in production)
+                torch.set_num_threads(int(os.environ.get("SENSEI_THREADS", 0)) or os.cpu_count() or 1)
             self._torch = torch
         return self._torch
 

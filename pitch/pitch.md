@@ -54,11 +54,12 @@ The same pictures give the manager's view. **Running out soon**: shelves forecas
 hours. **Sales speed**: how fast each product sells, with restocks spotted. **Planogram adherence**: which
 gondolas hold the wrong product. All estimates, from one day of pictures.
 
-## 8. One command (2:26 - 2:42)
+## 8. Cost per image (2:26 - 2:42)
 
-On validation day it is one command: it unpacks the pictures, predicts every area, checks its own file and
-builds the app. Free models, no keys: **26 seconds for 14 frames** on a laptop CPU. *(cut if short: A new store
-switches on the same day.)*
+You asked about cost. We measured it: about **7 CPU-seconds per image** on one core, no GPU, 1.1 GB of RAM.
+At on-demand cloud prices that is about **$0.00009 per image**, roughly 9 cents per thousand, or about
+**$6 a month** for this 14-camera section at one picture every five minutes. We chose the small models on
+purpose: the big ones did not score better. And it is one command: pictures in, checked file out.
 
 ## 9. Next steps (2:42 - 2:48)
 
@@ -83,6 +84,9 @@ Thank you. No labels, no new hardware, and staff know what to do first. Question
 | Hidden set | 289 areas, max 578, brief example 320 | the brief |
 | Projection | about 360 to 400 | roughly 1.25 to 1.40 times 289, rounded |
 | Speed | 26 s for 14 frames (152 areas) on a laptop CPU; product boxes add about a minute (about 4 s per camera) | measured `submit` dry runs |
+| Cost per image | ~7 CPU-seconds on 1 core (5.6-7.1 measured), 1.1 GB RAM, no GPU; x $0.045/vCPU-hour = ~$0.00009 per image (~$0.09 per 1,000) | `tools/benchmark_cost.py`; AWS c7i.large on-demand $0.0892/h for 2 vCPU (us-east-1) |
+| Per store | 14 cameras x 1 picture / 5 min x 14 h = 2,352 images/day = ~4.6 CPU-hours = ~$0.20/day, ~$6/month (a third of one core) | arithmetic on the line above |
+| Optional boxes | +~15.5 CPU-s per image (~$0.0002) | same benchmark, `--detect` |
 | Expected hidden input | 26 images, 289 areas | the brief; `submit` only warns on a different count |
 
 Insights and counts on the dry-run pictures (do not quote the figures as findings: they are model estimates
