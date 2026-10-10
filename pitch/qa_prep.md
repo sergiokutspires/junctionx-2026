@@ -16,12 +16,12 @@ heads the pipeline still runs, but it scores lower on our key. We never had the 
 ### 2. How do you know the score will hold on the hidden set?
 
 **We do not know; we estimate, and we tried hard not to flatter ourselves.** Every number we quote
-is on frames the model was not fitted on: 1.19 points per area on late frames (the hidden frames are
-later in the day than every labelled one), 1.41 on the last frame, 1.15 when a whole camera is held
-out. Times 289 areas that is about 345 to 400 of 578. Two caveats we say out loud: the key is
+is on frames the model was not fitted on: 1.21 points per area on the last two frames of each camera (the hidden frames are
+later in the day than every labelled one), 1.41 on the last frame, 1.19 when a whole camera is held
+out. Times 289 areas that is about 350 to 400 of 578. Two caveats we say out loud: the key is
 AI-labelled, not the store's truth, and our first unsupervised model's stock thresholds were tuned
-on the same labels, so we ignore its in-sample score. Sanity check: the 0.70 baseline can be
-reproduced by hand from the key's label counts.
+on the same labels, so we ignore its in-sample score. Sanity check: the always-compliant + always-full baseline scores 0.70 per area over the whole key,
+but only 0.36 on the last two frames and 0.06 on the last frame, because shelves empty late in the day.
 
 ### 3. Why not train an object detector?
 
@@ -50,7 +50,7 @@ camera 6215), only as the thing to compare against.
 
 ### 6. How fast is it, and what does it cost?
 
-**35 seconds for 14 frames on a laptop CPU, and no running cost.** All models are free open weights
+**About 26 seconds for 14 frames on a laptop CPU (about 1 minute with detection boxes), and no running cost.** All models are free open weights
 (CLIP, DINOv2, OWLv2); there are no paid APIs and no keys. A free Colab GPU speeds up the first
 feature extraction. The optional detection boxes are the slow part, about 8 seconds a frame on CPU,
 and only for the frames the app shows.
@@ -60,7 +60,7 @@ and only for the frames the app shows.
 **Yes in design, with one honest condition.** Nothing needs labelling to switch a store on, no new
 hardware is needed, and predicting works picture by picture, so more stores means more machines
 running the same command; the dashboard is a static page per store. The condition: our calibration
-heads were fitted on this store. The leave-one-camera-out result (1.15 points per area) shows they
+heads were fitted on this store. The leave-one-camera-out result (1.19 points per area) shows they
 transfer to a camera they have not seen; for a very different store we would re-check on a small
 labelled sample before trusting the stock levels. We have not measured another store.
 

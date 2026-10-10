@@ -5,6 +5,7 @@ import json
 import re
 import shutil
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -356,3 +357,158 @@ def test_real_owl_detections_are_selectable():
     assert 0 < len(sel) <= dashboard.DET_MAX_BOXES
     assert all(b[5] >= dashboard.DET_MIN_SCORE and b[4] not in dashboard.DET_NON_PRODUCT for b in sel)
     assert [b[5] for b in sel] == sorted((b[5] for b in sel), reverse=True)
+
+
+# --------------------------------------------------------------------------- item counts (visible units per area)
+
+def test_count_units_rules():
+    q2 = [[600, 100], [1000, 100], [1000, 300], [600, 300]]
+    quads = {"a": Q_BANANA, "b": q2}
+    boxes = [
+        det(120, 120, 170, 170, "bananas", 0.60),
+        det(125, 125, 172, 172, "bananas", 0.50),             # IoU 0.75 with the first: same item, suppressed
+        det(200, 120, 250, 170, "oranges", 0.22),             # faint: below the drawing threshold, still counted
+        det(300, 120, 350, 170, "bananas", 0.15),             # below the counting threshold
+        det(130, 130, 480, 285, "bananas", 0.90),             # > 40% of the area: a crate or the shelf, not an item
+        det(250, 120, 300, 170, "a person's hand", 0.90),     # distractor query
+        det(650, 120, 700, 170, "pears", 0.30),               # area b
+        det(900, 900, 950, 950, "pears", 0.90),               # outside every area
+        det(400, 200, 401, 201, "limes", 0.90),               # a speck
+        [1, 2, 3],                                            # malformed
+    ]
+    assert dashboard.count_units(boxes, quads) == {"a": 2, "b": 1}
+    assert dashboard.count_units(boxes, quads, min_scores={"a": 0.35}) == {"a": 1, "b": 1}      # per-area threshold
+    assert dashboard.count_units(boxes, quads, min_scores={"a": 0.10})["a"] == 3
+    assert dashboard.count_units(boxes, quads, nms_iou=0.9)["a"] == 3                            # parameters are real
+    assert dashboard.count_units([], quads) == {"a": 0, "b": 0} and dashboard.count_units(boxes, {}) == {}
+    assert dashboard.count_units(boxes, {"a": None}) == {}                                        # no quad, no count
+    grid = [det(110 + 20 * (i % 10), 105 + 19 * (i // 10), 126 + 20 * (i % 10), 121 + 19 * (i // 10), "x", 0.5) for i in range(100)]
+    assert dashboard.count_units(grid, {"a": [[100, 100], [500, 100], [500, 300], [100, 300]]}) == {"a": 100}   # uncapped (drawing stops at 60)
+    both = {"a": [[0, 0], [200, 0], [200, 200], [0, 200]], "b": [[100, 0], [400, 0], [400, 200], [100, 200]]}
+    assert dashboard.count_units([det(160, 90, 180, 110)], both) == {"a": 0, "b": 1}              # overlap: deepest quad wins
+
+
+def test_build_adds_counts_totals_and_packs(fake, tmp_path):
+    src = {"queries": [], "detections": {
+        f"1001|{TS_NEW}.jpg": [
+            det(120, 120, 170, 170, "bananas", 0.30),         # area 1 is empty: faint boxes are crate patterns
+            det(200, 120, 250, 170, "bananas", 0.60),
+            det(650, 120, 700, 170, "apples", 0.50), det(750, 120, 800, 170, "apples", 0.50),   # area 2 (wrong product)
+            det(1550, 650, 1600, 700, "packs of cherry tomatoes", 0.50),                           # area 10
+        ]}}
+    out = tmp_path / "site"
+    dashboard.build(fake, tmp_path / "raw", out, detections=src)
+    d = read_data_js(out)
+    n = {a["id"]: a.get("n") for a in d["areas"]}
+    assert n == {"1001_1": 1, "1001_2": 2, "1001_10": 1}
+    areas = {a["id"]: a for a in d["areas"]}
+    assert areas["1001_10"]["loose"] is False and areas["1001_1"]["loose"] is True        # "EMB. 250 G" = packs, "KG" = loose
+    assert d["insights"]["totals"] == {"11": {"n": 1, "k": 1}, "33": {"n": 1, "k": 1}}    # the wrong-product area adds to nothing
+    out2 = tmp_path / "plain"
+    dashboard.build(fake, tmp_path / "raw", out2)                                         # no boxes at all: no counts, nothing invented
+    d2 = read_data_js(out2)
+    assert all("n" not in a for a in d2["areas"]) and d2["insights"]["totals"] == {}
+
+
+def test_product_totals_adds_areas_per_product():
+    areas = [{"pid": "1", "status": "ok", "n": 10}, {"pid": "1", "status": "low", "n": 5}, {"pid": "1", "status": "wrong", "n": 7},
+             {"pid": "1", "status": "empty"}, {"pid": "2", "status": "ok", "n": 0}]
+    assert dashboard.product_totals(areas) == {"1": {"n": 15, "k": 2}, "2": {"n": 0, "k": 1}}
+
+
+# --------------------------------------------------------------------------- insights
+
+BASE = int(datetime(2025, 6, 27, 9, 0, tzinfo=timezone.utc).timestamp())      # 10:00 in Lisbon (summer time, UTC+1)
+
+
+def ins_area(aid, pid, fills, status="ok", start_h=0.0, cam="c1", fc=None):
+    """Area record with one picture per hour starting ``start_h`` hours after 10:00 local."""
+    tl = [[int(BASE + (start_h + i) * 3600), f, "full" if f > 0.7 else "half" if f > 0.2 else "empty"] for i, f in enumerate(fills)]
+    return {"id": aid, "cam": cam, "pid": pid, "status": status, "tl": tl, "fc": fc}
+
+
+def test_lisbon_clock_without_tz_database():
+    ts = lambda *a: datetime(*a, tzinfo=timezone.utc).timestamp()      # noqa: E731
+    assert dashboard._lisbon_offset_h(ts(2025, 6, 27, 9)) == 1 and dashboard._lisbon_offset_h(ts(2025, 12, 1, 9)) == 0
+    assert dashboard._lisbon_offset_h(ts(2025, 3, 30, 0, 59)) == 0 and dashboard._lisbon_offset_h(ts(2025, 3, 30, 1)) == 1
+    assert dashboard._lisbon_offset_h(ts(2025, 10, 26, 0, 59)) == 1 and dashboard._lisbon_offset_h(ts(2025, 10, 26, 1)) == 0
+    assert dashboard._local_hour(ts(2025, 6, 27, 9, 30)) == pytest.approx(10.5)
+
+
+def test_insights_soon_sales_restocks_and_adherence():
+    areas = [
+        ins_area("p1", "P", [1.0, 0.8, 0.6, 1.0, 0.9], cam="c1"),                  # two falls, a restock, one fall
+        ins_area("q1", "Q", [1.0, 0.99, 1.0, 0.985], cam="c1"),                    # picture noise only: no sales
+        ins_area("w1", "W", [1.0, 0.4, 0.0, 0.0], status="wrong", cam="c2"),       # wrong product: not this product's fill
+        ins_area("s1", "S", [0.5, 0.4], status="low", cam="c2", fc=1800),
+        ins_area("s2", "S", [0.5, 0.4], status="low", cam="c2", fc=9000),         # too far away
+        ins_area("s3", "S", [1.0, 1.0], status="ok", cam="c2", fc=600),            # model says full: no forecast shown
+        ins_area("s4", "S", [0.5, 0.4], status="wrong", cam="c1", fc=600),
+        ins_area("s5", "S", [0.0, 0.0], status="empty", cam="c1", fc=0),           # already empty: it is a task, not a forecast
+    ]
+    out = dashboard.compute_insights(areas, {"c1": BASE, "c2": BASE + 60})
+    assert [(x["id"], x["fc"], x["at"]) for x in out["soon"]] == [("s4", 600, BASE + 600), ("s1", 1800, BASE + 60 + 1800)]
+    sales = {s["pid"]: s for s in out["sales"]}
+    assert "W" not in sales
+    p = sales["P"]
+    assert p["restocks"] == [[BASE + 3 * 3600, "p1"]]                              # jump > +0.3, time of the later picture
+    assert p["hours"] == 3.0 and p["rate"] == pytest.approx(0.5 / 3, abs=1e-3)     # the restock hour is left out
+    assert sales["Q"]["rate"] == 0 and sales["Q"]["restocks"] == []
+    rates = [s["rate"] for s in out["sales"]]
+    assert rates == sorted(rates, reverse=True)                                    # fastest first
+    assert out["adherence"] == {"ok": 6, "n": 8, "cams": [{"id": "c1", "ok": 3, "n": 4}, {"id": "c2", "ok": 3, "n": 4}]}
+    assert dashboard.compute_insights([], {}) == {"soon": [], "sales": [], "hourly": [], "store_peak": None,
+                                                  "adherence": {"ok": 0, "n": 0, "cams": []}}
+
+
+def test_insights_peak_hint_only_when_data_supports_it():
+    # one product in 12 areas: fill is steady, then falls 0.3 per hour between 12:00 and 14:00 (local)
+    fills = [1.0] * 3 + [0.7, 0.4] + [0.4] * 5                                      # pictures 10:00 ... 20:00
+    many = [ins_area(f"a{i}", "P", fills) for i in range(12)]
+    out = dashboard.compute_insights(many, {})
+    peak = out["sales"][0]["peak"]
+    assert peak[:2] == [12, 14] and peak[2] == pytest.approx(0.3, abs=0.01)
+    assert out["store_peak"][:2] == [12, 14]
+    assert dict(out["hourly"])[12] == pytest.approx(0.3, abs=0.01) and dict(out["hourly"])[10] == 0
+    few = dashboard.compute_insights(many[:1], {})                                  # one area: too little to claim a peak
+    assert few["sales"][0]["peak"] is None and few["store_peak"] is None
+    flat = dashboard.compute_insights([ins_area(f"b{i}", "F", [1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65]) for i in range(12)], {})
+    assert flat["sales"][0]["peak"] is None and flat["store_peak"] is None         # even decline: no "fastest" hour
+
+
+def test_build_has_insights(fake, tmp_path):
+    out = tmp_path / "site"
+    dashboard.build(fake, tmp_path / "raw", out)
+    ins = read_data_js(out)["insights"]
+    assert [(x["id"], x["fc"], x["at"]) for x in ins["soon"]] == [("1001_2", 3000, TS_NEW + 3000)]
+    assert ins["adherence"] == {"ok": 2, "n": 3, "cams": [{"id": "1001", "ok": 2, "n": 3}]}
+    assert {s["pid"] for s in ins["sales"]} == {"11", "33"}                         # the wrong-product area is not a product here
+    assert next(s for s in ins["sales"] if s["pid"] == "11")["hours"] == 1.0         # two pictures an hour apart
+
+
+def test_ui_has_insights_and_counts_in_both_languages():
+    js = (UI / "app.js").read_text(encoding="utf-8")
+    html = (UI / "index.html").read_text(encoding="utf-8")
+    assert 'data-tab="insights"' in html and 'id="view-insights"' in html and "tab_insights" in html
+    for en, pt in (("Running out soon", "A acabar em breve"), ("Sales speed", "Velocidade de vendas"),
+                   ("Planogram adherence", "Cumprimento do planograma"), ("visible units", "unidades visíveis"),
+                   ("visible packs", "embalagens visíveis"), ("estimate", "estimativa")):
+        assert en in js and pt in js, (en, pt)
+    assert "renderInsights" in js and "INS.sales" in js and "INS.adherence" in js and "INS.soon" in js
+    assert ".ins-card" in (UI / "style.css").read_text(encoding="utf-8")
+
+
+REAL_DETAILS = Path(__file__).resolve().parents[1] / "outputs" / "real_v1_cal" / "details.json"
+
+
+@pytest.mark.skipif(not (REAL_DETS.is_file() and REAL_DETAILS.is_file()), reason="real details / Colab bundle not available")
+def test_real_counts_are_plausible():
+    d = json.loads(REAL_DETAILS.read_text(encoding="utf-8-sig"))
+    lk = dashboard._det_lookup(dashboard.load_detections(REAL_DETS))
+    rows = [r for r in d["rows"] if r["camera_id"] == "6215"]
+    boxes = lk[("6215", Path(rows[0]["image_name"]).stem)]
+    counts = dashboard.count_units(boxes, {r["area_id"]: r["quad"] for r in rows},
+                                   min_scores={r["area_id"]: dashboard.COUNT_MIN_SCORE_EMPTY for r in rows if r["stock_level"] == "empty"})
+    assert set(counts) == {r["area_id"] for r in rows}
+    assert max(counts.values()) > 5 and all(0 <= v <= 150 for v in counts.values())
+    assert counts["6215_6"] == 0 and counts["6215_8"] == 0                           # the two bare shelves: nothing visible

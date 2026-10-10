@@ -8,7 +8,11 @@ earlier frames feeds the per-area sparkline through ``timeline``). No network, n
 
 Optional product boxes: ``--detections <zip|json>`` (OWLv2 output, see ``load_detections``) or ``--detect``
 (runs OWLv2 locally on the shown frames) add a "Show detections" toggle to the gondola view; without
-either the toggle is hidden.
+either the toggle is hidden. The same boxes also give item counts (``count_units``: "~N visible units", or packs for
+packaged products, per area and added up per product; estimates, lower score bar than the drawn boxes).
+
+An "Insights" tab is built from the day's timeline (``compute_insights``): areas running out within 2 h, sales speed per
+product (fill drop per hour, restocks left out and listed), a store-wide hourly profile, and planogram adherence per gondola.
 
 Usage: ``python -m sensei.dashboard --details details.json --data data/raw --out dashboard/ [--zip]
 [--detections cache/colab/sensei_colab_features.zip] [--detect]``
@@ -22,6 +26,7 @@ import json
 import logging
 import shutil
 import zipfile
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable
 
@@ -48,6 +53,25 @@ DET_NMS_IOU = 0.40           # class-agnostic overlap limit
 DET_CONTAIN = 0.80           # a box mostly inside a better one is dropped
 DET_MAX_AREA = 0.03          # share of the frame: larger boxes cover a whole shelf, not a product
 DET_NON_PRODUCT = frozenset({"a person's hand", "a shopping basket"})   # distractor queries
+# item counts (same OWLv2 boxes, tuned for recall instead of a clean picture)
+COUNT_MIN_SCORE = 0.20       # lower than DET_MIN_SCORE: faint boxes on real items still count, drawing is capped and strict
+COUNT_NMS_IOU = 0.50         # class-agnostic, inside one area
+COUNT_MAX_SHARE = 0.40       # a box covering more than 40% of its area is a shelf or crate, not one item
+COUNT_MIN_SHARE = 0.002      # specks (< 0.2% of the area) are noise
+COUNT_MIN_SCORE_EMPTY = 0.35  # in an area the stock model calls empty, faint boxes are crate patterns and labels, not produce
+
+# insights (restock forecast, sales speed, planogram adherence)
+SOON_S = 7200                # "running out soon": forecast empty within 2 h
+RESTOCK_JUMP = 0.30          # fill rising by more than this between two pictures = the shelf was topped up
+SELL_NOISE = 0.03            # fill drops smaller than this are picture-to-picture noise, not sales
+MAX_GAP_S = 4 * 3600         # pictures further apart than this say nothing about "per hour"
+PEAK_WINDOW_H = 2            # "sells fastest 12:00-14:00"
+PEAK_MIN_DROP = 1.0          # a product needs this much total fill drop (in full-shelf units) before a peak is claimed
+PEAK_MIN_HOURS = 4.0         # observed area-hours inside the window
+PEAK_RATIO = 1.8             # the window must be this much faster than the product's all-day average ...
+PEAK_MIN_SHARE = 0.30        # ... and hold at least this share of its whole day's drop
+STORE_MIN_HOURS = 20.0       # same idea for the whole store (many areas, so a lighter bar)
+STORE_PEAK_RATIO = 1.4
 OWL_MODEL = "google/owlv2-base-patch16-ensemble"
 OWL_QUERIES = (
     "bananas", "oranges", "net bags of oranges", "lemons", "limes", "clementines", "apples", "green apples",
@@ -283,6 +307,73 @@ def select_detections(boxes: list, quads: list, frame_shape: tuple[int, int], *,
     return keep
 
 
+def _box_iou(a: list, b: list) -> float:
+    inter = max(0.0, min(a[2], b[2]) - max(a[0], b[0])) * max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
+    if inter <= 0:
+        return 0.0
+    return inter / ((a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - inter)
+
+
+def count_units(boxes: list, quads: dict[str, Any], **kw: Any) -> dict[str, int]:
+    """Visible units per planogram area from product boxes: ``{area_id: n}`` (0 for an area without boxes).
+    See ``counted_boxes`` for the rules and the keyword arguments.
+    """
+    return {aid: len(items) for aid, items in counted_boxes(boxes, quads, **kw).items()}
+
+
+def counted_boxes(boxes: list, quads: dict[str, Any], *, min_score: float = COUNT_MIN_SCORE,
+                  nms_iou: float = COUNT_NMS_IOU, max_share: float = COUNT_MAX_SHARE,
+                  min_share: float = COUNT_MIN_SHARE, min_scores: dict[str, float] | None = None) -> dict[str, list[list]]:
+    """The boxes behind ``count_units``: ``{area_id: [[x0, y0, x1, y1, label, score], ...]}``, best score first.
+
+    A box counts for the area whose quad holds its centre (the deepest one if quads overlap) when its score
+    is >= ``min_score`` (lower than the drawing threshold: counting wants recall, the 60-box drawing cap
+    does not apply), it is not a distractor query (hand, basket), not bigger than ``max_share`` of the area
+    (a box around the whole shelf is not one item) and not a speck (< ``min_share`` of the area). Inside
+    one area the boxes are thinned class-agnostically by overlap (NMS, IoU > ``nms_iou``), best score first.
+    ``min_scores`` overrides ``min_score`` for single areas (area id -> threshold). ``quads`` maps area id
+    -> 4 corners in the same pixels as the boxes. It is an estimate of what is
+    visible, never a stock-room count: stacked or hidden items are missed.
+    """
+    import cv2  # noqa: PLC0415
+
+    polys = {}
+    for aid, q in quads.items():
+        if q is not None:
+            p = np.asarray(q, dtype=np.float32).reshape(-1, 1, 2)
+            polys[str(aid)] = (p, abs(float(cv2.contourArea(p))))
+    cand: dict[str, list[list]] = {aid: [] for aid in polys}
+    floor = min([min_score, *(min_scores or {}).values()])
+    for b in boxes or []:
+        try:
+            x0, y0, x1, y1, label, score = float(b[0]), float(b[1]), float(b[2]), float(b[3]), str(b[4]), float(b[5])
+        except (TypeError, ValueError, IndexError):
+            continue
+        x0, x1, y0, y1 = min(x0, x1), max(x0, x1), min(y0, y1), max(y0, y1)
+        if score < floor or label in DET_NON_PRODUCT or (x1 - x0) < 2 or (y1 - y0) < 2:
+            continue
+        c = ((x0 + x1) / 2.0, (y0 + y1) / 2.0)
+        best, depth = None, -1.0
+        for aid, (p, _) in polys.items():
+            dist = cv2.pointPolygonTest(p, c, True)       # > 0 inside, deeper = larger
+            if dist >= 0 and (best is None or dist > depth):
+                best, depth = aid, dist
+        if best is None:
+            continue
+        share = (x1 - x0) * (y1 - y0) / max(polys[best][1], 1.0)
+        if score >= (min_scores or {}).get(best, min_score) and min_share <= share <= max_share:
+            cand[best].append([x0, y0, x1, y1, label, score])
+    out: dict[str, list[list]] = {}
+    for aid, items in cand.items():
+        items.sort(key=lambda b: -b[5])
+        keep: list[list] = []
+        for b in items:
+            if all(_box_iou(b, k) <= nms_iou for k in keep):
+                keep.append(b)
+        out[aid] = keep
+    return out
+
+
 def make_owl_detector(queries: list[str] | tuple[str, ...] = OWL_QUERIES, device: str | None = None,
                       model_name: str = OWL_MODEL) -> Callable[[np.ndarray], list]:
     """Return ``run(rgb) -> [[x0, y0, x1, y1, label, score], ...]`` backed by a local OWLv2 (free, CPU works).
@@ -337,6 +428,133 @@ def _timelines(details: dict, rows: list[dict]) -> dict[str, list[list]]:
         out.setdefault(str(r["area_id"]), {}).setdefault(
             ts, [ts, round(float(r["fill"]), 3), str(r.get("stock_level", "full"))])
     return {a: [pts[t] for t in sorted(pts)] for a, pts in out.items()}
+
+
+def _lisbon_offset_h(ts: float) -> int:
+    """UTC offset of Europe/Lisbon in hours at ``ts`` (EU summer time rule: +1 h from the last Sunday of March
+    01:00 UTC to the last Sunday of October 01:00 UTC). Written out because Windows has no tz database."""
+    y = datetime.fromtimestamp(ts, timezone.utc).year
+
+    def last_sunday(month: int) -> float:
+        d = datetime(y, month, 31, 1, tzinfo=timezone.utc)
+        return (d - timedelta(days=(d.weekday() + 1) % 7)).timestamp()
+
+    return 1 if last_sunday(3) <= ts < last_sunday(10) else 0
+
+
+def _local_hour(ts: float) -> float:
+    """Hours since local midnight (Europe/Lisbon) of a unix time, as a float."""
+    return ((ts + 3600 * _lisbon_offset_h(ts)) % 86400) / 3600.0
+
+
+def compute_insights(areas: list[dict], now_ts: dict[str, int] | None = None) -> dict:
+    """Staff insights from the dashboard area records (``tl`` timeline, ``fc``, ``status``, ``pid``).
+
+    * ``soon``: areas forecast to run empty within 2 h (low or wrong-product, like the "Do now" forecast; an
+      area the model calls full or empty gets no forecast), soonest first: ``{id, fc, at}``
+      (``at`` = forecast time of emptiness, ``now_ts[cam]`` + ``fc``).
+    * ``sales``: per product ``{pid, rate, areas, hours, restocks, peak}``: ``rate`` = average fill drop per
+      hour (share of a full shelf lost per area and hour) between consecutive pictures, restocks (fill
+      jumping up by more than 0.3) left out and listed as ``[ts, area_id]``; ``peak`` = ``[h0, h1, rate, drop]``
+      of the fastest 2-hour window of the day when the data supports one, else ``None``. Wrong-product
+      areas are skipped (their fill is not this product's).
+    * ``hourly`` / ``store_peak``: the same drop rate for all products together by local clock hour
+      (``[hour, rate]``) and its fastest 2-hour window ``[h0, h1, rate]`` when clearly above the day average.
+    * ``adherence``: ``{ok, n, cams: [{id, ok, n}]}``, areas holding the planned product now.
+    """
+    now_ts = now_ts or {}
+    soon = []
+    for a in areas:
+        fc = a.get("fc")
+        if fc is not None and 0 < fc < SOON_S and a["status"] in ("low", "wrong"):    # same rule as the "Do now" forecast
+            soon.append({"id": a["id"], "fc": int(fc), "at": int(now_ts.get(a["cam"], 0)) + int(fc)})
+    soon.sort(key=lambda x: (x["fc"], x["id"]))
+
+    prod: dict[str, dict] = {}
+    store: dict[int, list[float]] = {}                    # clock hour -> [fill drop, observed area-hours], all products
+    for a in areas:
+        if a["status"] == "wrong":
+            continue
+        pts = a.get("tl") or []
+        p = prod.setdefault(a["pid"], {"pid": a["pid"], "areas": 0, "drop": 0.0, "hours": 0.0, "restocks": [],
+                                       "win": {}})
+        p["areas"] += 1
+        for (t0, f0, _), (t1, f1, _) in zip(pts, pts[1:]):
+            dt = t1 - t0
+            if dt < 300 or dt > MAX_GAP_S:
+                continue
+            delta = f1 - f0
+            if delta > RESTOCK_JUMP:
+                p["restocks"].append([int(t1), a["id"]])
+                continue
+            hrs = dt / 3600.0
+            drop = -delta if delta < -SELL_NOISE else 0.0
+            p["hours"] += hrs
+            p["drop"] += drop
+            # spread the interval over the clock hours it covers (local time), for the "fastest window" hint
+            h0 = _local_hour(t0)
+            for k in range(int(h0), int(h0 + hrs) + 1):
+                ov = max(0.0, min(h0 + hrs, k + 1) - max(h0, k))
+                if ov > 0:
+                    w = p["win"].setdefault(k, [0.0, 0.0])      # [drop, hours] inside clock hour k (may pass 24)
+                    w[0] += drop * ov / hrs
+                    w[1] += ov
+                    sw = store.setdefault(k, [0.0, 0.0])
+                    sw[0] += drop * ov / hrs
+                    sw[1] += ov
+    sales = []
+    for p in prod.values():
+        if p["hours"] < 1.0:
+            continue
+        rate = p["drop"] / p["hours"]
+        peak = None
+        best = None
+        for k in sorted(p["win"]):
+            win = [p["win"].get(k + j, [0.0, 0.0]) for j in range(PEAK_WINDOW_H)]
+            d, h = sum(w[0] for w in win), sum(w[1] for w in win)
+            if h >= PEAK_MIN_HOURS and min(w[1] for w in win) >= 1.0 and (best is None or d / h > best[2]):
+                best = (k, d, d / h, h)
+        if (best and p["drop"] >= PEAK_MIN_DROP and best[2] >= PEAK_RATIO * rate
+                and best[1] >= PEAK_MIN_SHARE * p["drop"]):
+            peak = [best[0] % 24, (best[0] + PEAK_WINDOW_H) % 24, round(best[2], 3), round(best[1], 2)]
+        sales.append({"pid": p["pid"], "rate": round(rate, 4), "areas": p["areas"], "hours": round(p["hours"], 1),
+                      "restocks": sorted(p["restocks"]), "peak": peak})
+    sales.sort(key=lambda x: (-x["rate"], x["pid"]))
+
+    hourly = [[k % 24, round(v[0] / v[1], 4)] for k, v in sorted(store.items()) if v[1] >= 6.0]
+    tot_d, tot_h = sum(v[0] for v in store.values()), sum(v[1] for v in store.values())
+    store_peak = None
+    best = None
+    for k in sorted(store):
+        win = [store.get(k + j, [0.0, 0.0]) for j in range(PEAK_WINDOW_H)]
+        d, h = sum(w[0] for w in win), sum(w[1] for w in win)
+        if h >= STORE_MIN_HOURS and min(w[1] for w in win) >= 3.0 and (best is None or d / h > best[1]):
+            best = (k, d / h)
+    if best and tot_h and best[1] >= STORE_PEAK_RATIO * (tot_d / tot_h):
+        store_peak = [best[0] % 24, (best[0] + PEAK_WINDOW_H) % 24, round(best[1], 4)]
+
+    cams: dict[str, list[int]] = {}
+    for a in areas:
+        c = cams.setdefault(a["cam"], [0, 0])
+        c[1] += 1
+        c[0] += 0 if a["status"] == "wrong" else 1
+    adherence = {"ok": sum(c[0] for c in cams.values()), "n": sum(c[1] for c in cams.values()),
+                 "cams": [{"id": c, "ok": v[0], "n": v[1]} for c, v in sorted(cams.items(), key=lambda kv: (len(kv[0]), kv[0]))]}
+    return {"soon": soon, "sales": sales, "hourly": hourly, "store_peak": store_peak, "adherence": adherence}
+
+
+def product_totals(areas: list[dict]) -> dict[str, dict]:
+    """Visible units added up per product (the brief: count per area, then add up per product):
+    ``{pid: {"n": units, "k": areas counted}}``. Wrong-product areas are left out (their units are another
+    product) and so are areas without a count; products with no counted area are absent."""
+    out: dict[str, dict] = {}
+    for a in areas:
+        if a.get("n") is None or a["status"] == "wrong":
+            continue
+        t = out.setdefault(a["pid"], {"n": 0, "k": 0})
+        t["n"] += int(a["n"])
+        t["k"] += 1
+    return out
 
 
 def _frame_stem(cam: str, ts: int, image_name: str) -> str:
@@ -415,12 +633,12 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
         else:
             log.warning("dashboard: image %s of camera %s not found under %s", image_name, cam, data_root)
         scale = 1.0
+        boxes = det_by_frame.get((cam, Path(image_name).stem))
         if rgb is not None:
             entry["oh"], entry["ow"] = rgb.shape[:2]
             entry["w"], entry["h"] = _save_frame(rgb, out / "img" / "frames" / f"{stem}.jpg", max_w, quality)
             entry["frame"] = f"img/frames/{stem}.jpg"
             scale = entry["w"] / entry["ow"]
-            boxes = det_by_frame.get((cam, Path(image_name).stem))
             if boxes is None and detect:
                 if detector is None:
                     detector = _try_owl_detector(dets["queries"])
@@ -437,6 +655,12 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
                     entry["det"] = [[round(b[0] * scale, 1), round(b[1] * scale, 1), round(b[2] * scale, 1),
                                      round(b[3] * scale, 1), det_labels.index(b[4]), round(b[5], 3)] for b in sel]
         cameras.append(entry)
+        counts_by_area: dict[str, int] | None = None
+        if boxes is not None:     # item counts: every box of the frame, per area (see count_units)
+            counts_by_area = count_units(
+                boxes, {str(r["area_id"]): r.get("quad") for r in cam_rows},
+                min_scores={str(r["area_id"]): COUNT_MIN_SCORE_EMPTY for r in cam_rows
+                            if r.get("stock_level") == "empty"})
 
         for r in sorted(cam_rows, key=lambda r: _natural(str(r["area_id"]))):
             status = _status(r)
@@ -457,6 +681,8 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
                  "quad": ([[round(float(x) * scale, 1), round(float(y) * scale, 1)] for x, y in quad]
                           if quad is not None and rgb is not None else None),
                  "crop": crop, "tl": timelines.get(area_id, [])}
+            if counts_by_area is not None and area_id in counts_by_area:
+                a["n"] = counts_by_area[area_id]
             if r.get("likely_product_id") is not None:
                 a["lpid"] = str(r["likely_product_id"])
                 a["home"] = [x for x in product_areas.get(a["lpid"], []) if x != area_id][:3]
@@ -466,6 +692,8 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
         cameras.append({"id": cam, "image": None, "ts": unreadable[cam], "frame": None, "w": 0, "h": 0,
                         "ow": 0, "oh": 0, "unreadable": True})
     counts = {s: sum(1 for a in areas if a["status"] == s) for s in STATUS_ORDER}
+    insights = compute_insights(areas, {c["id"]: c["ts"] for c in cameras if not c.get("unreadable")})
+    insights["totals"] = product_totals(areas)
     payload = {
         "version": 1,
         "section": d.get("section", ""),
@@ -478,6 +706,7 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
         "cameras": cameras,
         "det_labels": det_labels,
         "areas": areas,
+        "insights": insights,
     }
     text = "window.SHELF_DATA = " + json.dumps(payload, ensure_ascii=True, separators=(",", ":")) + ";\n"
     (out / "data.js").write_text(text, encoding="utf-8")

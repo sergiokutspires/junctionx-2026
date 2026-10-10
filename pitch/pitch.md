@@ -1,72 +1,72 @@
 # Sensei shelf monitor: 3-minute pitch
 
-Deck: `pitch/slides.html` (arrow keys to move, F for fullscreen). One slide per block below. Target
-pace is about 155 words a minute, which ends at about 2:55, leaving a few seconds spare; the whole script is about 450 words. Fill in the team name and
-names on slide 9 before presenting (the yellow boxes).
+Deck: `pitch/slides.html` (arrow keys to move, F for fullscreen, number keys jump, 0 = last slide). One slide per
+block below, 10 slides. Target pace is about 155 words a minute: reading everything (about 450 words) ends at
+about 2:54, and cutting the marked sentences brings it to about 2:45. Fill in the team name and names on slide 10 before
+presenting (the yellow boxes).
 
-If you run long, cut the sentences marked *(cut if short)*. If you run short, add the 6215 story
-from slide 3 to the demo.
+If you run long, cut the sentences marked *(cut if short)*. If you run short, add the 6215 story from slide 3
+to the demo.
 
 ---
 
-## 1. Title (0:00 - 0:13)
+## 1. Title (0:00 - 0:12)
 
-Hello, we are **[team name]**, and this is the **Sensei shelf monitor**. In one line: it tells store
-staff which shelf to fix first, from ceiling-camera pictures alone. No labels, and no new hardware.
+Hello, we are **[team name]**, and this is the **Sensei shelf monitor**. It tells store staff which shelf
+to fix first, from ceiling-camera pictures alone. No labels, no new hardware.
 
-## 2. The problem (0:13 - 0:35)
+## 2. The problem (0:12 - 0:30)
 
-Fruit and veg goes wrong fast. An **empty gondola** is lost sales. An **overstocked** one is waste.
-The **wrong product in the wrong place** confuses customers and gives wrong prices. Staff walk the
-store to check, and nobody can label thousands of cameras. So the system must learn to see the shelf
-without being told what is right.
+Fresh produce goes wrong fast. An **empty gondola** is lost sales, an **overstocked** one is waste, and the
+**wrong product** in the wrong place means wrong prices. Nobody can label thousands of cameras, so the system
+must learn to see the shelf without being told what is right.
 
-## 3. What we found (0:35 - 1:01)
+## 3. What we found (0:30 - 0:52)
 
-This is camera 6215 at 6:14 in the morning, before the store is busy. Areas 3 and 5 are planned
-for banana and hold oranges; the banana trays beside them are empty. In our labelled sample, 42 of
-756 areas show the wrong product. So the planogram is the question, not the answer. And empty trays
-look the same under every product: the container repeats, the product changes.
+This is camera 6215 at 6:14 in the morning. Areas 3 and 5 are planned for banana and hold oranges; the banana
+trays beside them are empty. In our labelled sample, 42 of 756 areas show the wrong product, so the planogram
+is the question, not the answer. *(cut if short: And empty trays look the same under every product.)*
 
-## 4. How it works (1:01 - 1:30)
+## 4. How it works (0:52 - 1:20)
 
-We warp each planogram area to a square crop. For **stock**, we cluster DINOv2 patches: clusters
-found under every product are surface, clusters tied to a few fruits are product, and CLIP names
-them. Fill is the share of product. For **compliance**, CLIP recognises the product at base-fruit
-level: banana versus orange versus apple. Then we decide for the score: too high costs three points,
-too low costs two, so we lean low when unsure. *(cut if short: OWLv2 draws the product boxes you
-will see in the app.)*
+We warp each planogram area to a square crop. For **stock**, we cluster DINOv2 patches: clusters found under
+every product are surface, clusters tied to a few fruits are product, and CLIP names them. Fill is the share of
+product. For **compliance**, CLIP recognises the base fruit. Then we decide for the score: too high costs three
+points, too low two, so we lean low when unsure. *(cut if short: OWLv2 boxes feed the counts.)*
 
-## 5. Honest calibration (1:30 - 2:06)
+## 5. Honest calibration (1:20 - 1:56)
 
-The pipeline needs no labels, but we needed a ruler. So we built a **756-area answer key** with
-independent AI labellers: three votes per area, 94% unanimous. We used it to measure, and to
-calibrate small heads on top. On held-out late frames we score **1.19 points per area**, 1.41 on the
-last frame, against **0.70** for always answering "compliant" and "full". On the hidden set that
-projects to **about 345 to 400 out of 578**; the brief's example is 320. The key is AI-labelled, so
-it is an estimate: the hidden set decides.
+The pipeline needs no labels, but we needed a ruler: a **756-area answer key** from independent AI labellers,
+three votes per area. We use it to measure, and to calibrate small heads on top. Held out, we score **1.19
+points per area** on cameras it never saw, **1.21** on late frames, **1.41** on the last frame, against
+**0.70** for always answering compliant and full. On the hidden set that projects to **about 345 to 400 out
+of 578**. The key is AI-labelled, so it is an estimate: the hidden set decides.
 
-## 6. The staff app (2:06 - 2:21)
+## 6. The staff app (1:56 - 2:09)
 
-The **Do now** list puts wrong product and empty first, then low. Tap an area for the photo, the
-outlined shelf and one clear action, like "move it back". It works on a phone, in English or
-Portuguese. *(Live demo here if you have the time; see `demo_script.md`.)*
+The **Do now** list puts wrong product and empty first. Tap an area for the photo, the outlined shelf, one
+clear action and an estimate of the visible units. Phone or desktop, English or Portuguese. *(Live demo here if
+you have the time; see `demo_script.md`.)*
 
-## 7. Runs anywhere (2:21 - 2:37)
+## 7. Counts and Insights (2:09 - 2:26)
 
-It runs anywhere. Free models, no keys: **35 seconds for 14 frames on a laptop CPU**, or a free
-Colab GPU. One command. In a new store you point it at the camera pictures and switch it on the same
-day.
+The same pictures give the manager's view. **Running out soon**: shelves forecast to be empty within two
+hours. **Sales speed**: how fast each product sells, with restocks spotted. **Planogram adherence**: which
+gondolas hold the wrong product. All estimates, from one day of pictures.
 
-## 8. Next steps (2:37 - 2:47)
+## 8. One command (2:26 - 2:42)
 
-The same pictures can give **restock forecasting**, less waste, planogram audits with no manual
-walk, layout analytics, and later other loose products like bakery and flowers.
+On validation day it is one command: it unpacks the pictures, predicts every area, checks its own file and
+builds the app. Free models, no keys: **26 seconds for 14 frames** on a laptop CPU. *(cut if short: A new store
+switches on the same day.)*
 
-## 9. Thank you (2:47 - 2:54)
+## 9. Next steps (2:42 - 2:48)
 
-Thank you. No labels, no new hardware, and staff know what to do first. We would love your
-questions.
+Next: waste tracking, layout analytics, and other loose products like bakery and flowers.
+
+## 10. Thank you (2:48 - 2:54)
+
+Thank you. No labels, no new hardware, and staff know what to do first. Questions welcome.
 
 ---
 
@@ -76,12 +76,17 @@ questions.
 |---|---|---|
 | Answer key | 756 areas, 3 votes, 94% unanimous | `data/labels/teacher_labels.json` |
 | Wrong product in the key | 42 of 756 areas | count of `planogram_compliant: false` in that file |
-| Held-out, late frames | 1.19 points per area (max 2) | `calibrate` late-frame fold |
-| Held-out, last frame | 1.41 points per area | same |
-| Held-out, whole camera unseen | 1.15 points per area | leave-one-camera-out, 1.147 |
-| Baseline | 0.70 points per area | always "compliant" and "full" |
+| Held-out, cameras unseen | 1.19 points per area (max 2) | leave-one-camera-out, `models/real_v1_cal/calibration_cv.json` |
+| Held-out, late frames | 1.21 points per area | last two labelled frames of every camera, same file |
+| Held-out, last frame | 1.41 points per area | last labelled frame of every camera (`calibrate` with `holdout_frames=1`, 152 areas, 1.408) |
+| Baseline | 0.70 points per area | always "compliant" and "full", all 756 areas; it scores 0.36 and 0.06 on the last two frames and the last frame |
 | Hidden set | 289 areas, max 578, brief example 320 | the brief |
-| Projection | about 345 to 400 | roughly 1.19 and 1.41 times 289 |
-| Speed | 35 s for 14 frames, laptop CPU | measured dry run |
+| Projection | about 345 to 400 | roughly 1.19 to 1.41 times 289, rounded down |
+| Speed | 26 s for 14 frames (152 areas) on a laptop CPU; product boxes add about a minute (about 4 s per camera) | measured `submit` dry runs |
+| Expected hidden input | 26 images, 289 areas | the brief; `submit` only warns on a different count |
+
+Insights and counts on the dry-run pictures (do not quote the figures as findings: they are model estimates
+from one day, shown on screen as such): "Running out soon" lists areas forecast empty within 2 hours; a count
+reads "about N visible units", and for bunches such as bananas a unit is a bunch.
 
 Do not say any other number out loud. If asked something we have not measured, say so.

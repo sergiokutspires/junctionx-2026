@@ -125,6 +125,14 @@ def cmd_run(args) -> None:
     print(f"dashboard: {index}")
 
 
+def cmd_submit(args) -> None:
+    from .submit import run
+    code = run(args.images, args.model, args.out, detect=not args.no_detect, detections=args.detections,
+               device=args.device)
+    if code:
+        sys.exit(code)
+
+
 def _fit_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--data", required=True, help="image root (any layout)")
     p.add_argument("--planogram", required=True)
@@ -200,6 +208,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--labels", required=True, nargs="+")
     p.add_argument("--no-cv", action="store_true")
     p.set_defaults(func=cmd_calibrate)
+
+    p = sub.add_parser("submit", help="validation day: images (folder/zip) -> checked predictions.json + staff app")
+    p.add_argument("--images", required=True, nargs="+", help="folder, .zip, or image files (flags go after the paths)")
+    p.add_argument("--model", default="models/real_v1_cal")
+    p.add_argument("--out", default="submission")
+    p.add_argument("--no-detect", action="store_true", help="skip the local OWLv2 product boxes in the staff app")
+    p.add_argument("--detections", default=None, help="cached OWLv2 boxes (.zip/.json) to reuse (optional)")
+    p.add_argument("--device", help="auto | cpu | cuda")
+    p.set_defaults(func=cmd_submit)
 
     p = sub.add_parser("run", help="fit + predict + dashboard")
     _fit_args(p)

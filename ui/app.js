@@ -54,6 +54,26 @@
       spark_alt: 'Stock during the day: {a}',
       det_show: 'Show detections', det_n: '{n} products found by the camera model. Hover or tap a box for its name.',
       det_one: '{p} · {c} sure', det_alt: 'Product boxes',
+      cnt_u: '≈ {n} visible units', cnt_u1: '≈ 1 visible unit', cnt_p: '≈ {n} visible packs', cnt_p1: '≈ 1 visible pack',
+      cnt_in: 'in {a}', cnt_est: 'estimate', cnt_lbl_u: 'Visible units (estimate)', cnt_lbl_p: 'Visible packs (estimate)',
+      cnt_note: 'Counted from the product boxes the camera model finds. Items that are stacked or hidden are not counted.',
+      foot_cnt: 'Unit counts are estimates of what is visible, not of what is in the store room.',
+      tab_insights: 'Insights', ins_title: 'Insights', ins_none: 'Not enough data for insights.',
+      ins_sub: 'From {n} pictures taken between {a} and {b}. All numbers are estimates from the camera model.',
+      ins_hints: 'Highlights',
+      hint_store: 'Across the store, stock goes down fastest {a} to {b}.',
+      hint_peak: '{p} sells fastest {a} to {b}.',
+      hint_restock: '{p} was topped up {n} times during the day.',
+      hint_slow: '{n} products barely moved all day. Check they are still fresh.', hint_slow1: '1 product barely moved all day. Check it is still fresh.',
+      soon_title: 'Running out soon', soon_x: 'Areas forecast to be empty within 2 hours. Restock these first.',
+      soon_none: 'Nothing is forecast to run empty in the next 2 hours.', soon_in: 'in ~{t}', soon_at: 'around {t}',
+      sales_title: 'Sales speed', sales_x: 'Share of a full shelf that leaves per hour, from one picture to the next. Jumps up are restocks, not sales.',
+      sales_rate: '{r}% of a shelf per hour', sales_lt1: 'under 1% of a shelf per hour', sales_zero: 'no drop seen',
+      sales_tops: 'Topped up at {t}', more_n: 'and {n} more',
+      sales_more: 'Show {n} more products', hourly_title: 'Whole store, by hour', hourly_alt: 'Stock lost per hour of the day: {a}',
+      hourly_x: 'Share of a shelf lost per area and hour',
+      adh_title: 'Planogram adherence', adh_x: 'Areas that hold the planned product right now, per gondola.',
+      adh_rest: 'Show the {n} gondolas that are all right', adh_all_n: 'Show all {n} gondolas', adh_overall: '{p}% of areas hold the right product', adh_of: '{ok} of {n} areas', adh_fix: '{n} to move back', adh_all: 'All right',
     },
     pt: {
       skip: 'Saltar para o conteúdo', title: 'Controlo de prateleiras', tab_tasks: 'Fazer agora', tab_gondola: 'Gôndolas', tab_products: 'Produtos',
@@ -87,6 +107,26 @@
       spark_alt: 'Stock ao longo do dia: {a}',
       det_show: 'Mostrar deteções', det_n: '{n} produtos encontrados pelo modelo. Passe o rato ou toque numa caixa para ver o nome.',
       det_one: '{p} · {c} de certeza', det_alt: 'Caixas de produtos',
+      cnt_u: '≈ {n} unidades visíveis', cnt_u1: '≈ 1 unidade visível', cnt_p: '≈ {n} embalagens visíveis', cnt_p1: '≈ 1 embalagem visível',
+      cnt_in: 'em {a}', cnt_est: 'estimativa', cnt_lbl_u: 'Unidades visíveis (estimativa)', cnt_lbl_p: 'Embalagens visíveis (estimativa)',
+      cnt_note: 'Contado a partir das caixas de produtos que o modelo encontra. Artigos empilhados ou escondidos não são contados.',
+      foot_cnt: 'As contagens são estimativas do que se vê, não do que está no armazém.',
+      tab_insights: 'Análise', ins_title: 'Análise', ins_none: 'Dados insuficientes para a análise.',
+      ins_sub: 'Com {n} imagens tiradas entre as {a} e as {b}. Todos os valores são estimativas do modelo.',
+      ins_hints: 'Destaques',
+      hint_store: 'Em toda a loja, o stock desce mais depressa das {a} às {b}.',
+      hint_peak: '{p} vende mais depressa das {a} às {b}.',
+      hint_restock: 'Reposições de {p} durante o dia: {n}.',
+      hint_slow: '{n} produtos quase não mexeram durante o dia. Verifique se ainda estão frescos.', hint_slow1: '1 produto quase não mexeu durante o dia. Verifique se ainda está fresco.',
+      soon_title: 'A acabar em breve', soon_x: 'Zonas previstas ficarem vazias nas próximas 2 horas. Repor primeiro.',
+      soon_none: 'Nenhuma zona deverá ficar vazia nas próximas 2 horas.', soon_in: 'daqui a ~{t}', soon_at: 'por volta das {t}',
+      sales_title: 'Velocidade de vendas', sales_x: 'Parte de uma prateleira cheia que sai por hora, de uma imagem para a seguinte. Subidas são reposições, não vendas.',
+      sales_rate: '{r}% de uma prateleira por hora', sales_lt1: 'menos de 1% de uma prateleira por hora', sales_zero: 'sem descida',
+      sales_tops: 'Reposto às {t}', more_n: 'e mais {n}',
+      sales_more: 'Mostrar mais {n} produtos', hourly_title: 'Toda a loja, por hora', hourly_alt: 'Stock perdido por hora do dia: {a}',
+      hourly_x: 'Parte de uma prateleira perdida por zona e hora',
+      adh_title: 'Cumprimento do planograma', adh_x: 'Zonas com o produto planeado neste momento, por gôndola.',
+      adh_rest: 'Mostrar as {n} gôndolas que estão certas', adh_all_n: 'Mostrar as {n} gôndolas', adh_overall: '{p}% das zonas têm o produto certo', adh_of: '{ok} de {n} zonas', adh_fix: '{n} a devolver ao lugar', adh_all: 'Tudo certo',
     },
   };
 
@@ -116,12 +156,16 @@
   const LV_ICON = { empty: 'i-empty', half: 'i-low', full: 'i-full' };
   const LV_CLASS = { empty: 's-empty', half: 's-low', full: 's-ok' };
   const S_ICON = { empty: 'i-empty', low: 'i-low', wrong: 'i-wrong', ok: 'i-ok' };
-  const VIEWS = ['tasks', 'gondola', 'products'];
+  const VIEWS = ['tasks', 'gondola', 'products', 'insights'];
 
   const areas = D.areas;
   const areaById = Object.fromEntries(areas.map((a) => [a.id, a]));
   const camById = Object.fromEntries(D.cameras.map((c) => [c.id, c]));
   const detLabels = D.det_labels || [];
+  const INS = D.insights || {};
+  const hasCounts = areas.some((a) => a.n != null);        // item counts exist only when product boxes were available
+  const byPid = {};
+  areas.forEach((a) => { if (!byPid[a.pid]) byPid[a.pid] = a; });
   const hasDet = (c) => !!(c && c.frame && c.det && c.det.length);
   const detName = (i) => { const en = detLabels[i] || ''; return cap(st.lang === 'pt' ? (DET_PT[en] || en) : en); };
   const st = {
@@ -163,6 +207,12 @@
     return String(h).replace('.', st.lang === 'pt' ? ',' : '.') + ' h';
   }
   const pct = (x) => Math.round(x * 100) + '%';
+  const hh = (h) => String(h).padStart(2, '0') + ':00';
+  const areaWord = (k) => (k === 1 ? t('area1') : t('areas_n', { n: k }));
+  /* Item counts: "≈ 12 visible units" (loose produce) or "visible packs" (packaged). A wrong-product area is not a pack of the planned product. */
+  const isPack = (a) => a.loose === false && a.status !== 'wrong';
+  const unitsTxt = (n, pack) => t((pack ? 'cnt_p' : 'cnt_u') + (n === 1 ? '1' : ''), { n });
+  const areaUnits = (a) => (a.n == null ? '' : unitsTxt(a.n, isPack(a)));
 
   /* ------------------------------------------------------------------ names, labels */
   const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -249,6 +299,7 @@
     const bits = [`<span>${t('conf')}: <b>${t(confKey(a.conf))}</b></span>`];
     if (a.status === 'wrong' && a.level !== 'full') bits.push(`<span>${t('stock')}: <b>${t('lv_' + a.level)}</b></span>`);
     if (a.vis != null && a.vis < 0.7) bits.push(`<span>${t('partly')}</span>`);
+    if (a.n != null) bits.push(`<span title="${esc(t('cnt_est'))}"><b>${areaUnits(a)}</b></span>`);
     bits.push(`<span>${icon('i-clock')} ${t('seen_at', { t: fmtTime(camTs(a)) })}</span>`);
     const age = ageChip(camTs(a));
     if (age) bits.push(age);
@@ -386,6 +437,7 @@
     const rows = [[t('planned'), esc(nm(a).main)]];
     if (a.status === 'wrong' && seenName(a)) rows.push([t('seen_instead'), esc(seenName(a))]);
     rows.push([t('conf'), t(confKey(a.conf))]);
+    if (a.n != null) rows.push([t(isPack(a) ? 'cnt_lbl_p' : 'cnt_lbl_u'), `≈ ${a.n}`]);
     if (a.vis != null && a.vis < 0.95) rows.push([t('visible'), pct(a.vis)]);
     rows.push([t('snapshot_of'), fmtTime(camTs(a)) + (ageChip(camTs(a)) ? ` (${t('old', { t: dur(D.snapshot_ts - camTs(a)) })})` : '')]);
     rows.push([t('raw'), esc(a.raw)]);
@@ -395,6 +447,7 @@
       <p class="plain">${plainText(a)}</p>${homeHtml(a)}
       ${levelsHtml(a)}${fcTxt}${sparkHtml(a)}
       <dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+      ${a.n != null ? `<p class="note">${t('cnt_note')}</p>` : ''}
       ${a.status !== 'ok' ? `<label class="done"><input type="checkbox" data-act="done" data-key="${esc(key)}"${isDone ? ' checked' : ''}> ${t('mark_done')}</label>` : ''}`;
   }
   /* Product boxes: pointer-events are off on the boxes (area polygons stay tappable), so the box under the pointer is found by hand. */
@@ -481,7 +534,7 @@
       frame = `<div class="frame-wrap noframe">${t(cam.unreadable ? 'unreadable' : 'no_picture')}</div>`;
     }
     const legend = `<div class="legend" aria-label="${t('legend')}">${['wrong', 'empty', 'low', 'ok'].map((s) => `<span class="s-${s}">${icon(S_ICON[s])}${t('s_' + s)}</span>`).join('')}</div>`;
-    const list = camAreas.slice().sort(sortRoute).map((a) => `<li><button type="button" class="area-btn s-${a.status}${matches(a, true) ? '' : ' dim'}" data-act="area" data-id="${esc(a.id)}" aria-pressed="${a.id === st.sel}">${icon(S_ICON[a.status])}<b>${esc(a.num)} · ${esc(nm(a).main)}</b><small>${t('s_' + a.status)} · ${t('lv_' + a.level)}</small></button></li>`).join('');
+    const list = camAreas.slice().sort(sortRoute).map((a) => `<li><button type="button" class="area-btn s-${a.status}${matches(a, true) ? '' : ' dim'}" data-act="area" data-id="${esc(a.id)}" aria-pressed="${a.id === st.sel}">${icon(S_ICON[a.status])}<b>${esc(a.num)} · ${esc(nm(a).main)}</b><small>${t('s_' + a.status)} · ${t('lv_' + a.level)}${a.n != null ? ' · ' + areaUnits(a) : ''}</small></button></li>`).join('');
     el.innerHTML = `<div class="view-head"><h2>${t('tab_gondola')}</h2></div><div class="cam-chips" role="group" aria-label="${t('f_camera')}">${chips}</div>
       <div class="gv"><div class="frame-col">${frame}${legend}</div>
       <aside class="panel" id="panel" aria-live="polite">${panelHtml(sel)}</aside>
@@ -521,7 +574,10 @@
       const pills = g.areas.slice().sort(sortRoute).map((a) => `<a class="pill s-${a.status}" href="${hrefOf(a)}">${icon(S_ICON[a.status])}${esc(a.cam)} · ${esc(a.num)}</a>`).join('');
       const nmn = pair(g.en, g.pt);
       const els = g.elsewhere.length ? `<p class="home">${t('elsewhere')}: ${g.elsewhere.map((a) => `${esc(a.cam)} · ${esc(a.num)}`).join('; ')}</p>` : '';
+      const counted = g.areas.filter((a) => a.n != null && a.status !== 'wrong');
+      const units = counted.length ? `<p class="units"><b>${unitsTxt(counted.reduce((sum, a) => sum + a.n, 0), g.areas[0].loose === false)}</b> ${t('cnt_in', { a: areaWord(counted.length) })} <span class="muted">(${t('cnt_est')})</span></p>` : '';
       return `<article class="prod s-${g.worst}"><div class="prod-top"><h3 class="pname">${esc(nmn.main)}<small>${esc(nmn.sub)}</small></h3>${badge(g.worst)}</div>
+        ${units}
         <div class="stat-row"><span class="muted">${g.areas.length === 1 ? t('area1') : t('areas_n', { n: g.areas.length })}</span>${counts.map(([s, n]) => `<span class="badge s-${s}">${icon(S_ICON[s])}${n} ${t('s_' + s)}</span>`).join('')}</div>
         <div><div class="meta"><span>${t('avg_stock')}: <b>${pct(g.avg)}</b></span></div><div class="fillbar" aria-hidden="true"><i style="width:${pct(clamp(g.avg, 0.03, 1))}"></i></div></div>
         ${els}<div class="pill-row">${pills}</div></article>`;
@@ -529,6 +585,97 @@
     el.innerHTML = `<div class="view-head"><h2>${t('tab_products')} <span class="muted">· ${list.length}</span></h2>
       <div class="sortbar"><span class="lbl">${t('sort_by')}</span>${['attention', 'name', 'stock', 'areas'].map(sortBtn).join('')}</div></div>
       ${list.length ? `<div class="prod-grid">${cards}</div>` : `<div class="allgood"><h3>${t('no_products')}</h3></div>`}`;
+  }
+
+  /* ------------------------------------------------------------------ insights */
+  /* Everything here is computed in sensei/dashboard.py (compute_insights) from the day's timeline; this only draws it. */
+  const pname = (pid) => (byPid[pid] ? nm(byPid[pid]) : { main: pid, sub: '' });
+  function insHints() {
+    const out = []; const sales = INS.sales || [];
+    if (INS.store_peak) out.push(t('hint_store', { a: hh(INS.store_peak[0]), b: hh(INS.store_peak[1]) }));
+    sales.filter((s) => s.peak).sort((x, y) => y.peak[3] - x.peak[3]).slice(0, 3)
+      .forEach((s) => out.push(t('hint_peak', { p: esc(pname(s.pid).main), a: hh(s.peak[0]), b: hh(s.peak[1]) })));
+    const most = sales.filter((s) => s.restocks.length >= 3).sort((x, y) => y.restocks.length - x.restocks.length)[0];
+    if (most) out.push(t('hint_restock', { p: esc(pname(most.pid).main), n: most.restocks.length }));
+    const slow = sales.filter((s) => s.rate < 0.01 && s.hours >= 10 && !s.restocks.length).length;
+    if (slow) out.push(t(slow === 1 ? 'hint_slow1' : 'hint_slow', { n: slow }));
+    return out;
+  }
+  function soonHtml() {
+    const rows = (INS.soon || []).map((x) => ({ x, a: areaById[x.id] })).filter((r) => r.a);
+    const list = rows.map(({ x, a }) => {
+      const n = nm(a);
+      return `<li><a class="ins-row s-${a.status}" href="${hrefOf(a)}"><span class="ins-main"><b>${esc(n.main)}</b><small>${loc(a)} · ${t('s_' + a.status)}</small></span>
+        <span class="ins-val"><b>${t('soon_in', { t: dur(x.fc) })}</b><small>${t('soon_at', { t: fmtTime(x.at) })}</small></span></a></li>`;
+    }).join('');
+    return `<section class="ins-card c-soon" aria-labelledby="ins-soon"><h3 id="ins-soon">${icon('i-clock')}${t('soon_title')} <span class="count">${rows.length}</span></h3>
+      <p class="muted">${t(rows.length ? 'soon_x' : 'soon_none')}</p>${rows.length ? `<ul class="ins-list">${list}</ul>` : ''}</section>`;
+  }
+  function hourlyHtml() {
+    const hs = INS.hourly || [];
+    if (hs.length < 4) return '';
+    const W = 320; const H = 120; const L = 6; const R = 6; const Tp = 8; const B = 20;
+    const h0 = hs[0][0]; const h1 = hs[hs.length - 1][0]; const slots = h1 - h0 + 1; const bw = (W - L - R) / slots;
+    const max = Math.max(...hs.map((h) => h[1]), 0.01);
+    const sp = INS.store_peak;
+    const inPeak = (h) => sp && (h === sp[0] || h === (sp[0] + 1) % 24);
+    let g = `<line class="axis" x1="${L}" x2="${W - R}" y1="${H - B}" y2="${H - B}"/>`;
+    hs.forEach(([h, r]) => {
+      const x = L + (h - h0) * bw; const bh = Math.max(1.5, (r / max) * (H - B - Tp));
+      g += `<rect class="hbar${inPeak(h) ? ' peak' : ''}" x="${(x + bw * 0.12).toFixed(1)}" y="${(H - B - bh).toFixed(1)}" width="${(bw * 0.76).toFixed(1)}" height="${bh.toFixed(1)}" rx="2"><title>${hh(h)}: ${t('sales_rate', { r: Math.round(r * 100) })}</title></rect>`;
+      if (h % 2 === 0) g += `<text x="${(x + bw / 2).toFixed(1)}" y="${H - 5}" text-anchor="middle">${h}</text>`;
+    });
+    const alt = t('hourly_alt', { a: hs.map(([h, r]) => `${h}h ${Math.round(r * 100)}%`).join(', ') });
+    return `<div class="hourly"><h4>${t('hourly_title')}</h4><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(alt)}">${g}</svg><p class="muted small">${t('hourly_x')}</p></div>`;
+  }
+  function salesRow(s, max) {
+    const n = pname(s.pid);
+    const r = s.rate * 100;
+    const val = s.rate <= 0 ? t('sales_zero') : r < 1 ? t('sales_lt1') : t('sales_rate', { r: Math.round(r) });
+    const times = Array.from(new Set(s.restocks.map((x) => fmtTime(x[0])))).sort();
+    const tops = times.length ? `<small>${icon('i-up')}${t('sales_tops', { t: times.slice(0, 3).join(', ') })}${times.length > 3 ? ' ' + t('more_n', { n: times.length - 3 }) : ''}</small>` : '';
+    return `<li class="bar-row"><div class="bar-top"><b>${esc(n.main)}</b><span>${val}</span></div>
+      <div class="bar" aria-hidden="true"><i style="width:${s.rate > 0 ? Math.max(3, (s.rate / max) * 100).toFixed(1) : 0}%"></i></div>${tops}</li>`;
+  }
+  function salesHtml() {
+    const sales = INS.sales || [];
+    if (!sales.length) return '';
+    const max = Math.max(...sales.map((s) => s.rate), 0.01); const TOP = 8;
+    const first = sales.slice(0, TOP).map((s) => salesRow(s, max)).join('');
+    const rest = sales.slice(TOP);
+    const more = rest.length ? `<details class="more"><summary>${t('sales_more', { n: rest.length })}</summary><ul class="bar-list">${rest.map((s) => salesRow(s, max)).join('')}</ul></details>` : '';
+    return `<section class="ins-card c-sales" aria-labelledby="ins-sales"><h3 id="ins-sales">${icon('i-chart')}${t('sales_title')}</h3><p class="muted">${t('sales_x')}</p>
+      ${hourlyHtml()}<ul class="bar-list">${first}</ul>${more}</section>`;
+  }
+  function adherenceHtml() {
+    const ad = INS.adherence;
+    if (!ad || !ad.n) return '';
+    const share = ad.ok / ad.n;
+    const row = (c) => {
+      const bad = c.n - c.ok;
+      return `<li><a class="ins-row ${bad ? 's-wrong' : 's-ok'}" href="#/gondola/${encodeURIComponent(c.id)}"><span class="ins-main"><b>${t('camera')} ${esc(c.id)}</b>
+        <small>${t('adh_of', { ok: c.ok, n: c.n })}${bad ? ' · ' + t('adh_fix', { n: bad }) : ''}</small></span>
+        <span class="ins-val"><b>${pct(c.ok / c.n)}</b></span><span class="bar full" aria-hidden="true"><i style="width:${pct(c.ok / c.n)}"></i></span></a></li>`;
+    };
+    const byShare = (x, y) => (x.ok / x.n - y.ok / y.n) || (x.id < y.id ? -1 : 1);
+    const off = ad.cams.filter((c) => c.ok < c.n).sort(byShare);          // gondolas with something to move: always visible
+    const fine = ad.cams.filter((c) => c.ok >= c.n).sort(byShare);        // the rest folds away, so the page stays short
+    const rows = off.map(row).join('')
+      + (fine.length ? `<li><details class="more"><summary>${t(off.length ? 'adh_rest' : 'adh_all_n', { n: fine.length })}</summary><ul class="ins-list">${fine.map(row).join('')}</ul></details></li>` : '');
+    return `<section class="ins-card c-adh" aria-labelledby="ins-adh"><h3 id="ins-adh">${icon('i-ok')}${t('adh_title')}</h3><p class="muted">${t('adh_x')}</p>
+      <p class="big"><b>${t('adh_overall', { p: Math.round(share * 100) })}</b> <span class="muted">(${t('adh_of', { ok: ad.ok, n: ad.n })})</span></p>
+      <div class="bar" aria-hidden="true"><i style="width:${pct(share)}"></i></div><ul class="ins-list">${rows}</ul></section>`;
+  }
+  function renderInsights() {
+    const el = $('#view-insights');
+    if (!INS.adherence && !(INS.sales || []).length) { el.innerHTML = `<div class="view-head"><h2>${t('ins_title')}</h2></div><p class="muted">${t('ins_none')}</p>`; return; }
+    const stamps = new Set(); areas.forEach((a) => (a.tl || []).forEach((p) => stamps.add(p[0])));
+    const lo = Math.min(...stamps); const hi = Math.max(...stamps);
+    const sub = stamps.size ? t('ins_sub', { n: stamps.size, a: fmtTime(lo), b: fmtTime(hi) }) : '';
+    const hints = insHints();
+    el.innerHTML = `<div class="view-head"><h2>${t('ins_title')}</h2></div><p class="muted ins-sub">${sub}</p>
+      ${hints.length ? `<section class="ins-card hints" aria-labelledby="ins-hints"><h3 id="ins-hints">${t('ins_hints')}</h3><ul>${hints.map((h) => `<li>${h}</li>`).join('')}</ul></section>` : ''}
+      <div class="ins-grid">${soonHtml()}${salesHtml()}${adherenceHtml()}</div>`;
   }
 
   /* ------------------------------------------------------------------ print sheet */
@@ -566,6 +713,8 @@
     const dark = isDark();
     $('#theme-btn').innerHTML = icon(dark ? 'i-sun' : 'i-moon');
     const c = counts();
+    $('#counters').hidden = st.view === 'insights';
+    $('#filters').hidden = st.view === 'insights';
     $('#counters').classList.toggle('compact', st.view !== 'tasks');
     $('#counters').innerHTML = STATUS.map((s) => `<button type="button" class="counter s-${s}${c[s] ? '' : ' zero'}" data-act="status" data-v="${s}" aria-pressed="${st.status === s}">
       ${icon(S_ICON[s])}<span class="n">${c[s]}</span><span class="lbl">${t('s_' + s)}</span></button>`).join('');
@@ -579,7 +728,7 @@
     $$('.tab').forEach((a) => { if (a.dataset.tab === st.view) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     const any = st.status || st.cam !== 'all' || st.q;
     const cl = $('#clear-filters'); cl.hidden = !any; cl.textContent = t('clear');
-    $('#foot').textContent = t('foot', { b: D.backend || 'model' });
+    $('#foot').textContent = t('foot', { b: D.backend || 'model' }) + (hasCounts ? ' ' + t('foot_cnt') : '');
   }
   function isDark() {
     if (st.theme === 'dark') return true;
@@ -596,7 +745,8 @@
     VIEWS.forEach((v) => { $('#view-' + v).hidden = v !== st.view; });
     if (st.view === 'tasks') renderTasks();
     else if (st.view === 'gondola') renderGondola();
-    else renderProducts();
+    else if (st.view === 'products') renderProducts();
+    else renderInsights();
     buildPrintSheet();
   }
 

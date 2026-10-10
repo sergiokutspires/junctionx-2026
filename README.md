@@ -1,201 +1,275 @@
 # Sensei shelf monitor
 
-JunctionX Lisbon 2026, Sensei challenge. From ceiling-camera images of a supermarket fruit and
-vegetable section, it answers for **every planogram area of every image**:
+JunctionX Lisbon 2026, Sensei challenge ("Fresh eyes on fresh produce"). From ceiling-camera pictures of a
+supermarket fruit and vegetable section and its planogram, it answers for **every planogram area of every
+image**: is the product on display the one the planogram expects (`planogram_compliant`), and how much is
+there (`stock_level` empty / half / full, `stock_value` 0 / 0.5 / 1). It also builds a static staff app: a
+prioritised "Do now" list, a gondola view with product boxes and visible-unit counts, and an Insights tab
+(running out soon, sales speed, planogram adherence). The core pipeline is **unsupervised**: it needs no
+labels to fit, and everything is free and local (Hugging Face weights, CPU is enough, CUDA is used if present,
+no paid APIs). A 756-area answer key written by independent AI labellers is used to **measure** it and to
+lightly **calibrate** two small heads on top (see Results). Held out, it scores 1.19 to 1.41 points per area
+(maximum 2); the hidden validation set is the real judge.
 
-- `planogram_compliant`: is the product on display the one the planogram expects?
-- `stock_level`: `empty`, `half` or `full` (`stock_value` 0, 0.5, 1).
+## Validation day
 
-It also builds a static dashboard that tells a store employee in seconds what to restock first,
-what to move back and what to leave. Everything is free and local: Hugging Face weights, CPU
-works, CUDA is used if present (for example on free Google Colab). No labels and no paid APIs are
-needed.
+When the organisers hand over the hidden images (a folder, a `.zip`, nested or flat), run **one** command:
 
-## Method (label-free)
+```powershell
+SUBMIT.bat "D:\path\to\validation.zip"      # or double-click it, or drag the folder / zip / image files onto it
+.venv\Scripts\python -m sensei submit --images <folder or .zip> [--model models/real_v1_cal] [--out submission] [--no-detect]
+```
 
-1. **Crops.** Each planogram quad (a perspective trapezoid, sometimes partly outside the frame) is
-   warped to a 224x224 crop, shrunk slightly to avoid neighbours, with a mask of the visible part.
-2. **Product recognition (compliance).** CLIP zero-shot. Portuguese product names are translated
-   to English ("MACA GALA KG" becomes "gala apple") and turned into prompts such as "a photo of a
-   pile of gala apple in a supermarket". A crop is scored against the whole catalogue, mainly at the
-   base-fruit level (banana vs orange vs apple), with image prototypes as supporting evidence. The
-   planogram is often not followed in the real data, so an area's own history is not trusted as a
-   reference. Variety-level confusions (Gala vs Fuji) need strong evidence. Empty, occluded or
-   barely visible crops count as compliant, because nothing wrong is shown.
-3. **Stock (fill).** DINOv2 patch features are clustered. Crates, trays and boxes look the same under
-   every product, so clusters spread over many products are "surface" and product-specific clusters
-   are "product". Fill is the share of visible patches that are product, normalised per area over the
-   day, then a 3-component ordered Gaussian mixture gives p(empty), p(half), p(full).
-4. **Cost-aware decisions.** The answer with the best *expected* score under the scoring rules:
-   compliance threshold 0.5, stock via `scoring.best_stock` (leans low, because too high costs -3 and
-   too low costs -2). Every area is always answered, because a missing area costs -2 and -3.
-5. **Optional calibration.** A few self-labelled crops (`label`, then `calibrate`) fit cost-sensitive
-   heads on top of the same features, with a cross-validated challenge score. Without labels the
-   pipeline is unchanged. Time-neighbour smoothing is off by default (`smoothing_weight = 0`); the
-   per-area time series only feeds the dashboard timeline and the "empty in ~N min" forecast.
+It unpacks zips (junk like `__MACOSX` skipped), predicts every area of every image, re-reads the written JSON and
+checks it independently (all areas of each camera exactly once, valid `planogram_compliant` / `stock_level` /
+`stock_value`, every image answered, no mass fallbacks), then builds the staff app with local OWLv2 boxes
+(`--no-detect` skips them; a detection failure never blocks the submission).
+
+- Look for `SENSEI SUBMISSION CHECK: PASSED` and **`HAND IN THIS FILE: ...\submission\predictions.json`**;
+  the staff app is `submission\dashboard\index.html`. Exit code 0 = passed, 1 = file written but invalid
+  (read the `ERROR` lines, do not hand it in), 2 = no usable input (nothing written, old results removed).
+- Expect 26 images / 289 areas; a different count only prints a warning. Needs no internet when the
+  Hugging Face weights are cached (they are on this laptop). Rehearsal: `SUBMIT.bat data\val_sim`.
+- The output folder ignores itself in git (public repo: never commit store images or answers).
+
+## Results
+
+Scored with the challenge rules (`scoring.py`): identification +1 right / -2 wrong, stock +1 right / -2 too low /
+-3 too high, so the maximum is **2 points per area**.
+
+| Held-out test | Areas | Points per area (max 2) |
+|---|---:|---:|
+| Unseen cameras (leave one camera out) | 756 | **1.19** |
+| Last two labelled frames of every camera | 304 | **1.21** |
+| Last labelled frame of every camera | 152 | **1.41** |
+| Baseline: always "compliant" and "full" | 756 | 0.70 |
+
+How to read it, and what it is **not**:
+
+- **The answer key is AI-labelled, not the store's truth.** 756 areas (the labelled frames of the 14 cameras,
+  `data/labels/teacher_labels*.json`) labelled by independent AI labellers: three votes per area, 94%
+  unanimous; 42 of the 756 areas show a wrong product. It ranks models and calibrates the heads; it cannot replace the hidden
+  annotations, so every number here is an estimate.
+- **The core pipeline is unsupervised.** Patch clustering, product recognition and the decision rule never see a
+  label at fit time. The labels are used (a) to measure, and (b) to fit two small heads (stock, compliance) on
+  top of the same features, refitted without the test cameras or frames in each of the three scored rows. The unsupervised
+  part's defaults (thresholds, priors) were chosen while looking at this same key, so the rows are optimistic to
+  that extent.
+- **Late frames matter most.** The hidden frames are later in the day than every labelled one, so the "last
+  frames" rows are the closest rehearsal. Times the 289 hidden areas that is roughly 345 to 400 of 578 points
+  (the brief's worked example scores 320).
+- **The baseline is the generous figure.** On the last two frames and on the last frame, answering "compliant" and
+  "full" everywhere scores only 0.36 and 0.06, because shelves empty out during the day.
+- On the unseen-camera and last-two-frames tests identification is right on 97.6% and 99.3% of areas and stock
+  level on 79.5% and 80.3%: stock level is the weaker half.
+
+The shipped model is `models/real_v1_cal` (unsupervised model plus heads fitted on all 756 labelled areas). Choose
+models only on the late-frame fold of `calibrate` (the `[time]` block of `models/<m>/calibration_cv.json`). Per-camera
+numbers are in that file.
+
+## How it works
+
+```
+ ceiling frame + planogram.json
+            |
+            v
+ warp every planogram area (perspective quad -> 224x224 crop + visibility mask)
+            |
+            +--> DINOv2 patch features -> clusters, named by CLIP as "surface"
+            |    (crates, trays: same under every product) or "product"
+            |    -> fill = share of product patches -> p(empty / half / full)
+            |
+            +--> CLIP zero-shot at base-product level (banana vs orange vs apple)
+            |    -> p(compliant)
+            v
+ cost-aware decision from the scoring rules (best expected score, leans low)
+            |
+            v
+ predictions.json: every area of every image  <-- the submission
+            |
+            +--> OWLv2 open-vocabulary detections -> product boxes + visible-unit counts
+            v
+ staff dashboard (static page): Do now | Gondolas | Products | Insights
+```
+
+1. **Crops.** Each planogram quad (a perspective trapezoid, sometimes partly outside the frame) is warped to a
+   224x224 crop, shrunk slightly to avoid neighbours, with a mask of the visible part.
+2. **Stock (fill).** DINOv2 patch features are clustered. Crates, trays and boxes look the same under every
+   product, so clusters spread over many products are "surface" and product-specific clusters are "product"
+   (CLIP prompts help name them). Fill is the share of visible patches that are product, normalised per area over
+   the day; soft ordered thresholds in rank space give p(empty), p(half), p(full).
+3. **Product recognition (compliance).** CLIP zero-shot. Portuguese product names are translated to English
+   ("MACA GALA KG" becomes "gala apple") and turned into prompts such as "a photo of a pile of gala apple in a
+   supermarket". A crop is scored against the whole catalogue, mainly at the base-fruit level, with image
+   prototypes as supporting evidence. The planogram is often not followed in the real data, so an area's own
+   history is not trusted as a reference. Variety-level confusions (Gala vs Fuji) need strong evidence. Empty,
+   occluded or barely visible crops count as compliant, because nothing wrong is shown.
+4. **Cost-aware decisions.** The answer with the best *expected* score under the scoring rules: compliance
+   threshold 0.5, stock via `scoring.best_stock` (leans low, because too high costs -3 and too low costs -2).
+   Every area is always answered, because a missing area costs -2 and -3.
+5. **Optional calibration.** A few self-labelled crops (`label`, then `calibrate`) fit cost-sensitive heads on top
+   of the same features, with a cross-validated challenge score. Without labels the pipeline is unchanged.
+   Time-neighbour smoothing is off by default (`smoothing_weight = 0`); the per-area time series only feeds the
+   dashboard timeline, the "empty in ~N min" forecast and the Insights tab.
+6. **Boxes and counts.** OWLv2 (free, local) finds products in each frame. Boxes with score of at least 0.28 are
+   drawn; for counting, boxes with score of at least 0.20 whose centre is inside an area are merged (IoU 0.5),
+   hands, baskets, shelf-sized boxes and specks are dropped, and in areas the stock model calls empty only boxes
+   of at least 0.35 count. The app shows "about N visible units" (visible packs for packaged products) per
+   area and per product, always labelled as an estimate.
+7. **Insights tab** (all computed from the day's fill timeline):
+   - *Running out soon*: low or wrong-product areas forecast to be empty within 2 hours, soonest first (the same
+     rule as the "Do now" forecast, so the two never disagree).
+   - *Sales speed*: per product, the average share of a shelf lost per hour; sharp rises count as restocks and are
+     listed, tiny drops as noise; plus a store-wide bar chart by hour.
+   - *Planogram adherence*: share of compliant areas per gondola, gondolas with a wrong product first.
+   - Peak-hour highlights appear only when a window is clearly above the product's daily average.
 
 A `lite` backend (handcrafted colour features only, no torch) exists for tests and quick checks.
 
-## Scoring (local copy in `scoring.py`)
+## Run it
 
-Per area: identification +1 right / -2 wrong; stock +1 right / -2 too low / -3 too high. Maximum
-2 points per area. A missing area scores -2 and -3.
-
-## Quickstart on Windows
+### Windows setup (CPU is enough)
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
-.venv\Scripts\python -m pytest tests -q                      # lite backend, a few minutes at most
+.venv\Scripts\python -m pytest tests -q                      # lite backend, 154 tests, under a minute
 ```
 
-Real data goes in `data/raw/planogram.json` and `data/raw/images/<camera_id>/<unix_ts>.jpg`
-(train and test images are mixed in one folder, so every image is used to fit).
+The deep backend downloads `openai/clip-vit-base-patch16`, `facebook/dinov2-small` and (for boxes)
+`google/owlv2-base-patch16-ensemble` on first use (free, cached afterwards). On Linux or macOS use
+`.venv/bin/python` instead of `.venv\Scripts\python`.
+
+**Data and models are not in this repository, on purpose** (the dataset is Sensei's store footage; see
+`.gitignore`). Put the dataset in `data/raw/planogram.json` and `data/raw/images/<camera_id>/<unix_ts>.jpg`
+(train and test images mixed in one folder, so every image is used to fit), then build the model:
 
 ```powershell
-# one command: fit on the dataset, predict, build the dashboard
-.venv\Scripts\python -m sensei run --data data/raw/images --planogram data/raw/planogram.json `
-    --images data/raw/images --out outputs
-
-# or step by step
-.venv\Scripts\python -m sensei fit --data data/raw/images --planogram data/raw/planogram.json --model models/m1
-.venv\Scripts\python -m sensei predict --model models/m1 --images data/raw/images `
-    --out predictions.json --details details.json
+# the submission model: unsupervised fit on every image + calibration heads from the answer key
+.venv\Scripts\python -m sensei fit --data data/raw/images --planogram data/raw/planogram.json `
+    --model models/real_v1_cal --labels data/labels/teacher_labels.json
+# without --labels you get the pure unsupervised model
 ```
 
-The deep backend downloads `openai/clip-vit-base-patch16` and `facebook/dinov2-small` on first use
-(free, cached afterwards). Add `--backend lite` to `fit` to skip torch entirely.
+Then use `SUBMIT.bat` (see Validation day). Other one-liners:
 
-On Linux or macOS use `.venv/bin/python` instead of `.venv\Scripts\python`.
+```powershell
+# fit on the dataset, predict, build the dashboard in one go (model goes to outputs\model)
+.venv\Scripts\python -m sensei run --data data/raw/images --planogram data/raw/planogram.json `
+    --images data/raw/images --out outputs
+# local challenge score when you hold annotations in the same format
+.venv\Scripts\python -m sensei score annotations.json predictions.json
+```
 
-## Quickstart on Google Colab (free)
+### Free Google Colab
 
-Open `colab/sensei_colab.ipynb` in Colab and choose **Runtime > Change runtime type > T4 GPU**. Put
-these in `MyDrive/sensei/`: `junctionx-sensei.zip` (make it with `python colab/make_zip.py`, which
-uses forward-slash paths and leaves out `.venv`, `cache`, `outputs`; do not use PowerShell
-`Compress-Archive`), `Frutas e Legumes (train & test).zip`, `planogram.json`, and optionally
-`validation.zip`. Run the cells top to bottom: they mount Drive, unpack everything into
-`data/raw/images/<cam>/<ts>.jpg`, install `requirements.txt`, run `python -m sensei run --labels
-data/labels/teacher_labels*.json` (so Colab builds the same calibrated model as `models/real_v1_cal`),
-predict on the validation folder when given, and zip `outputs/` back to Drive. No paid tier and no
-keys are needed; a GPU only speeds up the first feature extraction.
+Open `colab/sensei_colab.ipynb` in Colab and choose **Runtime > Change runtime type > T4 GPU**. Put these in
+`MyDrive/sensei/`: `junctionx-sensei.zip` (make it with `python colab/make_zip.py`, which uses forward-slash paths
+and leaves out `.venv`, `cache`, `outputs`; do not use PowerShell `Compress-Archive`), `Frutas e Legumes (train &
+test).zip`, `planogram.json`, and optionally `validation.zip`. Run the cells top to bottom: they mount Drive, unpack
+everything into `data/raw/images/<cam>/<ts>.jpg`, install `requirements.txt`, run `python -m sensei run --labels
+data/labels/teacher_labels*.json` (the same recipe as `models/real_v1_cal`), predict on the validation folder when
+given, and zip `outputs/` back to Drive. No paid tier and no keys; a GPU only speeds up the first feature extraction.
+`colab/sensei_bigfeatures.ipynb` computes large-model features and OWLv2 detections for every frame on a free T4
+(about 10 minutes) and downloads `sensei_colab_features.zip`; keep that zip in `cache/colab/` and pass it as
+`--detections` below.
 
-## Command line
+### Command line
 
 All commands are `python -m sensei <command>`:
 
 | Command | Purpose |
 |---|---|
+| `submit --images <folder\|.zip\|files> [--model models/real_v1_cal] [--out submission] [--no-detect] [--detections <zip\|json>]` | validation day: unpack, predict, check, build the staff app |
 | `synth --out data_synth [--cameras 4 --images 40]` | write a synthetic dataset for tests and demos |
-| `fit --data <root> --planogram <planogram.json> --model models/m1 [--backend lite\|deep] [--max-images-per-camera N]` | learn everything from the unlabelled images |
+| `fit --data <root> --planogram <planogram.json> --model models/m1 [--backend lite\|deep] [--max-images-per-camera N] [--labels ...]` | learn everything from the unlabelled images |
 | `predict --model models/m1 --images <dir> --out predictions.json [--details details.json]` | answer every area of every image in `<dir>` |
 | `score annotations.json predictions.json` | local challenge score against truth |
-| `dashboard --details details.json --data <root> --out dashboard/` | build the static staff dashboard |
+| `dashboard --details details.json --data <root> --out dashboard/ [--detections <zip\|json>] [--detect]` | build the static staff dashboard |
 | `label --model models/m1 --data <root> --out labeling/ [--n 150]` | export contact sheets and a labelling page (optional) |
 | `calibrate --model models/m1 --labels labels.json` | fit heads from labels and report a cross-validated score (optional) |
 | `run --data <root> --planogram ... --images <dir> --out outputs/` | fit, predict and build the dashboard in one go |
 
-`-q` (warnings only) works before or after the sub-command. `fit` and `run` also accept `--labels labels.json [...]` (annotation format, e.g. the teacher labels) to fit the
-calibration heads right after fitting; `predict` then uses `<model>/heads/` automatically. `run` stores the model in `<out>/model`.
+`-q` (warnings only) works before or after the sub-command. `fit` and `run` also accept `--labels labels.json [...]`
+(annotation format) to fit the calibration heads right after fitting; `predict` then uses `<model>/heads/`
+automatically. Tunables (crop size, inset, number of patch clusters, priors, device, CLIP and DINO model names)
+live in `sensei/config.py`.
 
-Tunables (crop size, inset, number of patch clusters, priors, device, CLIP and DINO model names) live
-in `sensei/config.py`. A larger free CLIP such as `openai/clip-vit-large-patch14` can be selected there.
+### Predict by hand and open the dashboard
 
-## Run on the hidden validation set and make the submission
-
-**Submit with `models/real_v1_cal`** (the unsupervised model plus heads fitted on all teacher labels).
-Choose models only on the late-frame fold of `calibrate` (the `[time]` block of
-`models/<m>/calibration_cv.json`): the hidden frames are later in the day than every labelled one.
-There the calibrated model scores about 1.19 points per area against 0.97 for the unsupervised
-`models/real_v1`; the 899/1512 of `real_v1` against the teacher labels is in-sample (its stock
-thresholds were tuned on those labels) and must not be used to pick models.
-
-1. Put the validation images in one folder, preferably `data/val/<camera_id>/<unix_ts>.jpg`.
-   `<camera_id>_<ts>.jpg` also works, and so does a flat folder of `<ts>.jpg`: the camera is then
-   recognised from the picture (static ceiling views). Keys in `predictions.json` are
-   `<unix_ts>.jpg` (the annotation format), plus the on-disk name when it differs (e.g. `.JPG`).
-2. Predict (the command exits with code 2 and writes nothing if no image matches a camera):
-
-   ```powershell
-   .venv\Scripts\python -m sensei predict --model models/real_v1_cal --images data/val `
-       --out predictions.json --details details_val.json
-   .venv\Scripts\python -m sensei dashboard --details details_val.json --data data/val --out dashboard_val
-   ```
-
-   It prints the number of images, cameras, areas (and the expected count), skipped files and
-   whether heads were used. With heads, frames later than a camera's last labelled frame get the
-   late-day stock prior, and areas whose latest labelled frame was a wrong product stay flagged
-   while the crop still looks the same.
-
-3. `predictions.json` is the submission. Its format is
-   `{camera_id: {image_name: {area_id: {"planogram_compliant": true, "stock_level": "half", "stock_value": 0.5}}}}`
-   and it contains every planogram area of every image (cameras missing from the planogram are
-   skipped with a warning, and unreadable images get a safe fallback answer instead of a crash).
-4. If you have truth in the same format: `python -m sensei score annotations.json predictions.json`.
-
-## Open the dashboard
+`submit` does all of this; the manual steps are:
 
 ```powershell
-.venv\Scripts\python -m sensei dashboard --details details_val.json --data data/val --out dashboard
+.venv\Scripts\python -m sensei predict --model models/real_v1_cal --images data/val `
+    --out predictions.json --details details_val.json
+.venv\Scripts\python -m sensei dashboard --details details_val.json --data data/val --out dashboard `
+    --detections cache/colab/sensei_colab_features.zip
 start dashboard\index.html
 ```
 
-It is a static page: no server, no build step, no network, so it also opens from a USB stick or a
-phone. It shows counters (Empty / Low / Wrong product / OK), a "Do now" list ordered by priority
-(wrong product and empty first, then low), a gondola view with coloured area polygons and a fill
-sparkline, a per-product view, an EN/PT toggle, and works from 375 px wide in light and dark mode.
-`--data` must be the folder that holds the images listed in `details.json`.
+- Images: preferably `data/val/<camera_id>/<unix_ts>.jpg`; `<camera_id>_<ts>.jpg` and a flat folder of `<ts>.jpg`
+  also work (the camera is then recognised from the picture, since the ceiling views are static). `predict` exits
+  with code 2 and writes nothing if no image matches a camera. Keys in `predictions.json` are `<unix_ts>.jpg`
+  (the annotation format), plus the on-disk name when it differs.
+- `predictions.json` is `{camera_id: {image_name: {area_id: {"planogram_compliant": true, "stock_level": "half",
+  "stock_value": 0.5}}}}` with every planogram area of every image (unreadable images get a safe fallback answer
+  instead of a crash). With heads, frames later than a camera's last labelled frame get the late-day stock prior,
+  and areas whose latest labelled frame was a wrong product stay flagged while the crop still looks the same.
+- The dashboard is a static page: no server, no build step, no network, so it also opens from a USB stick or a
+  phone. Counters (Empty / Low / Wrong product / OK), a "Do now" list (wrong product and empty first, then low),
+  a gondola view with coloured area polygons and a fill sparkline, a per-product view, the Insights tab, an EN/PT
+  toggle, light and dark mode, from 375 px wide. `--data` must be the folder holding the images in `details.json`.
+- **Boxes and counts** need detections: `--detections` takes the cached `owl_detections.json` (inside the Colab
+  features zip, or that json), or `--detect` runs OWLv2 locally on the shown frames that have none (a few seconds
+  per frame on CPU; about 4 s measured for the 14-camera dry run). Without either, the **Show detections** button
+  and the visible-unit counts do not exist. Only the latest frame of each camera is shown, so only those frames
+  need boxes. `DET_*` and `COUNT_*` constants in `sensei/dashboard.py` hold the thresholds. A link such as
+  `index.html#/gondola/6491/6491_1/det` opens a gondola with the boxes already on; `index.html#/insights` opens
+  the Insights tab.
 
-**Product boxes (optional, brief task 1 "detect and classify").** The gondola view can draw what an
-open-vocabulary detector (OWLv2, free, local) finds on the shelf, behind a **Show detections** button
-(off by default; hover or tap a box for its name and score, EN/PT names). Two ways to feed it:
+Synthetic data for tests and demos: `python -m sensei synth --out data_synth` writes `planogram.json`,
+`images/<cam>/<ts>.jpg`, `val/<cam>/<ts>.jpg`, `annotations.json` (truth for `val`) and `annotations_train.json`.
+Fit on `data_synth/images` and predict on `data_synth/val`; do not fit on `data_synth` itself.
 
-```powershell
-# boxes cached by the Colab notebook (owl_detections.json inside the features zip, or that json)
-.venv\Scripts\python -m sensei dashboard --details details_val.json --data data/val --out dashboard `
-    --detections cache/colab/sensei_colab_features.zip
-# or run OWLv2 here on the shown frames that have no cached boxes (google/owlv2-base-patch16-ensemble,
-# about 8 s per frame on CPU, cached by Hugging Face after the first download)
-.venv\Scripts\python -m sensei dashboard --details details_val.json --data data/val --out dashboard --detect
-```
-
-Only the latest frame of each camera is shown, so only those frames need boxes. Boxes are kept when
-the score is at least 0.28, the centre lies inside a planogram area of that camera, the box is not
-shelf-sized, overlaps are thinned and the best 60 per frame are drawn (`DET_*` constants in
-`sensei/dashboard.py`; hands and baskets are never drawn). Without `--detections` or `--detect`
-the button does not exist. A link such as `index.html#/gondola/6491/6491_1/det` opens a gondola with the
-boxes already on. Pitch screenshots live in `pitch/assets/dash_*.png`.
-
-## Synthetic data
-
-`python -m sensei synth --out data_synth` writes `planogram.json`, `images/<cam>/<ts>.jpg` (a
-synthetic day), `val/<cam>/<ts>.jpg` (later frames), `annotations.json` (truth for `val`) and
-`annotations_train.json` (truth for `images`). Fit on `data_synth/images` and predict on
-`data_synth/val`; do not fit on `data_synth` itself, because the `val` folder would switch on the
-train/test/val split filter and hide the unlabelled `images` folder.
-
-## Folder layout
+## Repository layout
 
 ```
+README.md  SPEC.md  requirements.txt
+SUBMIT.bat                    validation day: double-click, or drop a folder / zip / images on it
 scoring.py, test_scoring.py   local scorer and decision rules (do not change the maths)
-SPEC.md                       build contract: module signatures, file formats, real-data facts
-requirements.txt
 sensei/                       the package
   config.py data.py products.py features.py stock.py compliance.py temporal.py
-  pipeline.py calibrate.py dashboard.py synth.py __main__.py
-ui/                           static dashboard assets copied by dashboard.py
-colab/sensei_colab.ipynb      free Colab runner (colab/make_zip.py builds its project zip)
+  pipeline.py calibrate.py dashboard.py submit.py synth.py __main__.py
+ui/                           static dashboard assets (index.html, app.js, style.css) copied by dashboard.py
+colab/                        free Colab notebooks (sensei_colab.ipynb, sensei_bigfeatures.ipynb) and make_zip.py
 tests/                        pytest suite (lite backend; the deep smoke test is marked slow)
-data/raw/                     planogram.json and images/<camera_id>/<unix_ts>.jpg (read-only)
-data/labels/                  optional labels in the annotations.json format
-models/ cache/ outputs/       fitted models, feature cache, run results (not shipped)
+data/labels/                  the AI-labelled answer key (annotation format, no images)
+labeler/, tools/              labelling page and the scripts that rendered sheets for the AI labellers
+pitch/                        3-minute pitch: slides.html, pitch.md, demo_script.md, qa_prep.md, build scripts
 docs/brief.txt                text of the challenge brief
+SPEC.md                       build contract: module signatures, file formats, real-data facts
+
+not in the repo (git-ignored): data/raw (the dataset), data/val_sim, models/, cache/, outputs/, experiments/,
+backups/, every .jpg/.png/.zip, pitch/assets pictures and pitch/slides_standalone.html
 ```
 
-## Known limitations
+The deck in `pitch/` shows store frames and dashboard screenshots from a local `pitch/assets/` folder that is not
+published; the deck source is.
 
-- Zero-shot recognition is strong at the base-fruit level and weak between varieties, so the system
-  only flags a wrong product when the evidence is clear.
-- Portuguese-to-English translation is dictionary based; unknown words are kept as variety words.
-- Stock depends on how crates and products look; unusual containers can shift the fill estimate,
-  which is what the optional calibration step is for.
+## Limitations
+
+- **Half versus full is the hard call**, especially for large fruit in deep crates, where a top-down view cannot see
+  how deep the pile is. Stock level is right on about 80% of held-out areas, identification on 97 to 99%.
+- **Counts are visible-unit estimates**, not inventory: boxes only see what is on top, piles hide items, and for
+  produce that comes in bunches one "unit" can be a bunch (bananas). The app says "estimate" wherever it shows one.
+- **One day of data** from one store: the sales-speed, peak-hour and "running out soon" figures come from a single
+  day's timeline of fill estimates and are a prototype of forecasting, not a scored feature.
+- **The answer key is AI-labelled** (not the store's truth) and was also used to choose defaults; expect the hidden
+  set to differ from the held-out numbers above.
+- Zero-shot recognition is strong at the base-fruit level and weak between varieties, so the system only flags a
+  wrong product when the evidence is clear. Portuguese-to-English translation is dictionary based; unknown words
+  are kept as variety words.
+- Stock depends on how crates and products look; unusual containers can shift the fill estimate, which is what the
+  optional calibration step is for.
+- Store images, models and outputs are deliberately not published, so a fresh clone needs the dataset and a fit
+  (above) before it can predict.
