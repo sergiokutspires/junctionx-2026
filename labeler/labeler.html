@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sensei labeler</title>
+<style>
+:root {
+  --bg: #f4f5f7; --panel: #ffffff; --ink: #14161a; --muted: #5b6270; --line: #d5d9e0;
+  --accent: #0b5fff; --accent-ink: #ffffff;
+  --empty: #c62828; --half: #b26a00; --full: #1b7f3b; --wrong: #7b1fa2;
+  --empty-bg: #fde8e8; --half-bg: #fff1d6; --full-bg: #dff3e4; --wrong-bg: #f1e3f6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101216; --panel: #1b1e24; --ink: #eceff4; --muted: #9aa3b2; --line: #343944;
+    --accent: #6aa0ff; --accent-ink: #0b0d12;
+    --empty: #ff8a80; --half: #ffca62; --full: #7fd99a; --wrong: #e1a6f2;
+    --empty-bg: #3a1c1c; --half-bg: #3a2f14; --full-bg: #16301f; --wrong-bg: #301a38;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101216; --panel: #1b1e24; --ink: #eceff4; --muted: #9aa3b2; --line: #343944;
+  --accent: #6aa0ff; --accent-ink: #0b0d12;
+  --empty: #ff8a80; --half: #ffca62; --full: #7fd99a; --wrong: #e1a6f2;
+  --empty-bg: #3a1c1c; --half-bg: #3a2f14; --full-bg: #16301f; --wrong-bg: #301a38;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+body { padding: 12px 16px 40px; max-width: 1400px; margin: 0 auto; }
+h1 { font-size: 18px; margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+input[type="number"] { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
+button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.top { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.progress { color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 4px; min-width: 220px; }
+.bar > i { display: block; height: 100%; background: var(--accent); width: 0; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 8px 12px; min-height: 40px; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.head { display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; margin-bottom: 10px; }
+.tileid { font-size: 44px; font-weight: 800; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+.en { font-size: 28px; font-weight: 700; }
+.pt { color: var(--muted); }
+.meta { color: var(--muted); font-size: 14px; }
+.views { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.views figure { margin: 0; }
+.views figcaption { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.views img { width: 100%; height: auto; display: block; border-radius: 8px; background: #000; border: 1px solid var(--line); }
+.answers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+.ans { border: 2px solid var(--line); background: var(--panel); border-radius: 12px; padding: 12px 8px; min-height: 64px; font-weight: 700; font-size: 18px; }
+.ans kbd { display: block; font-size: 13px; font-weight: 600; color: var(--muted); }
+.ans[aria-pressed="true"] { border-width: 3px; }
+.ans[data-k="0"][aria-pressed="true"] { border-color: var(--empty); background: var(--empty-bg); color: var(--empty); }
+.ans[data-k="1"][aria-pressed="true"] { border-color: var(--half); background: var(--half-bg); color: var(--half); }
+.ans[data-k="2"][aria-pressed="true"] { border-color: var(--full); background: var(--full-bg); color: var(--full); }
+.ans[data-k="w"][aria-pressed="true"] { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
+.nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
+.nav .grow { flex: 1; }
+.status { min-height: 22px; margin-top: 8px; color: var(--muted); font-size: 14px; }
+.grid { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 14px; }
+.cell { min-width: 40px; height: 34px; border: 1px solid var(--line); background: var(--panel); border-radius: 6px; font-size: 12px;
+  font-variant-numeric: tabular-nums; padding: 0 4px; }
+.cell[data-s="0"] { background: var(--empty-bg); color: var(--empty); border-color: var(--empty); }
+.cell[data-s="1"] { background: var(--half-bg); color: var(--half); border-color: var(--half); }
+.cell[data-s="2"] { background: var(--full-bg); color: var(--full); border-color: var(--full); }
+.cell[data-w="1"] { box-shadow: inset 0 -4px 0 var(--wrong); }
+.cell[aria-current="true"] { outline: 3px solid var(--accent); outline-offset: 1px; }
+details { margin-top: 12px; color: var(--muted); }
+details kbd, .keys kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--panel); color: var(--ink); font-size: 13px; }
+.warn { color: var(--wrong); font-weight: 600; }
+[hidden] { display: none !important; }
+@media (max-width: 760px) {
+  .views { grid-template-columns: 1fr; }
+  .answers { grid-template-columns: 1fr 1fr; }
+  .en { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<div id="nomanifest" class="card" hidden>
+  <h1>Sensei labeler</h1>
+  <p class="warn">manifest.js was not found next to this page.</p>
+  <p>Open the copy of this page that <code>export_sheets</code> writes into the labelling folder
+  (<code>labeling/labeler.html</code>), next to <code>manifest.js</code> and <code>crops/</code>.
+  Everything runs offline from <code>file://</code>.</p>
+</div>
+
+<div id="app" hidden>
+  <div class="top">
+    <div>
+      <h1>Sensei labeler</h1>
+      <div class="progress" id="progress" aria-live="polite"></div>
+      <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
+    </div>
+    <div class="tools">
+      <button class="btn primary" id="dl">Download labels.json</button>
+      <button class="btn" id="dltile" title="Tile-id format for labels_from_tiles">Download tile labels</button>
+      <button class="btn" id="imp">Import</button>
+      <button class="btn" id="auto" aria-pressed="true">Auto-advance: on</button>
+      <button class="btn" id="theme" aria-label="Switch light / dark theme">Theme</button>
+      <input type="file" id="file" accept=".json,application/json" hidden>
+    </div>
+  </div>
+
+  <section class="card" aria-label="Current tile">
+    <div class="head">
+      <span class="tileid" id="tid">000</span>
+      <div>
+        <div class="en" id="en"></div>
+        <div class="pt" id="pt"></div>
+      </div>
+      <div class="meta" id="meta"></div>
+    </div>
+    <div class="views">
+      <figure><figcaption>Area (straightened). Is it the expected product, and how full is it?</figcaption>
+        <img id="crop" alt="Warped crop of the planogram area"></figure>
+      <figure><figcaption>Context (area outlined in yellow)</figcaption>
+        <img id="ctx" alt="Part of the camera frame around the area"></figure>
+    </div>
+    <div class="answers" role="group" aria-label="Answer">
+      <button class="ans" data-k="0" aria-pressed="false"><kbd>1</kbd>Empty</button>
+      <button class="ans" data-k="1" aria-pressed="false"><kbd>2</kbd>Half</button>
+      <button class="ans" data-k="2" aria-pressed="false"><kbd>3</kbd>Full</button>
+      <button class="ans" data-k="w" aria-pressed="false"><kbd>W</kbd>Wrong product</button>
+    </div>
+    <div class="nav">
+      <button class="btn" id="prev">&larr; Previous</button>
+      <button class="btn" id="next">Next &rarr;</button>
+      <button class="btn" id="nextu" title="Next tile without a stock level">Next unlabelled &darr;</button>
+      <button class="btn" id="clear">Clear</button>
+      <span class="grow"></span>
+      <label>Go to tile <input type="number" id="goto" min="1" style="width:5.5em" aria-label="Go to tile number"></label>
+    </div>
+    <div class="status" id="status" aria-live="polite"></div>
+  </section>
+
+  <div class="grid" id="grid" role="list" aria-label="All tiles"></div>
+
+  <details>
+    <summary>Keys and rules</summary>
+    <p class="keys"><kbd>1</kbd> empty &nbsp; <kbd>2</kbd> half &nbsp; <kbd>3</kbd> full &nbsp; <kbd>W</kbd> wrong product (toggle)
+    &nbsp; <kbd>&larr;</kbd> <kbd>&rarr;</kbd> previous / next &nbsp; <kbd>&uarr;</kbd> <kbd>&darr;</kbd> previous / next unlabelled
+    &nbsp; <kbd>Backspace</kbd> clear &nbsp; <kbd>A</kbd> auto-advance &nbsp; <kbd>D</kbd> download labels.json</p>
+    <ul>
+      <li>Stock level = how full the area looks: empty (almost nothing), half, full. Judge what is visible in the straightened area.</li>
+      <li>Wrong product = the area shows a different product than the expected one (a different fruit, not just a different variety). Press <kbd>W</kbd> before the stock level, because the level key moves on to the next tile.</li>
+      <li>An empty area is normally compliant (nothing wrong is shown). Parts outside the frame are black: ignore them.</li>
+      <li>Labels are saved in this browser automatically. Download labels.json when you are done (annotations.json format).</li>
+    </ul>
+  </details>
+</div>
+
+<script src="manifest.js" charset="utf-8"></script>
+<script>
+(function () {
+  'use strict';
+  var LEVELS = ['empty', 'half', 'full'];
+  var VALUES = [0, 0.5, 1];
+  var M = window.MANIFEST;
+  var $ = function (id) { return document.getElementById(id); };
+
+  try {
+    var savedTheme = localStorage.getItem('sensei-labeler-theme');
+    if (savedTheme) { document.documentElement.setAttribute('data-theme', savedTheme); }
+  } catch (e) { /* storage may be blocked */ }
+
+  if (!M || !M.tiles || !M.tiles.length) { $('nomanifest').hidden = false; return; }
+  $('app').hidden = false;
+
+  var tiles = M.tiles;
+  var KEY = 'sensei-labeler-v1:' + (M.id || 'x');
+  var state = { pos: 0, auto: true, labels: {} };   // labels: tile id -> {level: 0|1|2|null, wrong: bool}
+  var storageWarned = false;
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) { return; }
+      var d = JSON.parse(raw);
+      if (d && typeof d === 'object') {
+        state.labels = d.labels || {};
+        state.pos = Math.min(Math.max(d.pos | 0, 0), tiles.length - 1);
+        state.auto = d.auto !== false;
+      }
+    } catch (e) { /* ignore corrupt or unavailable storage */ }
+  }
+  function saveState() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch (e) {
+      if (!storageWarned) { storageWarned = true; say('Autosave is unavailable in this browser: download labels.json before closing the page.', true); }
+    }
+  }
+
+  function say(msg, warn) {
+    var el = $('status');
+    el.textContent = msg || '';
+    el.className = 'status' + (warn ? ' warn' : '');
+  }
+  function lab(i) { return state.labels[tiles[i].tile] || null; }
+  function hasLevel(i) { var l = lab(i); return !!l && l.level !== null && l.level !== undefined; }
+  function pad(n) { return ('000' + n).slice(-3); }
+
+  function timeText(ts) {
+    if (!(ts > 0)) { return ''; }
+    var d = new Date(ts * 1000);
+    try { return d.toLocaleTimeString('en-GB', { timeZone: 'Europe/Lisbon', hour: '2-digit', minute: '2-digit' }); }
+    catch (e) { return d.toISOString().slice(11, 16) + ' UTC'; }
+  }
+
+  // ---- export (also used by the tests through window.SenseiLabeler)
+  function buildAnnotations(tileList, labels) {
+    var out = {}, skipped = 0;
+    tileList.forEach(function (t) {
+      var l = labels[t.tile];
+      if (!l) { return; }
+      if (l.level === null || l.level === undefined) { if (l.wrong) { skipped += 1; } return; }
+      if (!out[t.camera]) { out[t.camera] = {}; }
+      if (!out[t.camera][t.image_name]) { out[t.camera][t.image_name] = {}; }
+      out[t.camera][t.image_name][t.area_id] = {
+        planogram_compliant: !l.wrong, stock_level: LEVELS[l.level], stock_value: VALUES[l.level]
+      };
+    });
+    return { annotations: out, skipped: skipped };
+  }
+  function buildTileLabels(tileList, labels) {
+    var out = {};
+    tileList.forEach(function (t) {
+      var l = labels[t.tile];
+      if (l && l.level !== null && l.level !== undefined) { out[t.tile] = { level: LEVELS[l.level], wrong: !!l.wrong }; }
+    });
+    return out;
+  }
+  function importLabels(doc) {
+    var n = 0, keys = Object.keys(doc || {});
+    if (!keys.length) { return 0; }
+    var byKey = {};
+    tiles.forEach(function (t) { byKey[t.camera + '|' + t.image_name + '|' + t.area_id] = t; });
+    keys.forEach(function (k) {
+      var v = doc[k];
+      var tileFormat = typeof v === 'string' || (v && typeof v === 'object' && 'level' in v);
+      if (tileFormat) {                           // tile-id format: {"12": {"level": "half", "wrong": false}}
+        var name = typeof v === 'string' ? v : v.level;
+        var li = LEVELS.indexOf(name);
+        if (li >= 0 && tiles.some(function (t) { return String(t.tile) === k; })) {
+          state.labels[k] = { level: li, wrong: typeof v === 'object' && !!v.wrong };
+          n += 1;
+        }
+      } else if (v && typeof v === 'object') {    // annotations format (camera ids are numeric too)
+        Object.keys(v).forEach(function (img) {
+          Object.keys(v[img]).forEach(function (area) {
+            var t = byKey[k + '|' + img + '|' + area], e = v[img][area];
+            if (!t || !e) { return; }
+            var lv = e.stock_value !== undefined && e.stock_value !== null ? Math.round(e.stock_value * 2) : LEVELS.indexOf(e.stock_level);
+            if (lv >= 0 && lv <= 2) { state.labels[t.tile] = { level: lv, wrong: e.planogram_compliant === false }; n += 1; }
+          });
+        });
+      }
+    });
+    return n;
+  }
+  window.SenseiLabeler = { buildAnnotations: buildAnnotations, buildTileLabels: buildTileLabels };
+
+  function download(name, obj) {
+    var blob = new Blob([JSON.stringify(obj, null, 1)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+
+  // ---- rendering
+  var cells = [];
+  function buildGrid() {
+    var g = $('grid');
+    tiles.forEach(function (t, i) {
+      var b = document.createElement('button');
+      b.className = 'cell';
+      b.type = 'button';
+      b.textContent = t.tile;
+      b.setAttribute('role', 'listitem');
+      b.addEventListener('click', function () { go(i); });
+      g.appendChild(b);
+      cells.push(b);
+    });
+  }
+  function paintCell(i) {
+    var l = lab(i), b = cells[i];
+    var s = hasLevel(i) ? String(l.level) : '';
+    b.dataset.s = s;
+    b.dataset.w = l && l.wrong ? '1' : '0';
+    b.title = 'Tile ' + tiles[i].tile + (s ? ': ' + LEVELS[l.level] : ': not labelled') + (l && l.wrong ? ', wrong product' : '');
+    if (i === state.pos) { b.setAttribute('aria-current', 'true'); } else { b.removeAttribute('aria-current'); }
+  }
+  function countDone() { var n = 0; for (var i = 0; i < tiles.length; i++) { if (hasLevel(i)) { n += 1; } } return n; }
+
+  function show() {
+    var t = tiles[state.pos], l = lab(state.pos) || { level: null, wrong: false };
+    $('tid').textContent = pad(t.tile);
+    $('en').textContent = t.english + (t.loose ? ' (loose)' : t.packaged ? ' (packaged)' : '');
+    $('pt').textContent = t.product_name;
+    var vis = t.visible !== null && t.visible !== undefined && t.visible < 0.75 ? ' - only ' + Math.round(t.visible * 100) + '% inside the frame' : '';
+    $('meta').textContent = 'Area ' + t.area_id + ' - camera ' + t.camera + ' - ' + timeText(t.timestamp) + ' - sheet ' + t.sheet + vis;
+    $('crop').src = t.crop;
+    $('ctx').src = t.context;
+    var btns = document.querySelectorAll('.ans');
+    for (var i = 0; i < btns.length; i++) {
+      var k = btns[i].dataset.k;
+      btns[i].setAttribute('aria-pressed', String(k === 'w' ? !!l.wrong : l.level === +k));
+    }
+    cells.forEach(function (_, i) { paintCell(i); });
+    var done = countDone();
+    $('progress').textContent = 'Tile ' + (state.pos + 1) + ' of ' + tiles.length + ' - ' + done + ' labelled';
+    $('barfill').style.width = (100 * done / tiles.length) + '%';
+    $('auto').textContent = 'Auto-advance: ' + (state.auto ? 'on' : 'off');
+    $('auto').setAttribute('aria-pressed', String(state.auto));
+    $('goto').value = t.tile;
+    [state.pos + 1, state.pos - 1].forEach(function (j) {   // warm the browser cache
+      if (j >= 0 && j < tiles.length) { new Image().src = tiles[j].crop; new Image().src = tiles[j].context; }
+    });
+    saveState();
+  }
+  function go(i) {
+    state.pos = Math.min(Math.max(i, 0), tiles.length - 1);
+    say('');
+    show();
+  }
+  function nextUnlabelled(dir) {
+    for (var s = 1; s <= tiles.length; s++) {
+      var j = (state.pos + dir * s + tiles.length * s) % tiles.length;
+      if (!hasLevel(j)) { return j; }
+    }
+    return -1;
+  }
+  function ensure() {
+    var k = tiles[state.pos].tile;
+    if (!state.labels[k]) { state.labels[k] = { level: null, wrong: false }; }
+    return state.labels[k];
+  }
+  function setLevel(v) {
+    ensure().level = v;
+    if (state.auto && state.pos < tiles.length - 1) { go(state.pos + 1); } else { show(); }
+  }
+  function toggleWrong() {
+    var l = ensure();
+    l.wrong = !l.wrong;
+    if (l.wrong && (l.level === 0)) { say('Note: an empty area is normally compliant.', false); } else { say(''); }
+    show();
+  }
+  function clearTile() {
+    delete state.labels[tiles[state.pos].tile];
+    show();
+  }
+  function exportLabels() {
+    var r = buildAnnotations(tiles, state.labels);
+    var n = countDone();
+    if (!n) { say('Nothing labelled yet.', true); return; }
+    download('labels.json', r.annotations);
+    say('Downloaded ' + n + ' labels' + (r.skipped ? ' (' + r.skipped + ' tiles marked wrong but without a stock level were left out)' : '') + '.', !!r.skipped);
+  }
+
+  $('dl').addEventListener('click', exportLabels);
+  $('dltile').addEventListener('click', function () { download('tile_labels.json', buildTileLabels(tiles, state.labels)); });
+  $('imp').addEventListener('click', function () { $('file').click(); });
+  $('file').addEventListener('change', function (ev) {
+    var f = ev.target.files && ev.target.files[0];
+    if (!f) { return; }
+    var rd = new FileReader();
+    rd.onload = function () {
+      try { var n = importLabels(JSON.parse(rd.result)); show(); say('Imported ' + n + ' labels.', n === 0); }
+      catch (e) { say('Could not read that file: ' + e.message, true); }
+    };
+    rd.readAsText(f);
+    ev.target.value = '';
+  });
+  $('auto').addEventListener('click', function () { state.auto = !state.auto; show(); });
+  $('theme').addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    var dark = cur ? cur === 'dark' : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var next = dark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('sensei-labeler-theme', next); } catch (e) { /* ignore */ }
+  });
+  $('prev').addEventListener('click', function () { go(state.pos - 1); });
+  $('next').addEventListener('click', function () { go(state.pos + 1); });
+  $('nextu').addEventListener('click', function () { var j = nextUnlabelled(1); if (j >= 0) { go(j); } else { say('Every tile has a stock level.'); } });
+  $('clear').addEventListener('click', clearTile);
+  $('goto').addEventListener('change', function () {
+    var want = parseInt($('goto').value, 10), j = -1;
+    tiles.forEach(function (t, i) { if (t.tile === want) { j = i; } });
+    if (j >= 0) { go(j); } else { say('No tile ' + want + '.', true); show(); }
+  });
+  document.querySelectorAll('.ans').forEach(function (b) {
+    b.addEventListener('click', function () { if (b.dataset.k === 'w') { toggleWrong(); } else { setLevel(+b.dataset.k); } });
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.ctrlKey || ev.metaKey || ev.altKey) { return; }
+    var tag = (ev.target && ev.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') { return; }
+    var k = ev.key, handled = true;
+    if (k === '1' || k === '2' || k === '3') { setLevel(+k - 1); }
+    else if (k === 'w' || k === 'W') { toggleWrong(); }
+    else if (k === 'ArrowRight' || k === ' ') { go(state.pos + 1); }
+    else if (k === 'ArrowLeft') { go(state.pos - 1); }
+    else if (k === 'ArrowDown') { var d = nextUnlabelled(1); if (d >= 0) { go(d); } else { say('Every tile has a stock level.'); } }
+    else if (k === 'ArrowUp') { var u = nextUnlabelled(-1); if (u >= 0) { go(u); } }
+    else if (k === 'Backspace' || k === 'Delete' || k === '0') { clearTile(); }
+    else if (k === 'a' || k === 'A') { state.auto = !state.auto; show(); }
+    else if (k === 'd' || k === 'D') { exportLabels(); }
+    else { handled = false; }
+    if (handled) { ev.preventDefault(); }
+  });
+
+  loadState();
+  buildGrid();
+  show();
+  if (countDone() > 0) { say('Resumed where you stopped (' + countDone() + ' labels restored from this browser).'); }
+})();
+</script>
+</body>
+</html>

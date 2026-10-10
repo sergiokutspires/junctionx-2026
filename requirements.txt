@@ -1,0 +1,10 @@
+# Sensei shelf monitor (Python >= 3.10). Colab already ships most of these.
+numpy>=1.23
+pillow>=9.0
+opencv-python-headless>=4.7
+scikit-learn>=1.2
+pytest>=7.0
+# deep backend only (CLIP + DINOv2, free Hugging Face weights); CPU build is enough
+torch>=2.0
+transformers>=4.38
+safetensors>=0.4
