@@ -17,9 +17,9 @@ Fruits & Vegetables - Shelf Monitoring Solution
   At the same time, it is the section where knowing the state of the shelf matters most,
   since produce is perishable:
 
-      Empty gondola » lost sales » unhappy customers
-      Overstocked gondola » products left too long on the shelf » waste
-      Wrong product in the wrong place » confused customers » wrong prices
+      Empty gondola Â» lost sales Â» unhappy customers
+      Overstocked gondola Â» products left too long on the shelf Â» waste
+      Wrong product in the wrong place Â» confused customers Â» wrong prices
   Today, these checks depend on staff walking the store. Labelling this kind of data is itself
   hard and subjective: counting bananas in a pile is a challenge even for a person. Across
   hundreds of stores and thousands of cameras, nobody can label every image, every day.
@@ -32,8 +32,8 @@ Fruits & Vegetables - Shelf Monitoring Solution
   and check the products on each gondola, continuously and without human help.
   Our company operates autonomous stores fitted with ceiling cameras and has created a
   dataset specifically for this challenge. It contains images from 14 cameras installed over
-  the Fruits & Vegetables section of Continente Bom Dia S. Romão in Leiria -- the largest
-  autonomous store in the world, powered by Sensei -- extracted during one full day of
+  the Fruits & Vegetables section of Continente Bom Dia S. RomÃ£o in Leiria â€” the largest
+  autonomous store in the world, powered by Sensei â€” extracted during one full day of
   operation. Each camera sees one or multiple gondola modules.
 
                                                                                                                                                                                                                                                       Page 1 of 6
@@ -143,18 +143,18 @@ level is given as a number in stock_value: 0 for empty, 0.5 for half and 1 for f
   what to move back to its place, what to leave alone. Every wrong piece of information has
   a cost:
 
-      False alarm » staff walk to a shelf that needed nothing » time lost
-      Missed problem » empty or wrong shelf left in front of customers » lost sales
-      Repeated errors » frustration » staff stop trusting the app
+      False alarm Â» staff walk to a shelf that needed nothing Â» time lost
+      Missed problem Â» empty or wrong shelf left in front of customers Â» lost sales
+      Repeated errors Â» frustration Â» staff stop trusting the app
   The scoring therefore rewards information staff can act on and penalises each error by
   the trouble it would cause them.
   The level of achievement will be measured area by area, adding and subtracting points
-  according to the consequences for the staff¹:
+  according to the consequences for the staffÂ¹:
    1. Product identification of each planogram area, compared with planogram_compliant:
       the answer is correct when it states rightly whether the product actually shown in the
       image is the one the planogram expects:
        a. Correct identification; +1 point.
-       b. Wrong identification; -2 points, since staff go there to arrange products and there
+       b. Wrong identification; âˆ’2 points, since staff go there to arrange products and there
 
           is nothing to arrange.
    2. Stock level of each planogram area, compared with stock_value (0 for empty, 0.5 for
@@ -162,14 +162,14 @@ level is given as a number in stock_value: 0 for empty, 0.5 for half and 1 for f
       half, 1 for full): a lower value than the annotation is below the real shelf stock, a higher
       value is above it:
        a. Correct stock level; +1 point.
-       b. Stock level below the real shelf stock; -2 points, since staff go there to replenish
+       b. Stock level below the real shelf stock; âˆ’2 points, since staff go there to replenish
 
           and the shelf is already full.
 
                                                                                                                                                                                                                                                       Page 4 of 6
 Fruits & Vegetables - Shelf Monitoring Solution
 
-     c. Stock level above the real shelf stock; -3 points, since the shelf runs empty without
+     c. Stock level above the real shelf stock; âˆ’3 points, since the shelf runs empty without
         anyone noticing and sales are lost.
 
 In addition, the user interface and user experience (UI/UX) of the application will be
@@ -177,18 +177,18 @@ evaluated qualitatively, on a scale from 1 to 5, judging how clearly and quickly
 the store staff can see what needs to be done. This evaluation is used only in case of a tie
 in points between candidates: among them, the one with the best UI/UX ranks first.
 
-¹ The score is the total of points over all observed areas: each area can earn up to 2 points,
-1 for identification and 1 for stock level, so the maximum on the validation set is 289 × 2 =
+Â¹ The score is the total of points over all observed areas: each area can earn up to 2 points,
+1 for identification and 1 for stock level, so the maximum on the validation set is 289 Ã— 2 =
 578 points. An area that is annotated but missing from the output counts as a wrong
-identification (-2) and a stock level above the real stock (-3), since staff get no warning
+identification (âˆ’2) and a stock level above the real stock (âˆ’3), since staff get no warning
 about it. Assume a solution is run on all 289 planogram areas of the validation set:
 
 Case                                             Areas  Points each  Points
 Identification correct                           270    +1           +270
-Identification wrong                             19     -2           -38
+Identification wrong                             19     âˆ’2           âˆ’38
 Stock level correct                              230    +1           +230
-Stock level below the real stock                 35     -2           -70
-Stock level above the real stock                 24     -3           -72
+Stock level below the real stock                 35     âˆ’2           âˆ’70
+Stock level above the real stock                 24     âˆ’3           âˆ’72
 Total                                                                +320
 
 The score would be 320 points, out of a maximum of 578.

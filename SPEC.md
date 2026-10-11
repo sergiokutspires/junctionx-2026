@@ -1,3 +1,5 @@
+> **Historical document.** This is the build contract written on day 1 (10 October 2026), before the final model and the AI answer key. It is kept for the record; the [README](README.md) and the code are authoritative, and numbers, model names and file layout below may be out of date. For how the system works now, see [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md).
+
 # Sensei shelf monitor: build spec (shared contract for all modules)
 
 Challenge brief: `C:\Users\alifa\Documents\JunctionX 2026\Sensei - JunctionX Lisbon 2026.pdf`
