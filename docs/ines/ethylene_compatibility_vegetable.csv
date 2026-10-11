@@ -1,0 +1,30 @@
+﻿Vegetable compatibility: ethylene risk when stored together (1 = best, 9 = worst)
+Score = worst direction: MAX(producer of A x sensitivity of B, producer of B x sensitivity of A). Low=1, Medium=2, High=3.
+Producer score;;;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;2;1
+Sensitivity score;;;3;3;3;2;3;3;1;2;3;3;1;2;1;2;1;3;2
+Type;Producer;Sensitive;Broccoli;Cabbage;Cauliflower;Chayote;Cucumber;Eggplant;Garlic;Ginger;Green Beans;Lettuce;Onion;Pepper;Potato;Pumpkin;Sweet Potato;Tomato;Zucchini
+Broccoli;1;3;-;3;3;3;3;3;3;3;3;3;3;3;3;3;3;6;3
+Cabbage;1;3;3;-;3;3;3;3;3;3;3;3;3;3;3;3;3;6;3
+Cauliflower;1;3;3;3;-;3;3;3;3;3;3;3;3;3;3;3;3;6;3
+Chayote;1;2;3;3;3;-;3;3;2;2;3;3;2;2;2;2;2;4;2
+Cucumber;1;3;3;3;3;3;-;3;3;3;3;3;3;3;3;3;3;6;3
+Eggplant;1;3;3;3;3;3;3;-;3;3;3;3;3;3;3;3;3;6;3
+Garlic;1;1;3;3;3;2;3;3;-;2;3;3;1;2;1;2;1;3;2
+Ginger;1;2;3;3;3;2;3;3;2;-;3;3;2;2;2;2;2;4;2
+Green Beans;1;3;3;3;3;3;3;3;3;3;-;3;3;3;3;3;3;6;3
+Lettuce;1;3;3;3;3;3;3;3;3;3;3;-;3;3;3;3;3;6;3
+Onion;1;1;3;3;3;2;3;3;1;2;3;3;-;2;1;2;1;3;2
+Pepper;1;2;3;3;3;2;3;3;2;2;3;3;2;-;2;2;2;4;2
+Potato;1;1;3;3;3;2;3;3;1;2;3;3;1;2;-;2;1;3;2
+Pumpkin;1;2;3;3;3;2;3;3;2;2;3;3;2;2;2;-;2;4;2
+Sweet Potato;1;1;3;3;3;2;3;3;1;2;3;3;1;2;1;2;-;3;2
+Tomato;2;3;6;6;6;4;6;6;3;4;6;6;3;4;3;4;3;-;4
+Zucchini;1;2;3;3;3;2;3;3;2;2;3;3;2;2;2;2;2;4;-
+Legend
+1-3 Compatible: can share space;;;;;;;
+4-6 Caution: separate shelves, remove damaged items quickly;;;;;;;
+7-9 Avoid: keep apart;;;;;;;
+Pairs (each counted once):
+Compatible (1-3);;;124
+Caution (4-6);;;12
+Avoid (7-9);;;0

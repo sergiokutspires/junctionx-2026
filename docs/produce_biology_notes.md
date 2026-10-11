@@ -226,3 +226,20 @@ Reproduce with `.venv/Scripts/python tools/ethylene_neighbours.py [--gap 0.25] [
 - Judgement calls kept on purpose (conservative, as section 2 says): cherries and pineapple *medium* sensitivity
   (Kader lists them low); eggplant and beans *high* (the AU table says moderate); ready-to-eat avocado *high*
   sensitivity (AH-66 says "very sensitive" only for unripe fruit).
+
+
+## Team biologist review (Inês Matias Medeiros, 11 Oct 2026)
+
+- **Review:** Inês reviewed all 94 planogram products and confirmed every shelf-life class, check interval, ethylene
+  production class and ethylene sensitivity class in this reference; she rewrote the visible-spoilage notes of the 8
+  products sold both loose and packed (packaging-specific checks). Her table is `docs/ines/fruit_shelf_life_ethylene.xlsx`
+  and is applied through `docs/produce_biology_template.csv` (her values override the reference cell by cell).
+- **Ethylene profiles:** `docs/ines/ethylene_profiles.csv` gives each product a role (strong emitter; moderate emitter;
+  emitter and highly sensitive; highly sensitive, low emitter; mildly sensitive, low emitter; neutral) and practical
+  advice for staff.
+- **Compatibility score (her design):** for two products A and B, with Low = 1, Medium = 2, High = 3,
+  `risk = max(producer(A) x sensitivity(B), producer(B) x sensitivity(A))`, from 1 to 9. Bands: **1-3 compatible**
+  (can share space), **4-6 caution** (separate shelves, remove damaged items quickly), **7-9 avoid** (keep apart).
+  Matrices: `docs/ines/ethylene_compatibility_fruit.csv` (24 fruit types: 87 compatible, 148 caution, 41 avoid pairs)
+  and `docs/ines/ethylene_compatibility_vegetable.csv` (17 vegetable types: 124 compatible, 12 caution, 0 avoid).
+  The app's "strong" ethylene pairs (high producer next to high sensitivity) are exactly her score 9 ("avoid").

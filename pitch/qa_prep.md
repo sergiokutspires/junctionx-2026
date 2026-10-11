@@ -255,6 +255,13 @@ No human labelled anything. The core runs label-free from day 0 (the label-free 
 `SUBMIT_LABEL_FREE.bat`); to train it, as Sensei said teams have to, we had AI models annotate the train/test pictures
 (never the validation set). That answer key costs minutes, not a labelling team, and works the same in a new store.
 
+### 27. Who decided the freshness classes and the ethylene warnings? (Inês answers)
+Inês, our team's biologist, reviewed the sourced reference for all 94 products (USDA Agriculture Handbook 66, FAO,
+peer-reviewed postharvest papers) and confirmed every class; she designed the ethylene compatibility score: for two
+neighbours, max(producer of A x sensitivity of B, producer of B x sensitivity of A), from 1 to 9, with three bands:
+compatible (1-3), caution (4-6), avoid (7-9). The app's strong warnings are her "avoid" band (score 9, e.g. Galia
+melon next to kiwi). It is a layout suggestion, not a measurement from the picture.
+
 ## Lightning round
 
 - **Why not skip the areas that did not change?** We tested it: at hourly spacing it saves only 3.6% to 11.7% of the
