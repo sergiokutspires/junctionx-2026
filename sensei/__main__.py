@@ -90,7 +90,8 @@ def cmd_score(args) -> None:
 
 def cmd_dashboard(args) -> None:
     from .dashboard import build, make_zip
-    print(build(args.details, args.data, args.out, detections=args.detections, detect=args.detect))
+    biology = False if getattr(args, "no_biology", False) else getattr(args, "biology", None)
+    print(build(args.details, args.data, args.out, detections=args.detections, detect=args.detect, biology=biology))
     if args.zip:
         print(make_zip(args.out))
 
@@ -249,6 +250,10 @@ def build_parser() -> argparse.ArgumentParser:
                    help="OWLv2 product boxes: .zip holding owl_detections.json, or that .json (optional)")
     p.add_argument("--detect", action="store_true",
                    help="run OWLv2 locally on the shown frames lacking boxes (free; slow on CPU)")
+    p.add_argument("--biology", default=None, metavar="CSV",
+                   help="produce biology reference CSV (default docs/produce_biology_reference.csv; values typed "
+                        "into docs/produce_biology_template.csv override it)")
+    p.add_argument("--no-biology", action="store_true", help="no freshness badges or ethylene pairs")
     p.set_defaults(func=cmd_dashboard)
 
     p = add("label", "export contact sheets and a labelling page for labelling crops by eye",

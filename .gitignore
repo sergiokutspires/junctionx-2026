@@ -43,3 +43,7 @@ gemini_key.txt
 docs/ines_todo.md
 docs/TODO_FOR_TEAM.md
 docs/morning_summary.md
+
+# PDFs exported from the deck contain store photos (local only)
+pitch/*.pdf
+docs/lovable_prompt.md

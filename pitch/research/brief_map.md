@@ -1,3 +1,5 @@
+> **Superseded working note (written ~01:20 on 11 Oct).** Numbers here predate the final model. The current brief-to-evidence table is in [README.md](../../README.md); the numbers we say are in [pitch/pitch.md](../pitch.md) ("Numbers you may say").
+
 # Brief map: Sensei's words versus what we built and measured
 
 > **SUPERSEDED (2026-10-11).** The numbers in this file are pre-final (for example 1.20 / 1.30 / 1.39, +15.5 CPU-s,

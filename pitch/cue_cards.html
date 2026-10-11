@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fresh Eyes cue cards</title>
+<style>
+  :root { --ink: #14171c; --muted: #5b6370; --blue: #0b57d0; --orange: #b54700; --green: #0b6b3a; --line: #d9dde3; --bg: #ffffff; --tint: #f3f6fb; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #e9ecf1; color: var(--ink); font: 17px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .card { background: var(--bg); width: 210mm; min-height: 297mm; margin: 16px auto; padding: 14mm 15mm; box-shadow: 0 2px 10px rgba(0,0,0,.12); }
+  h1 { font-size: 30px; margin: 0 0 2px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 12px; font-size: 15px; }
+  .rule { background: var(--tint); border-left: 5px solid var(--blue); padding: 8px 12px; margin: 0 0 14px; font-size: 15px; }
+  .slide { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .num { font-weight: 800; font-size: 26px; color: var(--blue); line-height: 1; }
+  .num small { display: block; font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+  .say { font-size: 19px; line-height: 1.4; }
+  .say b { color: var(--orange); }
+  .cue { display: inline-block; font-size: 12px; font-weight: 700; color: #fff; background: var(--ink); border-radius: 4px; padding: 1px 6px; margin-right: 6px; vertical-align: 2px; }
+  .opt { color: var(--muted); font-style: italic; }
+  .handover { font-size: 14px; font-weight: 700; color: var(--green); margin-top: 4px; }
+  .boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .box { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 14.5px; }
+  .box h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--blue); margin: 0 0 6px; }
+  .box ul { margin: 0; padding-left: 18px; }
+  .box li { margin: 2px 0; }
+  .never { border-color: #f0c7a8; background: #fff7f1; }
+  .never h2 { color: var(--orange); }
+  .line { font-weight: 800; font-size: 20px; text-align: center; padding: 10px; margin: 12px 0 0; border: 2px solid var(--ink); border-radius: 8px; }
+  @media print {
+    body { background: #fff; font-size: 12.5px; }
+    h1 { font-size: 22px; } .sub { font-size: 11.5px; margin-bottom: 6px; } .rule { font-size: 11.5px; padding: 5px 9px; margin-bottom: 6px; }
+    .slide { padding: 5px 0; gap: 8px; grid-template-columns: 48px 1fr; } .num { font-size: 20px; } .num small { font-size: 10px; }
+    .say { font-size: 14px; line-height: 1.32; } .handover { font-size: 11.5px; } .cue { font-size: 9.5px; }
+    .boxes { gap: 8px; margin-top: 8px; } .box { font-size: 11px; padding: 7px 9px; } .box h2 { font-size: 10.5px; margin-bottom: 3px; }
+    .line { font-size: 15px; padding: 6px; margin-top: 8px; }
+    .card { margin: 0; padding: 0; box-shadow: none; page-break-after: always; break-after: page; width: auto; min-height: auto; }
+    @page { size: A4; margin: 10mm; }
+  }
+</style>
+</head>
+<body>
+
+<section class="card">
+  <h1>Inês: cue card</h1>
+  <p class="sub">Fresh Eyes · QuantumLotus · 3-minute pitch · your slides: 1, 2, 3, 4 and 10 (about 1:20 of speaking)</p>
+  <p class="rule">Calm pace (~140 words/min). Pause after the first line. Look at the judges, not the screen. You hand over to Sérgio at slide 5 and take it back for slide 10.</p>
+
+  <div class="slide"><div class="num">1<small>0:00</small></div>
+    <div class="say"><span class="cue">SLIDE 1</span>Six fourteen in the morning. Leiria, camera 6215, the first picture of the day. Four banana trays are empty. Two banana crates hold oranges. <b>The plan says where things go. The camera sees what is there.</b></div></div>
+
+  <div class="slide"><div class="num">2<small>0:15</small></div>
+    <div class="say"><span class="cue">CLICK</span>Your brief calls produce the most demanding section of a store for computer vision. We are QuantumLotus. Fresh Eyes reads the produce shelf from the cameras Sensei already has, on one CPU core.</div></div>
+
+  <div class="slide"><div class="num">3<small>0:30</small></div>
+    <div class="say"><span class="cue">CLICK</span>You asked three questions: what to restock first, what to move back, what to leave alone. The staff app answers in Portuguese. <b>Repor</b>: it is empty. <b>Trocar</b>: oranges should be here, but it holds bananas. <b>Deixar</b>: these areas are right. Wrong products and empty shelves come first. When it is unsure, it says so: <b>confirmar à vista</b>.</div></div>
+
+  <div class="slide"><div class="num">4<small>0:55</small></div>
+    <div class="say"><span class="cue">CLICK</span>The same pictures warn the manager before a shelf runs empty, and turn time on display into freshness checks. <span class="opt">(optional, only if rehearsal is under 2:40: In a one-day backtest, flagged areas emptied eight times as often as the rest.)</span>
+    <div class="handover">→ Hand over to Sérgio: "How, without labels?"</div></div></div>
+
+  <div class="slide"><div class="num">10<small>2:45</small></div>
+    <div class="say"><span class="cue">SLIDE 10</span>At six fourteen, the plan and the shelf disagreed. <b>The plan says where things go. The camera sees what is there.</b> Obrigado.</div></div>
+
+  <div class="boxes">
+    <div class="box"><h2>Your Q&amp;A topics</h2><ul>
+      <li><b>Staff app:</b> Repor / Trocar / Deixar; wrong products and empty first; "Baixa: confirmar à vista" when unsure.</li>
+      <li><b>Too many tasks?</b> Two rounds: Primeiro (wrong + empty), Depois (low). Freshness checks are extras "quando houver tempo".</li>
+      <li><b>Freshness:</b> an estimate from time since restock and the product's shelf-life class (USDA Handbook 66, FAO), not seen in the picture.</li>
+      <li><b>Ethylene:</b> producers (melon, avocado) next to sensitive produce (kiwi, lettuce) ripen it faster: a layout suggestion, not an alarm.</li>
+    </ul></div>
+    <div class="box never"><h2>Never say</h2><ul>
+      <li>"We beat 320" (it is the brief's example, not a benchmark).</li>
+      <li>"Zero effort" or "no labels" about the calibrated score.</li>
+      <li>Any number not on this card or Sérgio's.</li>
+      <li>That freshness is measured from the picture.</li>
+    </ul></div>
+  </div>
+  <p class="line">The plan says where things go. The camera sees what is there.</p>
+</section>
+
+<section class="card">
+  <h1>Sérgio: cue card</h1>
+  <p class="sub">Fresh Eyes · QuantumLotus · 3-minute pitch · your slides: 5 to 9 (about 1:35 of speaking)</p>
+  <p class="rule">Numbers slowly, one per breath. Never cut slide 7's honest limit or slide 9's ask. If you are long by slide 8, say only its first sentence.</p>
+
+  <div class="slide"><div class="num">5<small>1:10</small></div>
+    <div class="say"><span class="cue">CLICK</span>How, without labels? Empty trays look the same under every product. So it learns what empty looks like from the store's own pictures, and names the fruit from your catalogue. Then your scoring rule decides: too full costs most, so when unsure, it answers lower.</div></div>
+
+  <div class="slide"><div class="num">6<small>1:30</small></div>
+    <div class="say"><span class="cue">CLICK</span>Day zero, with no labels at all, it already beats the always-full guess. Day one, we add an answer key made by AI models, with no human labelling. Late in the day, on pictures held out from calibration, it scores <b>1.4 points out of 2</b>. Our estimate for the hidden set is <b>355 to 430 of 578</b>: an estimate, not a promise.</div></div>
+
+  <div class="slide"><div class="num">7<small>1:55</small></div>
+    <div class="say"><span class="cue">CLICK</span>It catches <b>99 percent</b> of empty shelves, with <b>two</b> false wrong-product alarms in over eighteen hundred correct areas. Our honest limit: on a brand-new camera, it finds only <b>one wrong product in four</b>, until it is calibrated.</div></div>
+
+  <div class="slide"><div class="num">8<small>2:12</small></div>
+    <div class="say"><span class="cue">CLICK</span>Cost: about <b>five cents per thousand images</b>, on one CPU core, no GPU. A fourteen-camera produce section costs about <b>three dollars a month</b>. <span class="opt">(optional: Switching on a new store costs about a cent.)</span></div></div>
+
+  <div class="slide"><div class="num">9<small>2:27</small></div>
+    <div class="say"><span class="cue">CLICK</span>Our ask: a <b>four-week shadow pilot</b>. One silent week at Leiria against your restock logs, then a second store. We need a frame feed and one contact. You get a weekly accuracy report.
+    <div class="handover">→ Click to slide 10, Inês closes.</div></div></div>
+
+  <div class="boxes">
+    <div class="box"><h2>Numbers you may say</h2><ul>
+      <li>Late frames, held out: <b>1.41</b> (last two) / <b>1.48</b> (last) of 2; whole day, camera held out: <b>1.23</b>.</li>
+      <li>Day 0, no labels: <b>0.99</b> late, <b>1.18</b> whole day; always-full guess 0.46 late.</li>
+      <li>Hidden set: <b>355-430 of 578</b>, an estimate on an AI-made key.</li>
+      <li>Cost: <b>3.8 CPU-s</b>, <b>$0.00005</b>/image, <b>~300x</b> cheaper than a Claude Sonnet call (cost, not accuracy).</li>
+      <li>Key: <b>1,962 areas</b>, all 181 pictures, 3 AI votes per area (2 on 36), 84% unanimous on the 11 re-voted cameras.</li>
+    </ul></div>
+    <div class="box"><h2>Quick answers</h2><ul>
+      <li><b>Labels?</b> No human labelled anything. Day 0 is label-free; to train it, as Sensei said teams must, AI models annotated train/test pictures, never validation.</li>
+      <li><b>Look-alike products?</b> Per-area memory learns each spot's normal look; on a new camera it is our weak spot (1 in 4).</li>
+      <li><b>Not in the planogram?</b> Not compliant: our rule too.</li>
+      <li><b>320?</b> The brief's worked example, not a benchmark.</li>
+      <li><b>Unmeasured?</b> "We have not measured that."</li>
+    </ul></div>
+  </div>
+  <p class="line">The plan says where things go. The camera sees what is there.</p>
+</section>
+
+</body>
+</html>
