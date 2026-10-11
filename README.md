@@ -173,6 +173,14 @@ Pictures in a flat folder (no camera folder in the path or name) are fine: the c
   4 hours, and nothing is uploaded. Close the window to stop.
 - **Live demo on the validation pictures:** run `SUBMIT.bat` on the validation images first, then double-click
   `LIVE_DEMO.bat`: it shares that staff app (`submission\dashboard`) to phones by QR code, the same way.
+- **Results slide for the pitch:** after `SUBMIT.bat`, double-click `UPDATE_SLIDES.bat`. It writes the run's real
+  numbers (pictures, areas, time, the four status counts, the format check) and a screenshot of the staff app onto
+  the final "Results." slide of `pitch/slides.html` and rebuilds the deck (`tools/validation_slide.py`; it never
+  invents a number: before the run the slide only says "Results.").
+- **Validation package layouts tested (11 October):** camera folders, a zip of them, a zip with an extra top-level
+  folder, Mac `__MACOSX` junk, all pictures in one flat folder (the camera is recognised from the picture), names
+  like `6215_<ts>.jpg`, `.JPG`/`.jpeg` extensions, folders nested two levels deep, a path with spaces and accents,
+  and stray non-image files: every area of every picture was answered in all 11.
 - **Public demo site:** `.venv\Scripts\python tools\build_site.py` builds the landing page, the staff app and the
   day replay into `outputs\site` with every camera picture pixelated (`tools/make_public_demo.py`); it is
   published on the `gh-pages` branch as https://sergiokutspires.github.io/junctionx-2026/.
