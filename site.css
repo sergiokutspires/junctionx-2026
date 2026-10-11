@@ -117,12 +117,12 @@ h3 { font-size: 21px; line-height: 1.2; font-weight: 700; }
 .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 
 /* ---------------------------------------------------------------- hero */
-.hero { padding: clamp(48px, 9vw, 104px) 0 clamp(64px, 10vw, 120px); text-align: center; overflow: hidden; }
-.hero-logo { width: clamp(132px, 15vw, 184px); height: auto; margin: 0 auto 28px; filter: drop-shadow(0 10px 24px rgba(195, 33, 114, .25)); }
+.hero { padding: clamp(40px, 6vw, 72px) 0 clamp(64px, 10vw, 120px); text-align: center; overflow: hidden; }
+.hero-logo { width: clamp(112px, 12vw, 152px); height: auto; margin: 0 auto 22px; filter: drop-shadow(0 10px 24px rgba(195, 33, 114, .25)); }
 .hero .eyebrow { color: var(--muted); }
 .hero h1 {
-  font-size: clamp(44px, 9.4vw, 104px); line-height: .98; font-weight: 800; letter-spacing: -.045em;
-  margin: 0 auto; max-width: 13ch; text-wrap: balance;
+  font-size: clamp(40px, 7.6vw, 88px); line-height: 1; font-weight: 800; letter-spacing: -.045em;
+  margin: 0 auto; max-width: 24ch; text-wrap: balance;
 }
 .lede { font-size: clamp(19px, 2.4vw, 24px); line-height: 1.4; color: var(--muted); max-width: 30ch; margin: 24px auto 36px; font-weight: 450; text-wrap: balance; }
 .hero .ctas { margin-bottom: clamp(48px, 7vw, 80px); }
