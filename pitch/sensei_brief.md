@@ -1,8 +1,16 @@
 # Sensei brief: make Sensei the hero, solve their real problem
 
+> **Update 2026-10-11, 09:00: the deck was restructured.** `slides.html` now has 10 main slides (cold open 06:14 on
+> camera 6215, Fresh Eyes, staff app, manager and freshness, how it works, results, trust, cost, the ask, the close) and
+> 5 appendix slides (A1 Sensei context, A2 trust table, A3 cost table, A4 method and answer key, A5 projection). The
+> script (`pitch.md`) is about 390 spoken words with two speakers. The slide-by-slide plan in section 4 below is the
+> earlier 12-slide plan, kept for the record. The current script, slide list and every number with its source are in
+> `pitch.md`; where this file disagrees, `pitch.md` wins. The app's verbs are now **Repor, Trocar, Deixar**, and the
+> header reads "Fazer agora · 66 tarefas".
+
 Written 2026-10-11, revised the same day after two jury-style critiques (section 12). This is the plan the deck (`slides.html`), the script (`pitch.md`), the Q&A (`qa_prep.md`) and the
 demo (`demo_script.md`) follow. Sources: `research/sensei_facts.md` (company facts, tags [S] Sensei's words, [P] third
-party), `research/market_facts.md` (grades A/B), `research/brief_map.md` (our measured numbers and gaps), `docs/brief.txt`.
+party), `research/market_facts.md` (grades A/B), `research/brief_map.md` (plan-time gaps, SUPERSEDED for numbers: our measured numbers are the table at the end of `pitch.md`), `docs/brief.txt`.
 
 **Status (2026-10-11, final numbers applied).** Every provisional number below has been replaced in `slides.html`,
 `pitch.md`, `qa_prep.md`, `demo_script.md` and `README.md`; the narrative, slide order and wording are unchanged. The
@@ -97,11 +105,11 @@ numbers, or flattery without substance.
    labelling effort, switched on the same day.**
 2. **About $0.00005 per image on one CPU core, and no labelling bill as the fleet grows: about a cent of CPU to switch
    on a store.**
-3. **Staff get the brief's three answers in Portuguese (repor, devolver ao lugar, deixar), biggest problems first, and
+3. **Staff get the brief's three answers in Portuguese (Repor, Trocar, Deixar), biggest problems first, and
    the app says when it is unsure.**
 
 Each one is said aloud once in the script and appears on the close slide. We no longer say "the app leans low": the
-decision rule does, but on late frames the calibrated model is too high 42 times and too low 13 (slide 8, Q&A 12).
+decision rule does, but on late frames the calibrated model is too high 35 times and too low 11 (appendix A2, Q&A 12).
 
 ## 6. What we say about Sensei, and how
 
@@ -116,8 +124,11 @@ Say (all verified in `sensei_facts.md`; [S] facts always as "Sensei reports"):
 - Sensei reports that at Leiria its platform handles planogram compliance and automated replenishment alerts for staff,
   and generates 9 replenishment tasks a day (that number is now Q&A only: we do not know how it is counted, so we never
   set it against our app's list). Our area events are the same kind of object as their alerts, for the produce section.
-- Leiria sells loose produce by weight from scales on the gondola (camera 6215 shows the "Pese aqui" scale); Sensei
-  reports 2,000 scales at launch (vendor figure, Q&A only). This is the basis of the slide-11 pilot design.
+- Leiria sells loose produce by weight from a scale on the gondola (camera 6215 shows the "Pese aqui" scale). Trade
+  press (Retail-Optimiser, Jan 2025) reported about 1,700 cameras and 2,000 "scales" at launch; those are shelf weight
+  sensors, not produce-weighing scales, and not a Sensei figure, so we never cite them as such (Q&A only).
+- Leiria was built to show loose produce can sell autonomously, by weight: that is Sensei's framing (case study), so
+  we say "Sensei's case study" and never "Leiria proved".
 - Their vocabulary, used sparingly: "proactive replenishment", "planogram compliance", "replenishment alerts for staff",
   "real-time shelf inventory visibility", "tech-agnostic". One echo per slide at most.
 
@@ -142,6 +153,8 @@ No produce out-of-stock rate exists in our research (market_facts O8); we never 
 the slides: it is 24 years old, about packaged goods, and it is not "the share a shelf camera can catch".
 
 ## 8. Fixes applied to old claims (brief_map section 8 and the critiques)
+
+> **SUPERSEDED (2026-10-11).** The "New" column holds plan-time numbers (1.20, 1.19, 375-400, 1 in 60, 0 in 294, 1 in 1,168, Depois 45, ~2 cents, 160x) that are no longer current. Do not quote them: the final numbers and their sources are the table at the end of `pitch.md`.
 
 | Old | New |
 |---|---|
@@ -226,7 +239,7 @@ section 8. Skipped, and why:
 - **Day-one "Certo-only" mode and its false-restock rate on new cameras**: not measured; slide 8 says the first week is
   *confirmar à vista* instead.
 - **Wharton staff-time share**: left out; the scope (60 executives, all categories, estimates) needs more airtime than
-  3 minutes allow. Slide 5 uses our own measured "152 areas in 26 seconds".
+  3 minutes allow. (The earlier slide-5 timing line was dropped in the 09:00 restructure: no saved log; about 25 s including model load.)
 - **Re-run the one-core benchmark on 14 frames**: left for the final-numbers pass (section 11 item 3).
 - **The "no threshold beats the current rule" re-score** reported by one critique: not reproduced in our evidence files,
   so not quoted anywhere.

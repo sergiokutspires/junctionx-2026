@@ -29,9 +29,11 @@ internet, no paid API. We have not built that connector yet.
 ### 3. What does it take to switch it on in a new store?
 
 **One day of that store's own pictures and its planogram; no labels.** Day 0: the label-free core fits itself to the
-store's unlabelled pictures. For one day here (181 frames) that is about 12 CPU-minutes of features plus an 11.5-second
-fit, about a cent at cloud prices (our arithmetic); it then scores about 1.18 points per area over the day. Day 1,
-optional: an AI labeller marks the store's pictures once and two small heads are refitted; no person labels anything.
+store's unlabelled pictures. For one day here (181 frames) that is about 12 CPU-minutes of feature extraction plus a fit
+that took 11.5 s wall-clock, about a cent at cloud prices (our arithmetic); it then scores about 1.18 points per area
+over the day. Its default thresholds were tuned once on this store's key, so a second store is the real test. Day 1,
+optional: AI models label a sample of the store's pictures once (automated, no human labelling), a small stock head
+is refitted and a same-day memory of those labels is kept; product recognition stays zero-shot.
 At API list price that is about $2.5 to $7.7 per store-day (181 pictures, one to three Claude Sonnet 5.5 votes each),
 our estimate. Late in the day the calibrated heads score 1.41 to 1.48 against the label-free 0.88 to 0.99, so day 1 is
 where the late-day accuracy comes from. We have not timed this on a second store, because we have only one.
@@ -40,31 +42,34 @@ where the late-day accuracy comes from. We have not timed this on a second store
 
 **On cost, yes; on accuracy, we need a second store to prove it.** At one picture per camera every 5 minutes, 14 hours
 a day, it is about $0.24 per camera per month, about $235 a month for 1,000 cameras. What grows with a fleet is
-usually labelling, and ours needs none: a new store is about a cent of CPU to switch on. Each picture is independent,
+usually labelling, and day 0 needs none: a new store is about a cent of CPU to switch on (day-1 calibration uses an AI-made key, about $2.5 to $7.7 per store). Each picture is independent,
 so more stores means more cores running the same command. Our proxy for a new camera is holding a whole camera out of
 calibration: 1.23 points per area over the day, against 1.18 for the label-free core, and a new store is our ask. (If
-asked about all of Leiria: 1,676 cameras, as Sensei reported at launch, at this cadence would be about $395 a month, an
-upper bound, since most of those cameras do not look at produce.)
+asked about all of Leiria: about 1,700 cameras, as trade press reported at launch (Retail-Optimiser, Jan 2025), at this
+cadence would be about $395 a month, an upper bound, since most of those cameras do not look at produce.)
 
 ### 5. Why not just ask a vision-language model about every picture?
 
 **Cost, and you asked about cost.** With the same two pictures our AI labellers saw (about 4,600 input and 490 output
 tokens), Claude Sonnet 5.5 costs about $0.014 per image, about 300 times ours; Opus 5.5 about 600 times; Haiku 5.5
-about 15 times, accuracy untested. That is a cost ratio, not an accuracy comparison. We used such a model
-once, as a teacher to label a sample, and ship small open models as the student.
+about 15 times, accuracy untested. That is a cost ratio at list price with our labelling prompt (output tokens are our estimate, 45 per area), not an
+accuracy comparison; a leaner prompt or the Batch API (about 150 times) would narrow it. We used such models once, as
+teachers to label a sample, and ship small open models as the student.
 
 ### 6. What exactly does it cost per image?
 
 **About $0.00005 per image, measured.** One CPU core spends about 3.8 CPU-seconds on a frame (all ~11 areas; 14
-frames, median of three back-to-back runs, 3.7 to 3.8; `tools/benchmark_cost.py`), peak RAM
-1.2 GB, no GPU. At on-demand cloud prices (AWS c7i.large, $0.0892/h for 2 vCPU, so ~$0.045 per vCPU-hour) that is
+frames, median of three back-to-back runs, 3.66 to 3.84; two earlier runs measured about 4.5, not saved, which would
+be about $0.00006; `tools/benchmark_cost.py`), peak RAM 1.2 GB, no GPU, measured on an AMD Ryzen AI 7 350 laptop with
+native bf16 (a CPU without bf16 needs about 1.6 times more). We price those CPU-seconds at a cloud vCPU, which may be
+slower, so treat it as about $0.00005 to $0.0001. At on-demand cloud prices (AWS c7i.large, $0.0892/h for 2 vCPU, so ~$0.045 per vCPU-hour) that is
 ~$0.000047 per image, about 5 cents per thousand. A 14-camera section photographed every 5 minutes for 14 hours is
 2,352 images a day: ~$0.11 a day, ~$3 a month, a sixth of one core, or nothing extra on a machine the store already
-runs. How we got there: running CLIP and DINOv2 in bf16 cut the CPU time by about a quarter against full precision (5.2 to 3.8 CPU-s on the same 14 frames)
-with scores inside the noise of the clustering seed; int8 lost score and the smaller CLIP B/32 lost identification accuracy,
-so both were rejected, and bigger models (CLIP-L, SigLIP, DINOv2-base) did not score better. Using 16 threads is faster (1.4 s
+runs. How we got there: running CLIP and DINOv2 in bf16 cut the CPU time by about a third (5.2 to 3.4 CPU-s, same heads);
+the per-area memory adds back about 0.3 (3.4 to 3.8). In quick tests whose results were not saved, int8 lost score,
+and larger embeddings in the heads showed no gain; we do not quote numbers for those. Using 16 threads is faster (1.4 s
 per image) but burns 18 CPU-seconds (an earlier full-precision measurement), so for cost we run one core per stream.
-The optional product boxes (OWLv2) cost ~16 CPU-seconds more (~$0.0002) and only feed the staff app, not the score.
+The optional product boxes (OWLv2) cost ~16 CPU-seconds more (about $0.00024 per image in total, peak RAM 1.76 GB) and only feed the staff app, not the score.
 
 **Cheaper still: skipping areas whose pixels did not change. We tested it and the win is small.** Cameras are fixed,
 so we compared consecutive pictures of every area (1,810 pairs, about an hour apart): 84.5% of them keep their label,
@@ -79,40 +84,48 @@ measured, and the gate is not built into the pipeline.
 
 **A four-week shadow pilot.** Week 1: run silently at Leiria and compare our tasks with your restock logs and your
 existing replenishment tasks. Weeks 2 to 4: a second store, switched on from its own pictures. Pass criteria we
-propose: at least 95% of empty shelves caught, at most 1 wasted walk in 10, and a first round short enough for one
-person per shift. With your scale data we would also test the design on slide 11: kilos weighed per product per hour
+propose: at least 95% of empty shelves caught, at most 1 wasted restock walk in 10 (on our AI key the calibrated store
+already measures about 1 in 10, so the pilot checks that against your restock logs), and a first round short enough
+for one person per shift. What we need: frames and planogram from your data API, restock logs, one contact. What you
+get: a weekly accuracy report. With your scale data we would also test a design: kilos weighed per product per hour
 against the drop in shelf fill, as free calibration and as a check on sales speed. None of that is tested yet.
 
 ### 8. Is planogram compliance even worth monitoring?
 
 **Where compliance is high, the effect on out-of-stocks is modest; the value is where it is low.** In the one solid
 study (one US retailer, four non-fresh categories), compliance was already above 90% and a 10-point change moved
-out-of-stocks by about one point. In this produce section, about 1 area in 8 holds another product than planned in
-the first pictures of the day, 1 in 65 by evening, and a wrong product also means a wrong price on the
+out-of-stocks by about one point. In this produce section, on one day and our AI-made key, about 1 area in 8 held another product
+than planned in the first pictures of the day (06h), 1 in 65 by evening; we cannot tell a set-up mistake from a
+planned change, and a wrong product also means a wrong price on the
 shelf. So we flag only clear cases and put them first.
 
 ## B. Questions about the method and the numbers
 
 ### 9. Did you use labels?
 
-**The pipeline does not need any.** It learns the store's look from unlabelled pictures: patch clusters for stock,
-CLIP zero-shot for the product. To measure it, and to calibrate two small heads, we built an answer key with
-independent AI labellers; no person labelled anything. The key has 1,962 areas over all 181 frames, three votes
+**Day 0 needs none; the submitted, calibrated model uses an answer key made by AI models, with no human
+labelling.** The label-free core learns the store's look from unlabelled pictures: patch clusters for stock, CLIP
+zero-shot for the product (its default thresholds were tuned once on this store's key). To measure it, and to
+calibrate a small stock head, we built the key with AI labellers: round 1 (cameras 6215, 6371, 6373) three Claude Opus
+5.5 labellers plus adjudication; then Claude Sonnet 5.5 votes plus two more votes per area (Sonnet 5.5 and Opus 5.5),
+with the rubric in `tools/gemini_label.py`. The key has 1,962 areas over all 181 frames, three votes
 per area: on the 11 cameras voted most recently (1,569 areas) the votes were unanimous for 84% and 34 disputes were
 adjudicated; three cameras (393 areas) come from the earlier round, where 36 areas of camera 6373 got only two
 votes (six of them split). The original 756-area key is kept as a
-second test so older numbers stay comparable. A second AI, Gemini, matched all 24 wrong-product calls it re-checked. We never had the hidden
+second test so older numbers stay comparable. A Gemini Flash cross-check on 192 areas agreed on 100% of wrong-product calls and 81% of stock levels. We never had the hidden
 validation set.
 
 ### 10. How do you know the score will hold on the hidden set?
 
-**We do not know; we estimate, and we show the weak number too.** Calibrated scores are on labels the heads were not
+**We do not know; we estimate a range, 355 to 430 of 578, and we show the weak number too.** Calibrated scores are on labels the heads were not
 fitted on: 1.23 points per area with a whole camera held out over the day (all 1,962 areas), 1.41 on the last two
 frames of each camera, 1.48 on the last frame. Label-free core: 1.18, 0.99 and 0.88. The label-free core uses no labels
 at all, but it was fitted on unlabelled pictures from all 14 cameras, so we never say it saw no camera. The hidden set
-is the same 14 cameras; if its pictures are late in the day, as the brief's one example file name (20:24) suggests,
-1.41 to 1.48 x 289 is about 410 to 430 of 578; if they span the day, about 355 (1.23 x 289). The key is AI-labelled,
-not the store's truth. If asked about the old 1.25: that was the first 756 areas with the previous model; the final
+is the same 14 cameras; if its pictures are late in the day, which we assume because the brief's one example file name
+(20:24) is later than our last picture (20:16), 1.41 to 1.48 x 289 is about 410 to 430 of 578; if they span the day,
+about 355 (1.23 x 289). Day 0 with no labels would be about 255 to 285. Camera by camera, late scores run from 0.5 to
+2.0 per area. The key is AI-labelled, not the store's truth. The brief's 320 is a worked scoring example, not a
+benchmark, so we do not compare against it. If asked about the old 1.25: that was the first 756 areas with the previous model; the final
 model scores 1.17 on that part (dominated by three cameras with 12 to 13 labelled frames each), 1.23 on all 1,962, and
 the late rows, which are what the hidden set resembles, improved on both keys (on the 756 part 1.35 and 1.43, against
 1.30 and 1.39 before; about 390 to 410 points). Sanity check: always answering "compliant" and "full" scores 0.76 per
@@ -120,12 +133,13 @@ area over the whole key but only 0.46 and 0.18 late in the day, because shelves 
 
 ### 11. What are the weak spots?
 
-**Four, all measured, and on slide 8.** (1) Wrong product on a camera held out of calibration: it finds 31 of 117
-cases, about a quarter, against 6 of 8 on late frames and 4 of 4 on the last frame (those folds hold very few wrong
-products); it is precise (2 false alarms in 1,845 correct areas) but not complete. (2) Wasted walks: about 1 restock
+**Four, all measured, on slide 7 and appendix A2.** (1) Wrong product on a camera held out of calibration: it finds
+31 of 117 cases, about a quarter, against 6 of 8 on late frames and 4 of 4 on the last frame (those folds hold very
+few wrong products, and about half of those late finds come from remembering an earlier labelled wrong product: the
+label-free run finds 4 of 8 and 2 of 4); it is precise (2 false alarms in 1,845 correct areas) but not complete. (2) Wasted walks: about 1 restock
 task in 10 on late frames points at a shelf our key calls full (9 of 91), about 1 in 4 with a camera held out (148 of
 539). (3) Half shelves shown as full: about 4 in 10 (28 of 71 late, 130 of 340 camera held out); our own labellers
-disagreed most there: on the 11 voted cameras the three votes agreed on 58% of the areas the key calls half, against
+disagreed most there: on the 11 voted cameras the three votes agreed on 57% of the areas the key calls half, against
 88% for empty and 92% for full. (4) One store, one day.
 
 ### 12. Do you lean low on stock?
@@ -134,7 +148,7 @@ disagreed most there: on the 11 voted cameras the three votes agreed on 58% of t
 Take an area that is half or full with equal chance: "half" has expected score 0.5 x 1 + 0.5 x (-2) = -0.5, "full"
 has 0.5 x 1 + 0.5 x (-3) = -1.0, so the rule answers "half". We pick the answer with the best expected score for every
 area, and we always answer. But on late frames the calibrated model is still too high 35 times and too low 11:
-the misses are confident half-read-as-full calls, so the fix is in seeing, not in the threshold.
+28 of the 35 too-high errors are half read as full, so the fix is in seeing, not in the threshold.
 
 ### 13. Why not train an object detector and count?
 
@@ -147,14 +161,15 @@ trust the answer; they feed the "about N visible units" estimate, not the scored
 
 **We look only at what is visible, and we do not raise alarms we cannot support.** Every area crop carries a mask of
 the visible pixels, and fill uses visible patches only. An area that is empty, occluded or barely visible counts as
-compliant, because nothing wrong is shown. Hands and baskets are never drawn as products. We have not measured how
+compliant, because nothing wrong is shown. The optional box detector drops boxes it labels as hands or baskets. We have not measured how
 much a large occluder degrades the stock estimate.
 
 ### 15. What happens when the planogram changes?
 
-**Edit the planogram file; the product side follows.** Catalogue names become CLIP prompts, so a new product needs no
-new training images. The stock side looks for "container versus product", which does not depend on the product;
-re-running the label-free fit refreshes it. We compare the shelf against the planogram; we never assume the planogram
+**Edit the planogram and re-run the label-free fit; no new labels for the product side.** Catalogue names become
+CLIP prompts, so a new product needs no new training images. The refit took 11.5 s wall-clock with cached features, about
+12 CPU-minutes for a new day of pictures; the labelled heads should then be refitted or dropped. The stock side looks
+for "container versus product", which does not depend on the product. We compare the shelf against the planogram; we never assume the planogram
 describes the shelf.
 
 ### 16. Why only base-fruit level for compliance?
@@ -172,11 +187,14 @@ tested that.
 
 ### 18. Can it tell you about waste?
 
-**Only a first proxy today, and a design for more.** The app lists slow movers ("barely moved all day, check they are
-still fresh"); we have not validated it against waste records. The design on slide 11: where fill drops with no
+**Only a first proxy today, and a design for more.** The app counts slow movers ("24 produtos quase não mexeram
+durante o dia. Verifique se ainda estão frescos.") and turns time on display, against a shelf-life class, into
+freshness checks ("Quando houver tempo: verificar frescura", an estimate); we have not validated either against waste
+records. A design: where fill drops with no
 matching weighed sale, that is culling or shrink, a waste signal. Untested. Context, with its scope: in Austria's
-mandatory retailer reporting, fruit and vegetables were about 45% of the food large retailers discarded (Q4 2023), and
-MC has publicly committed to halve food waste by 2028 against 2020. The brief's stock scale stops at "full", so
+mandatory retailer reporting, fruit and vegetables were about 45% of the food discarded (Q4 2023, among large retailers
+that assigned product groups), and MC has publicly committed to halve all food waste by 2028 against 2020 (Feb 2025; we
+found no published progress figure). The brief's stock scale stops at "full", so
 overstock cannot be scored; our waste levers are slow movers and not over-restocking (question 21).
 
 ### 19. You have scales and weight sensors. Isn't that enough?
@@ -188,11 +206,11 @@ labeller and checks our sales-speed estimate. We have not seen your sensor or sa
 
 ## C. Questions a store or operations manager will ask
 
-### 20. The app shows 79 tasks. Your platform generates about 9 replenishment tasks a day. Isn't that alert overload?
+### 20. The app shows 66 tasks. Your platform generates about 9 replenishment tasks a day. Isn't that alert overload?
 
-**Staff see 25 first, and those 79 are one evening snapshot of the whole section.** The app groups the list: *Primeiro*
-(wrong product and empty, 25 in that screenshot), *Depois* (running low, 41) and 13 freshness checks in a last group of
-their own, all 14 cameras, pictures from 18:07 to 20:16. We do not know how Sensei counts its 9 tasks (store-wide, all
+**Staff see 25 first, and those 66 are one evening snapshot of the whole section.** The header reads "Fazer agora · 66
+tarefas" and groups the list: *Primeiro: produto errado e vazio* (25), *Depois: a ficar baixo* (41), then 13 freshness
+checks as extras (*Quando houver tempo: verificar frescura*), all 14 cameras, pictures from 18:07 to 20:16. We do not know how Sensei counts its 9 tasks (store-wide, all
 categories, per day), so we do not compare the two numbers. Next steps we have not built: cap each round, rank by how
 soon the shelf empties, and merge an area's repeated pictures into one task that shows how long the problem has
 lasted. We have not measured tasks per shift or how often a task flips between pictures.
@@ -200,21 +218,42 @@ lasted. We have not measured tasks per shift or how often a task flips between p
 ### 21. Late in the day we let produce shelves run down on purpose. Won't "restock the low shelves" add waste?
 
 **It would if staff followed it blindly, so the next step is a closing-time mode.** After a store's own cut-off, the
-list would show only empty shelves and wrong products, and carry the low ones to the next morning's list. It is on
-slide 11 as "next", not built. Today "low" already sits in the second round (*Depois*), after empty and wrong.
+list would show only empty shelves and wrong products, and carry the low ones to the next morning's list. It is a
+next step, not built. Today "low" already sits in the second round (*Depois*), after empty and wrong.
 
 ### 22. What stops the same alert coming back every picture?
 
-**Today, little beyond honesty; that is a known gap.** Uncertain calls say *Incerto: confirmar à vista*, and every
-task shows its picture's age. *Marcar feito* is stored on that phone only. Next (not built): a task closes itself when
-the next picture shows the area filled, and *Está certo assim* silences an area until the planogram changes, for
-promotions and planned swaps.
+**Today, little beyond honesty; that is a known gap.** Uncertain calls say *Confiança: Baixa: confirmar à vista*,
+every card shows when the camera saw it (*Visto às 18:35*), and an age chip (*há 1 h 40 min*) when the picture is
+older than the newest. *Marcar feito* is stored on that phone only. Next (not built): a task closes itself when the
+next picture shows the area filled, and a button that silences an area until the planogram changes, for promotions
+and planned swaps.
 
 ### 23. Why say 1 in 8 areas differ in the morning? Our team is still setting up then.
 
-**Exactly: it is a set-up check, not a failure.** About 1 area in 8 differs from the plan in the first pictures (06h)
-and 1 in 65 by evening (19h). That is what a morning check-sheet is for: the app prints one, with a tick
+**Exactly: it is a set-up check, not a failure.** On one day and our AI-made key, about 1 area in 8 differed from the
+plan in the first pictures (06h) and 1 in 65 by evening (19h); we cannot tell a set-up mistake from a planned change. That is what a morning check-sheet is for: the app prints one, with a tick
 box per task. We do not know the store's opening hour, so we do not say "at opening".
+
+## D. Questions other teams asked Sensei on Discord (judges may ask them too)
+
+### 24. What about products that are not in the planogram?
+Sensei's answer on Discord: they are **not planogram compliant**. That is exactly our rule: an area is compliant
+only if it shows the planogram's product for that spot; anything else, including a product that is not in the
+planogram at all, is "wrong product". Our answer key used the same rule (117 of 1,962 areas are not compliant,
+`data/labels/teacher_labels_v2.json`).
+
+### 25. How do you tell apart products that look the same (varieties, packs, different names)?
+Sensei's answer on Discord: *"you have to train it"* - and that is what we do. The per-area memory compares each
+picture with the same spot's labelled pictures from earlier in the day, so every spot learns its own normal look;
+CLIP catches clear swaps (oranges in the banana crate). Honest limit: look-alike varieties are the hardest case,
+and on a camera we have never labelled we miss most wrong products (slide 7). The scalable fix is training data
+that the store already produces (for example what the scale or till recorded for that spot) - an idea, not built.
+
+### 26. You trained on labels. Isn't the brief about learning without labels?
+No human labelled anything. The core runs label-free from day 0 (the label-free model is shipped:
+`SUBMIT_LABEL_FREE.bat`); to train it, as Sensei said teams have to, we had AI models annotate the train/test pictures
+(never the validation set). That answer key costs minutes, not a labelling team, and works the same in a new store.
 
 ## Lightning round
 
@@ -224,13 +263,17 @@ box per task. We do not know the store's opening hour, so we do not say "at open
 - **Is the app tied to the internet?** No. It is a static page and opens from a file, a USB stick or a phone. In
   production the tasks would go into the alerts your staff already get; the page is the reference UI.
 - **Languages?** Portuguese by default, English one tap away; product names come from your catalogue.
-- **Privacy?** We analyse only the planogram areas of each frame; we never identify people, and hands are dropped
-  from the boxes.
+- **Privacy?** The scores use only the planogram areas; the optional box detector sees the whole picture and keeps
+  only boxes inside the areas, dropping those it labels as hands or baskets. We never identify people. The staff app
+  shows the frame, downscaled.
 - **Why the name Fresh Eyes?** It is your challenge title. The staff app itself is called *Controlo de prateleiras*.
-- **What would you do with another week?** Calibrate confidence (check that "Certo" is right more often than
-  "Provável"), hand-count 20 to 30 areas to check the unit counts, build the closing-time mode and
+- **What would you do with another week?** Calibrate confidence (check that "Alta" is right more often than
+  "Média"), hand-count 20 to 30 areas to check the unit counts, build the closing-time mode and
   self-closing tasks, and run on a second store.
 - **"SUBMISSION FORMAT CHECK"?** Our own check that the output file has the brief's format; not a Sensei
   certification.
-- **Who labelled the key?** Independent AI labellers, three votes per area (two on 36 areas); not people, not the store.
-- **Is the projection the score you expect?** It is our best estimate; the hidden set decides.
+- **Who labelled the key?** AI models (Claude Opus 5.5 and Sonnet 5.5 votes, Opus adjudication), three votes per area
+  (two on 36 areas); no human labelling, not the store.
+- **Is the projection the score you expect?** It is our estimate, 355 to 430, on an AI-made key with the upper end
+  assuming late pictures; the hidden set decides.
+- **Did you beat the brief's 320?** We do not compare against it: it is a worked scoring example, not a benchmark.

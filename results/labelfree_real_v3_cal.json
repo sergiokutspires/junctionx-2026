@@ -1,0 +1,41 @@
+{
+ "camera": {
+  "total": 2320,
+  "max": 3924,
+  "areas": 1962,
+  "per_area": 1.1825,
+  "ident_acc": 0.9551,
+  "stock_acc": 0.8053,
+  "stock_cases": {
+   "correct": 1580,
+   "below": 188,
+   "above": 194
+  }
+ },
+ "time2": {
+  "total": 301,
+  "max": 608,
+  "areas": 304,
+  "per_area": 0.9901,
+  "ident_acc": 0.9868,
+  "stock_acc": 0.7303,
+  "stock_cases": {
+   "correct": 222,
+   "below": 33,
+   "above": 49
+  }
+ },
+ "time1": {
+  "total": 134,
+  "max": 304,
+  "areas": 152,
+  "per_area": 0.8816,
+  "ident_acc": 0.9868,
+  "stock_acc": 0.7039,
+  "stock_cases": {
+   "correct": 107,
+   "above": 29,
+   "below": 16
+  }
+ }
+}

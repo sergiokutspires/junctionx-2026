@@ -1,0 +1,10 @@
+{
+ "input_tokens": 4610.1551014019315,
+ "output_tokens": 487.7900552486188,
+ "usd_per_image": {
+  "ours (CLIP + DINOv2 on 1 CPU core)": 4.664416666666666e-05,
+  "Claude Sonnet 5.5, one call per image": 0.014098210755290051,
+  "Claude Opus 5.5, one call per image": 0.028196421510580102,
+  "Claude Haiku 5.5, one call per image": 0.0007049105377645026
+ }
+}

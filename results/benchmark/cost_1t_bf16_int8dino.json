@@ -1,0 +1,17 @@
+{
+ "model": "experiments/cost/bf16_int8dino",
+ "clip_model": "openai/clip-vit-base-patch16",
+ "dino_model": "facebook/dinov2-small",
+ "int8_clip": false,
+ "int8_dino": true,
+ "bf16": true,
+ "threads": 1,
+ "images": 14,
+ "areas": 152,
+ "model_load_s": 4.4,
+ "wall_s_per_image": 2.653,
+ "cpu_s_per_image": 2.82,
+ "cpu_s_per_area": 0.26,
+ "areas_per_image": 10.9,
+ "peak_ram_mb": 1308
+}

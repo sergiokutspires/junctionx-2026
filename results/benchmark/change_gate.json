@@ -1,0 +1,675 @@
+{
+ "study": {
+  "frames": 181,
+  "cameras": 14,
+  "area_pairs": 1810,
+  "scorable_pairs": 1810,
+  "frame_spacing_s": {
+   "min": 3604,
+   "median": 3925,
+   "max": 4696
+  },
+  "gate_resolution": 64,
+  "labels": "data/labels/teacher_labels_v2.json",
+  "protocol": "consecutive frames of the same camera, all planogram areas"
+ },
+ "labels": {
+  "changed_pairs": 281,
+  "unchanged_share": 0.8448,
+  "oracle_max_skip_share": 0.8448,
+  "changed_stock_level": 263,
+  "changed_compliance": 28,
+  "unanimous_pairs": 1131,
+  "unanimous_changed": 124,
+  "mean_points_lost_per_stale_changed_area": 3.58
+ },
+ "score": {
+  "components": [
+   "grey",
+   "chroma",
+   "hist"
+  ],
+  "blur_sigma_px": 1.5,
+  "hist_bins": [
+   12,
+   4
+  ],
+  "combination": "mean of robust z-scores of log components",
+  "log_median": [
+   -3.4305,
+   0.4,
+   -2.3549
+  ],
+  "log_mad_sd": [
+   1.328,
+   0.6138,
+   0.4804
+  ],
+  "auc_label_changed_all": 0.888,
+  "auc_label_changed_unanimous": 0.943
+ },
+ "operating_points": [
+  {
+   "target_miss_rate": 0.0,
+   "threshold": -0.953,
+   "in_sample": {
+    "pairs": 1810,
+    "skipped": 56,
+    "skip_share": 0.0309,
+    "changed_pairs": 281,
+    "changed_skipped": 0,
+    "miss_rate": 0.0,
+    "miss_rate_ci95": [
+     0.0,
+     0.0135
+    ],
+    "stale_share_of_skipped": 0.0,
+    "stale_areas_per_100_pairs": 0.0,
+    "points_lost_per_area": 0.0,
+    "points_lost_per_stale_area": 0.0
+   },
+   "leave_one_camera_out": {
+    "pairs": 1810,
+    "skipped": 68,
+    "skip_share": 0.0376,
+    "changed_pairs": 281,
+    "changed_skipped": 1,
+    "miss_rate": 0.0036,
+    "miss_rate_ci95": [
+     0.0006,
+     0.0199
+    ],
+    "stale_share_of_skipped": 0.0147,
+    "stale_areas_per_100_pairs": 0.055,
+    "points_lost_per_area": 0.0017,
+    "points_lost_per_stale_area": 3.0
+   },
+   "loco_thresholds": {
+    "6215": -0.942,
+    "6371": -0.957,
+    "6373": -0.965,
+    "6376": -0.93,
+    "6383": -0.955,
+    "6385": -0.977,
+    "6386": -0.959,
+    "6443": -0.926,
+    "6462": -0.951,
+    "6468": -0.948,
+    "6491": -0.938,
+    "6591": -0.831,
+    "6594": -0.96,
+    "6781": -0.952
+   },
+   "unanimous_pairs_only_in_sample": {
+    "threshold": -0.764,
+    "pairs": 1131,
+    "skipped": 116,
+    "skip_share": 0.1026,
+    "changed_pairs": 124,
+    "changed_skipped": 0,
+    "miss_rate": 0.0,
+    "miss_rate_ci95": [
+     0.0,
+     0.03
+    ],
+    "stale_share_of_skipped": 0.0,
+    "stale_areas_per_100_pairs": 0.0,
+    "points_lost_per_area": 0.0,
+    "points_lost_per_stale_area": 0.0
+   }
+  },
+  {
+   "target_miss_rate": 0.005,
+   "threshold": -0.817,
+   "in_sample": {
+    "pairs": 1810,
+    "skipped": 127,
+    "skip_share": 0.0702,
+    "changed_pairs": 281,
+    "changed_skipped": 1,
+    "miss_rate": 0.0036,
+    "miss_rate_ci95": [
+     0.0006,
+     0.0199
+    ],
+    "stale_share_of_skipped": 0.0079,
+    "stale_areas_per_100_pairs": 0.055,
+    "points_lost_per_area": 0.0017,
+    "points_lost_per_stale_area": 3.0
+   },
+   "leave_one_camera_out": {
+    "pairs": 1810,
+    "skipped": 133,
+    "skip_share": 0.0735,
+    "changed_pairs": 281,
+    "changed_skipped": 2,
+    "miss_rate": 0.0071,
+    "miss_rate_ci95": [
+     0.002,
+     0.0256
+    ],
+    "stale_share_of_skipped": 0.015,
+    "stale_areas_per_100_pairs": 0.11,
+    "points_lost_per_area": 0.0039,
+    "points_lost_per_stale_area": 3.5
+   },
+   "loco_thresholds": {
+    "6215": -0.803,
+    "6371": -0.821,
+    "6373": -0.831,
+    "6376": -0.801,
+    "6383": -0.816,
+    "6385": -0.842,
+    "6386": -0.825,
+    "6443": -0.737,
+    "6462": -0.813,
+    "6468": -0.811,
+    "6491": -0.798,
+    "6591": -0.779,
+    "6594": -0.826,
+    "6781": -0.817
+   },
+   "unanimous_pairs_only_in_sample": {
+    "threshold": -0.764,
+    "pairs": 1131,
+    "skipped": 116,
+    "skip_share": 0.1026,
+    "changed_pairs": 124,
+    "changed_skipped": 0,
+    "miss_rate": 0.0,
+    "miss_rate_ci95": [
+     0.0,
+     0.03
+    ],
+    "stale_share_of_skipped": 0.0,
+    "stale_areas_per_100_pairs": 0.0,
+    "points_lost_per_area": 0.0,
+    "points_lost_per_stale_area": 0.0
+   }
+  },
+  {
+   "target_miss_rate": 0.01,
+   "threshold": -0.764,
+   "in_sample": {
+    "pairs": 1810,
+    "skipped": 179,
+    "skip_share": 0.0989,
+    "changed_pairs": 281,
+    "changed_skipped": 2,
+    "miss_rate": 0.0071,
+    "miss_rate_ci95": [
+     0.002,
+     0.0256
+    ],
+    "stale_share_of_skipped": 0.0112,
+    "stale_areas_per_100_pairs": 0.11,
+    "points_lost_per_area": 0.0039,
+    "points_lost_per_stale_area": 3.5
+   },
+   "leave_one_camera_out": {
+    "pairs": 1810,
+    "skipped": 215,
+    "skip_share": 0.1188,
+    "changed_pairs": 281,
+    "changed_skipped": 5,
+    "miss_rate": 0.0178,
+    "miss_rate_ci95": [
+     0.0076,
+     0.041
+    ],
+    "stale_share_of_skipped": 0.0233,
+    "stale_areas_per_100_pairs": 0.276,
+    "points_lost_per_area": 0.0088,
+    "points_lost_per_stale_area": 3.2
+   },
+   "loco_thresholds": {
+    "6215": -0.747,
+    "6371": -0.769,
+    "6373": -0.778,
+    "6376": -0.745,
+    "6383": -0.761,
+    "6385": -0.789,
+    "6386": -0.77,
+    "6443": -0.727,
+    "6462": -0.757,
+    "6468": -0.759,
+    "6491": -0.744,
+    "6591": -0.77,
+    "6594": -0.601,
+    "6781": -0.767
+   },
+   "unanimous_pairs_only_in_sample": {
+    "threshold": -0.754,
+    "pairs": 1131,
+    "skipped": 122,
+    "skip_share": 0.1079,
+    "changed_pairs": 124,
+    "changed_skipped": 1,
+    "miss_rate": 0.0081,
+    "miss_rate_ci95": [
+     0.0014,
+     0.0443
+    ],
+    "stale_share_of_skipped": 0.0082,
+    "stale_areas_per_100_pairs": 0.088,
+    "points_lost_per_area": 0.0027,
+    "points_lost_per_stale_area": 3.0
+   }
+  },
+  {
+   "target_miss_rate": 0.02,
+   "threshold": -0.585,
+   "in_sample": {
+    "pairs": 1810,
+    "skipped": 375,
+    "skip_share": 0.2072,
+    "changed_pairs": 281,
+    "changed_skipped": 5,
+    "miss_rate": 0.0178,
+    "miss_rate_ci95": [
+     0.0076,
+     0.041
+    ],
+    "stale_share_of_skipped": 0.0133,
+    "stale_areas_per_100_pairs": 0.276,
+    "points_lost_per_area": 0.0088,
+    "points_lost_per_stale_area": 3.2
+   },
+   "leave_one_camera_out": {
+    "pairs": 1810,
+    "skipped": 391,
+    "skip_share": 0.216,
+    "changed_pairs": 281,
+    "changed_skipped": 9,
+    "miss_rate": 0.032,
+    "miss_rate_ci95": [
+     0.0169,
+     0.0597
+    ],
+    "stale_share_of_skipped": 0.023,
+    "stale_areas_per_100_pairs": 0.497,
+    "points_lost_per_area": 0.0166,
+    "points_lost_per_stale_area": 3.33
+   },
+   "loco_thresholds": {
+    "6215": -0.643,
+    "6371": -0.591,
+    "6373": -0.601,
+    "6376": -0.572,
+    "6383": -0.579,
+    "6385": -0.595,
+    "6386": -0.593,
+    "6443": -0.509,
+    "6462": -0.575,
+    "6468": -0.579,
+    "6491": -0.56,
+    "6591": -0.592,
+    "6594": -0.507,
+    "6781": -0.591
+   },
+   "unanimous_pairs_only_in_sample": {
+    "threshold": -0.664,
+    "pairs": 1131,
+    "skipped": 186,
+    "skip_share": 0.1645,
+    "changed_pairs": 124,
+    "changed_skipped": 2,
+    "miss_rate": 0.0161,
+    "miss_rate_ci95": [
+     0.0044,
+     0.0569
+    ],
+    "stale_share_of_skipped": 0.0108,
+    "stale_areas_per_100_pairs": 0.177,
+    "points_lost_per_area": 0.0053,
+    "points_lost_per_stale_area": 3.0
+   }
+  },
+  {
+   "target_miss_rate": 0.05,
+   "threshold": -0.328,
+   "in_sample": {
+    "pairs": 1810,
+    "skipped": 630,
+    "skip_share": 0.3481,
+    "changed_pairs": 281,
+    "changed_skipped": 14,
+    "miss_rate": 0.0498,
+    "miss_rate_ci95": [
+     0.0299,
+     0.0819
+    ],
+    "stale_share_of_skipped": 0.0222,
+    "stale_areas_per_100_pairs": 0.773,
+    "points_lost_per_area": 0.026,
+    "points_lost_per_stale_area": 3.36
+   },
+   "leave_one_camera_out": {
+    "pairs": 1810,
+    "skipped": 614,
+    "skip_share": 0.3392,
+    "changed_pairs": 281,
+    "changed_skipped": 15,
+    "miss_rate": 0.0534,
+    "miss_rate_ci95": [
+     0.0326,
+     0.0862
+    ],
+    "stale_share_of_skipped": 0.0244,
+    "stale_areas_per_100_pairs": 0.829,
+    "points_lost_per_area": 0.0282,
+    "points_lost_per_stale_area": 3.4
+   },
+   "loco_thresholds": {
+    "6215": -0.449,
+    "6371": -0.352,
+    "6373": -0.365,
+    "6376": -0.342,
+    "6383": -0.464,
+    "6385": -0.357,
+    "6386": -0.295,
+    "6443": -0.299,
+    "6462": -0.457,
+    "6468": -0.469,
+    "6491": -0.442,
+    "6591": -0.354,
+    "6594": -0.163,
+    "6781": -0.356
+   },
+   "unanimous_pairs_only_in_sample": {
+    "threshold": 0.573,
+    "pairs": 1131,
+    "skipped": 797,
+    "skip_share": 0.7047,
+    "changed_pairs": 124,
+    "changed_skipped": 6,
+    "miss_rate": 0.0484,
+    "miss_rate_ci95": [
+     0.0224,
+     0.1016
+    ],
+    "stale_share_of_skipped": 0.0075,
+    "stale_areas_per_100_pairs": 0.531,
+    "points_lost_per_area": 0.0168,
+    "points_lost_per_stale_area": 3.17
+   }
+  },
+  {
+   "target_miss_rate": 0.1,
+   "threshold": 0.092,
+   "in_sample": {
+    "pairs": 1810,
+    "skipped": 949,
+    "skip_share": 0.5243,
+    "changed_pairs": 281,
+    "changed_skipped": 28,
+    "miss_rate": 0.0996,
+    "miss_rate_ci95": [
+     0.0698,
+     0.1402
+    ],
+    "stale_share_of_skipped": 0.0295,
+    "stale_areas_per_100_pairs": 1.547,
+    "points_lost_per_area": 0.0503,
+    "points_lost_per_stale_area": 3.25
+   },
+   "leave_one_camera_out": {
+    "pairs": 1810,
+    "skipped": 960,
+    "skip_share": 0.5304,
+    "changed_pairs": 281,
+    "changed_skipped": 30,
+    "miss_rate": 0.1068,
+    "miss_rate_ci95": [
+     0.0758,
+     0.1483
+    ],
+    "stale_share_of_skipped": 0.0312,
+    "stale_areas_per_100_pairs": 1.657,
+    "points_lost_per_area": 0.0541,
+    "points_lost_per_stale_area": 3.27
+   },
+   "loco_thresholds": {
+    "6215": 0.085,
+    "6371": 0.089,
+    "6373": 0.041,
+    "6376": 0.095,
+    "6383": 0.113,
+    "6385": 0.065,
+    "6386": 0.085,
+    "6443": 0.238,
+    "6462": 0.069,
+    "6468": 0.092,
+    "6491": 0.083,
+    "6591": 0.055,
+    "6594": 0.417,
+    "6781": 0.065
+   },
+   "unanimous_pairs_only_in_sample": {
+    "threshold": 1.164,
+    "pairs": 1131,
+    "skipped": 932,
+    "skip_share": 0.824,
+    "changed_pairs": 124,
+    "changed_skipped": 12,
+    "miss_rate": 0.0968,
+    "miss_rate_ci95": [
+     0.0562,
+     0.1616
+    ],
+    "stale_share_of_skipped": 0.0129,
+    "stale_areas_per_100_pairs": 1.061,
+    "points_lost_per_area": 0.038,
+    "points_lost_per_stale_area": 3.58
+   }
+  }
+ ],
+ "headline": {
+  "target_miss_rate": 0.0,
+  "leave_one_camera_out": {
+   "pairs": 1810,
+   "skipped": 68,
+   "skip_share": 0.0376,
+   "changed_pairs": 281,
+   "changed_skipped": 1,
+   "miss_rate": 0.0036,
+   "miss_rate_ci95": [
+    0.0006,
+    0.0199
+   ],
+   "stale_share_of_skipped": 0.0147,
+   "stale_areas_per_100_pairs": 0.055,
+   "points_lost_per_area": 0.0017,
+   "points_lost_per_stale_area": 3.0
+  },
+  "in_sample": {
+   "pairs": 1810,
+   "skipped": 56,
+   "skip_share": 0.0309,
+   "changed_pairs": 281,
+   "changed_skipped": 0,
+   "miss_rate": 0.0,
+   "miss_rate_ci95": [
+    0.0,
+    0.0135
+   ],
+   "stale_share_of_skipped": 0.0,
+   "stale_areas_per_100_pairs": 0.0,
+   "points_lost_per_area": 0.0,
+   "points_lost_per_stale_area": 0.0
+  },
+  "frames_fully_skipped_share": 0.0
+ },
+ "anchor_simulation": [
+  {
+   "target_miss_rate_for_threshold": 0.0,
+   "frames_x_areas": 1810,
+   "skip_share": 0.037,
+   "stale_answers": 1,
+   "stale_share_of_skipped": 0.0149,
+   "stale_share_of_all": 0.0006,
+   "points_lost_per_area": 0.0017,
+   "longest_skip_run_frames": 3
+  },
+  {
+   "target_miss_rate_for_threshold": 0.0,
+   "frames_x_areas": 1810,
+   "skip_share": 0.037,
+   "stale_answers": 1,
+   "stale_share_of_skipped": 0.0149,
+   "stale_share_of_all": 0.0006,
+   "points_lost_per_area": 0.0017,
+   "longest_skip_run_frames": 3
+  },
+  {
+   "target_miss_rate_for_threshold": 0.05,
+   "frames_x_areas": 1810,
+   "skip_share": 0.3028,
+   "stale_answers": 11,
+   "stale_share_of_skipped": 0.0201,
+   "stale_share_of_all": 0.0061,
+   "points_lost_per_area": 0.021,
+   "longest_skip_run_frames": 8
+  }
+ ],
+ "ablation": [
+  {
+   "variant": "combined (grey+chroma+hist), global scale  [used]",
+   "auc_all": 0.888,
+   "auc_unanimous": 0.943,
+   "skip_at_0_miss": 0.0309,
+   "skip_at_1pct_miss": 0.0989,
+   "note": ""
+  },
+  {
+   "variant": "grey only",
+   "auc_all": 0.862,
+   "auc_unanimous": 0.924,
+   "skip_at_0_miss": 0.0503,
+   "skip_at_1pct_miss": 0.0663,
+   "note": ""
+  },
+  {
+   "variant": "chroma only",
+   "auc_all": 0.874,
+   "auc_unanimous": 0.927,
+   "skip_at_0_miss": 0.0238,
+   "skip_at_1pct_miss": 0.0807,
+   "note": ""
+  },
+  {
+   "variant": "colour histogram only",
+   "auc_all": 0.871,
+   "auc_unanimous": 0.927,
+   "skip_at_0_miss": 0.021,
+   "skip_at_1pct_miss": 0.1238,
+   "note": ""
+  },
+  {
+   "variant": "grey + hist (no chroma)",
+   "auc_all": 0.885,
+   "auc_unanimous": 0.94,
+   "skip_at_0_miss": 0.0138,
+   "skip_at_1pct_miss": 0.0834,
+   "note": ""
+  },
+  {
+   "variant": "combined, minus per-camera noise floor (q25)",
+   "auc_all": 0.883,
+   "auc_unanimous": 0.941,
+   "skip_at_0_miss": 0.0155,
+   "skip_at_1pct_miss": 0.1088,
+   "note": ""
+  },
+  {
+   "variant": "combined, divided by the area's own noise floor (q10 of its other pairs)",
+   "auc_all": 0.864,
+   "auc_unanimous": 0.92,
+   "skip_at_0_miss": 0.0348,
+   "skip_at_1pct_miss": 0.079,
+   "note": "per-area normalisation: worse ranking than the global scale"
+  },
+  {
+   "variant": "combined, divided by the area's own noise floor (q25 of its other pairs)",
+   "auc_all": 0.847,
+   "auc_unanimous": 0.907,
+   "skip_at_0_miss": 0.0199,
+   "skip_at_1pct_miss": 0.0575,
+   "note": "per-area normalisation: worse ranking than the global scale"
+  }
+ ],
+ "cost": {
+  "gate_per_area_ms": {
+   "decode_ms_per_frame": 3.3751,
+   "warp64_ms_per_area": 0.0748,
+   "features_ms_per_area": 0.0665,
+   "score_ms_per_area_pair": 0.1518,
+   "areas_per_frame": 10.84,
+   "gate_ms_per_area": 0.2931,
+   "gate_ms_per_area_incl_decode": 0.6045,
+   "full_pass_cpu_s": 1.16
+  },
+  "model_reference": {
+   "source": "outputs/benchmark/cost_1t_real_v2.json",
+   "model": "models/real_v2",
+   "bf16": true,
+   "cpu_s_per_area": 0.316,
+   "cpu_s_per_image": 3.43
+  },
+  "gate_cost_as_share_of_model_cost_per_area": 0.00191,
+  "net_cpu_saving_at_headline": 0.0357,
+  "cpu_s_per_image_with_gate_at_headline": 3.303,
+  "per_operating_point": [
+   {
+    "target_miss_rate": 0.0,
+    "skip_share_loco": 0.0376,
+    "miss_rate_loco": 0.0036,
+    "net_cpu_saving": 0.0357,
+    "cpu_s_per_image_with_gate": 3.303
+   },
+   {
+    "target_miss_rate": 0.005,
+    "skip_share_loco": 0.0735,
+    "miss_rate_loco": 0.0071,
+    "net_cpu_saving": 0.0716,
+    "cpu_s_per_image_with_gate": 3.18
+   },
+   {
+    "target_miss_rate": 0.01,
+    "skip_share_loco": 0.1188,
+    "miss_rate_loco": 0.0178,
+    "net_cpu_saving": 0.1169,
+    "cpu_s_per_image_with_gate": 3.025
+   },
+   {
+    "target_miss_rate": 0.02,
+    "skip_share_loco": 0.216,
+    "miss_rate_loco": 0.032,
+    "net_cpu_saving": 0.2141,
+    "cpu_s_per_image_with_gate": 2.692
+   },
+   {
+    "target_miss_rate": 0.05,
+    "skip_share_loco": 0.3392,
+    "miss_rate_loco": 0.0534,
+    "net_cpu_saving": 0.3373,
+    "cpu_s_per_image_with_gate": 2.27
+   },
+   {
+    "target_miss_rate": 0.1,
+    "skip_share_loco": 0.5304,
+    "miss_rate_loco": 0.1068,
+    "net_cpu_saving": 0.5285,
+    "cpu_s_per_image_with_gate": 1.615
+   }
+  ],
+  "note": "assumes model cost is proportional to the number of areas analysed (CLIP + DINOv2 run per 224x224 area crop, ~98% of the time); sensei.pipeline.predict has no per-area skip yet and the per-area fill normalisation uses the whole day, so a real implementation would reuse cached features/answers."
+ },
+ "extrapolation_5min": "No 5-minute frames exist, so no 5-minute figure is measured. The hourly measurement above is the evidence: at 1 h spacing 84.5% of area-pairs keep their label and the gate (threshold chosen for <=0.0% missed label changes) skips 3.8% leave-one-camera-out. At shorter spacing fewer things change, so the skippable share can only be higher than the hourly figure; treat the hourly numbers as a lower bound. What is NOT known is the miss rate: the label changes that do occur within 5 minutes may be mostly small threshold crossings (half<->full), which are the hardest to see, so the per-change miss rate at the same threshold could be worse even though far fewer areas are stale (unmeasured). Measure it on real 5-minute frames before relying on it.",
+ "notes": [
+  "Labels are AI-teacher labels (84% of areas unanimous over 3 votes), not store truth; many tiny 'changes' are half/full borderline flips and compliance flips between similar-looking products, which no pixel gate can see.",
+  "Thresholds in-sample use the same labels that judge them (optimistic); leave_one_camera_out is the honest figure.",
+  "The per-area noise normalisation asked for was tried (ablation) and ranks label changes worse than a global scale.",
+  "A skipped area keeps the previous answer; points_lost assumes that answer was perfect (best case), see scoring.py."
+ ]
+}

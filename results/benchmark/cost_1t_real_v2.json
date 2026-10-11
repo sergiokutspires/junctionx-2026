@@ -1,0 +1,17 @@
+{
+ "model": "models/real_v2",
+ "clip_model": "openai/clip-vit-base-patch16",
+ "dino_model": "facebook/dinov2-small",
+ "int8_clip": false,
+ "int8_dino": false,
+ "bf16": true,
+ "threads": 1,
+ "images": 14,
+ "areas": 152,
+ "model_load_s": 3.93,
+ "wall_s_per_image": 3.265,
+ "cpu_s_per_image": 3.43,
+ "cpu_s_per_area": 0.316,
+ "areas_per_image": 10.9,
+ "peak_ram_mb": 1243
+}

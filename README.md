@@ -1,346 +1,226 @@
-# Sensei shelf monitor
+# Fresh Eyes: shelf monitoring for fresh produce
 
-JunctionX Lisbon 2026, Sensei challenge ("Fresh eyes on fresh produce"). From ceiling-camera pictures of a
-supermarket fruit and vegetable section and its planogram, it answers for **every planogram area of every
-image**: is the product on display the one the planogram expects (`planogram_compliant`), and how much is
-there (`stock_level` empty / half / full, `stock_value` 0 / 0.5 / 1). It also builds a static staff app: a
-prioritised "Do now" list, a gondola view with product boxes and visible-unit counts, and an Insights tab
-(running out soon, sales speed, planogram adherence). The core pipeline is **unsupervised**: it needs no
-labels to fit, and everything is free and local (Hugging Face weights, CPU is enough, CUDA is used if present,
-no paid APIs). A 1,962-area answer key written by independent AI labellers is used to **measure** it and to
-lightly **calibrate** small heads on top (see Results). Held out, it scores 1.23 to 1.48 points per area
-(maximum 2); the hidden validation set is the real judge.
+**Ceiling cameras + a planogram in, a staff to-do list out: for every shelf area of every picture, Fresh Eyes
+says whether the right product is there and whether it is empty, half or full. It runs on one CPU core for about
+$0.00005 per image and needs no labels to run.**
 
-Built by team **QuantumLotus** (Sérgio Kuts Pires, Inês Matias Medeiros) at JunctionX Lisbon 2026. The product in the
-pitch is called **Fresh Eyes**; the staff app is *Controlo de prateleiras*.
+JunctionX Lisbon 2026, Sensei challenge "Fresh eyes on fresh produce" ([brief](docs/brief.txt)). Team
+**QuantumLotus**.
 
-## Validation day
+| | |
+|---|---|
+| **Score on late frames** (held out, max 2 points per area) | **1.41 to 1.48** (last two frames / last frame of every camera) |
+| **Score on unseen cameras** | **1.23** |
+| **Label-free score** (no labels at all) | 1.18 / 0.99 / 0.88 (unseen cameras / last two / last frame) |
+| **Cost per image** | **3.8 CPU-seconds** on one core, **~$0.00005** (about 5 cents per 1,000 images) |
+| **Labels needed to run** | **none** (labels from the same day make it better) |
+| Baseline "always compliant and full" | 0.76 / 0.46 / 0.18 |
 
-When the organisers hand over the hidden images (a folder, a `.zip`, nested or flat), run **one** command:
+All scores are measured against an **AI-made answer key**, not Sensei's hidden annotations
+([how it was made](docs/LABELLING_GUIDE.md)). Evidence for every number: [`results/`](results/README.md).
 
-```powershell
-SUBMIT.bat "D:\path\to\validation.zip"      # or double-click it, or drag the folder / zip / image files onto it
-.venv\Scripts\python -m sensei submit --images <folder or .zip> [--model models/real_v3_cal] [--out submission] [--no-detect]
-```
+## In 30 seconds
 
-The default model is `models/real_v3_cal` (see Results). `--model models/real_v1` is the label-free fallback (the
-pure unsupervised fit, no heads); `--model models/real_v1_cal` is the previous submission model.
+Each camera always sees the same shelves, and the planogram says where each product should be. For every
+planogram area we cut out the picture, measure how much of it is product rather than empty crate (DINOv2
+features, clustered without labels), and ask CLIP which fruit or vegetable it shows. A decision rule built from
+the challenge's own scoring turns those probabilities into the safest answer: it leans towards "less stock",
+because over-reporting stock costs more than under-reporting it. The submission adds a small calibration layer
+fitted on AI labels from earlier the same day. Everything runs locally on free open models; no paid API and no
+GPU. The output is the `predictions.json` the challenge asks for, plus a static staff app that turns it into a
+prioritised to-do list.
 
-It unpacks zips (junk like `__MACOSX` skipped), predicts every area of every image, re-reads the written JSON and
-checks it independently (all areas of each camera exactly once, valid `planogram_compliant` / `stock_level` /
-`stock_value`, every image answered, no mass fallbacks), then builds the staff app with local OWLv2 boxes
-(`--no-detect` skips them; a detection failure never blocks the submission).
+## The brief asked, we built, the evidence
 
-- Look for `SUBMISSION FORMAT CHECK: PASSED` and **`HAND IN THIS FILE: ...\submission\predictions.json`**;
-  the staff app is `submission\dashboard\index.html`. Exit code 0 = passed, 1 = file written but invalid
-  (read the `ERROR` lines, do not hand it in), 2 = no usable input (nothing written, old results removed).
-- Expect 26 images / 289 areas; a different count only prints a warning. Needs no internet when the
-  Hugging Face weights are cached (they are on this laptop). Rehearsal: `SUBMIT.bat data\val_sim`.
-- The output folder ignores itself in git (public repo: never commit store images or answers).
-
-## Results
-
-Scored with the challenge rules (`scoring.py`): identification +1 right / -2 wrong, stock +1 right / -2 too low /
--3 too high, so the maximum is **2 points per area**.
-
-Submission model `models/real_v3_cal`, heads refitted without the held-out camera or frames
-(`experiments/final_integration/heldout.py`; the previous model `real_v1_cal` in brackets, same protocol):
-
-| Held-out test | Full key (1,962 areas) | Areas | Original 756-area key | Areas |
-|---|---:|---:|---:|---:|
-| Unseen cameras (leave one camera out) | **1.23** (1.18) | 1,962 | 1.17 (1.25) | 756 |
-| Last two labelled frames of every camera | **1.41** (1.28) | 304 | 1.35 (1.30) | 304 |
-| Last labelled frame of every camera | **1.48** (1.36) | 152 | 1.43 (1.39) | 152 |
-| Baseline: always "compliant" and "full" | 0.76 / 0.46 / 0.18 | | 0.70 (unseen cameras) | |
-
-The two keys share the same last frames; the 756-area key scores them against the older one-vote labels. The new
-model wins every late-frame row (the hidden frames are later in the day) and loses on unseen cameras of the
-756-area part, which is dominated by three cameras with 12-13 labelled frames each; it gains on the other 1,206.
-
-### Cost per image (Sensei's resource-efficiency criterion)
-
-Measured with `tools/benchmark_cost.py` on the submission model `models/real_v3_cal` (14 frames, 152 areas, no
-feature cache, bf16 CLIP + DINOv2; model loading excluded, ~5 s once per process):
-
-| Setup | Wall time per image | CPU-seconds per image | Peak RAM |
-|---|---:|---:|---:|
-| 1 CPU core (`SENSEI_THREADS=1`), all ~11 areas of a frame | 3.6 s | **3.8** (median of three back-to-back runs, 3.7-3.8) | 1.2 GB |
-| 16 threads (fast, less efficient; earlier fp32 measurement) | 1.4 s | 18.2 | |
-| Optional OWLv2 product boxes (staff app only, 1 core) | +15.7 s | +15.7 | 1.8 GB |
-
-The three runs (`outputs/benchmark/cost_1t_real_v3_cal_b2b_run{1,2,3}.json`) measured 3.66, 3.77 and 3.84; an
-earlier single run gave 3.59. The calibration heads and the per-area memory cost little: `models/real_v2` (same
-features, no heads) measured 3.4 to 3.6 in earlier runs. bf16 cut the cost by about a quarter against the fp32
-`real_v1_cal` (5.2 on the same frames). At ~$0.045 per vCPU-hour (AWS c7i.large on-demand, $0.0892/h for 2 vCPU, us-east-1) that is **~$0.00005 per
-image analysed** (~$0.05 per 1,000), or ~$3 a month for a 14-camera section at one picture per camera every
-5 minutes for 14 hours a day (a sixth of one core). No GPU and no paid API are needed. Bigger models (CLIP-L,
-SigLIP, DINOv2-base) were tested and did not score better, so the small ones ship.
-
-**Teacher vs student.** We used large AI models (Claude) once, to label a few hundred frames for
-calibration and measurement; the shipped pipeline then runs on small open models. Asking a frontier vision LLM
-about every image instead would cost, per image with the same two pictures our labellers saw (~4,600 input and
-~490 output tokens, `tools/llm_cost_compare.py`, Claude API list prices): Claude Sonnet 5.5 ~$0.014 (**~300x
-ours**), Claude Opus 5.5 ~$0.028 (~600x), Claude Haiku 5.5 ~$0.0007 (~15x, accuracy untested).
-
-**Skipping unchanged areas: tested, a small win.** Cameras never move, so we measured whether an area whose pixels
-did not change can reuse its last answer (`tools/change_gate.py`, result in `outputs/benchmark/change_gate.json`).
-Over the 181 frames there are 1,810 consecutive-frame area pairs, about an hour apart (median 3,925 s); 84.5% of
-them keep their label, which is the most any gate could skip. A cheap pixel-change score (grey, chroma and
-hue/saturation histogram, 64x64 per area) ranks label-changed pairs above unchanged ones with AUC 0.89 against the
-answer key. With the threshold picked on the other 13 cameras, skipping **3.8%** of areas misses 1 of 281 label
-changes, and skipping **11.9%** misses 5 of 281 (1.8%). The gate costs 0.29 ms per area (0.60 ms with JPEG decode),
-under 0.2% of the model, so the net compute saving at hourly spacing is about **3.6% to 11.7%**
-(3.77 to about 3.3 CPU-s per image on the shipped model). The changes in this key are mostly borderline
-half/full flips and swaps between similar-looking products, which pixels barely show. We have no 5-minute frames:
-fewer areas change over 5 minutes, so the skippable share could be higher, but the missed-change rate could be worse,
-and neither is measured. It is **not wired into `predict`** (which has no per-area skip and normalises fill over the
-whole day), so none of the cost figures above include it.
-
-How to read it, and what it is **not**:
-
-- **The answer key is AI-labelled, not the store's truth.** `data/labels/teacher_labels_v2.json`: all 1,962 areas
-  of all 181 frames, voted by independent AI labellers: three votes per area, except 36 areas of camera 6373
-  with two (six of them split) from the earlier round (84% unanimous on the 11 newly voted cameras, `tools/aggregate_votes.py`, 34 disputes adjudicated in `adjudications_v2.json`); 117 areas show a wrong
-  product. The original 756-area key (`teacher_labels.json`) is kept as a second test so older numbers stay
-  comparable. It ranks models and calibrates the heads; it cannot replace the hidden annotations, so every number
-  here is an estimate.
-- **The core pipeline is unsupervised.** Patch clustering, product recognition and the decision rule never see a
-  label at fit time. The labels are used (a) to measure, and (b) to fit two small heads (stock, compliance) on
-  top of the same features, refitted without the test cameras or frames in each of the three scored rows. The unsupervised
-  part's defaults (thresholds, priors) were chosen while looking at this same key, so the rows are optimistic to
-  that extent.
-- **Late frames matter most.** The hidden frames are later in the day than every labelled one (the brief's example
-  file is 20:24; our latest picture is 20:16, and the last pictures of the 14 cameras run from 18:07 to 20:16), so the
-  "last frames" rows are the closest rehearsal. Times the 289 hidden areas, 1.41 to 1.48
-  is about **410 to 430 of 578** points on the full key (about 390 to 410 on the older 756-area key; the brief's
-  worked example scores 320). If the hidden pictures instead span the whole day, the unseen-camera 1.23 gives about
-  355.
-- **The baseline is the generous figure.** On the last two frames and on the last frame, answering "compliant" and
-  "full" everywhere scores only 0.46 and 0.18, because shelves empty out during the day.
-- On the unseen-camera and last-two-frames tests (full key) identification is right on 96% and 99% of areas, but
-  answering "compliant" everywhere already gets 94% and 97%: the real signal is wrong-product recall (31 of 117 on
-  unseen cameras). Stock level is right on 82% and 85%: stock level is the weaker half.
-
-The shipped model is `models/real_v3_cal`: the unsupervised fit of `models/real_v2` (CLIP B/16 + DINOv2-small in
-bf16) plus heads fitted on the complete 1,962-area key, with a **per-area memory** in the stock head. The memory
-is what lifts the late-frame rows (1.32 and 1.40 without it on the full key); unseen cameras have no memory and keep
-the plain head (`calibration_cv.json`: `heads` vs `heads_nomem`). Choose models only on the late-frame folds of
-`calibrate` (the `[time]` and `[time1]` blocks of `models/<m>/calibration_cv.json`); per-camera numbers are in that
-file. Older models stay for comparison: `models/real_v1_cal` (fp32 features, heads on 1,240 areas, no memory),
-`models/real_v2` (bf16, heads on 1,240 areas, no memory) and `models/real_v1`, the label-free fallback.
+| The brief asks | What we built | Evidence |
+|---|---|---|
+| Task 1: find the products and name them | CLIP names the product in every area; optional OWLv2 boxes with product names in the staff app | [`sensei/compliance.py`](sensei/compliance.py), [`sensei/dashboard.py`](sensei/dashboard.py); box quality not measured (no box truth) |
+| Task 2: stock per area, as a count or fill level | Fill level per area (empty / half / full) from patch features; "about N visible units" estimates from boxes | [`sensei/stock.py`](sensei/stock.py); stock right on 82 to 86% of held-out areas ([HOW_IT_WORKS](docs/HOW_IT_WORKS.md#2-how-we-measured)) |
+| Task 3: compliant, low, empty or wrong product | `planogram_compliant` + `stock_level` for every area; the app lists wrong, empty and low areas | [`results/calibration_cv_real_v3_cal.json`](results/calibration_cv_real_v3_cal.json) |
+| Output in the annotation format, every area of every image | `submit` writes `predictions.json`, re-reads it and checks it | [`sensei/submit.py`](sensei/submit.py), [`tests/test_submit.py`](tests/test_submit.py) |
+| Learn to see the shelf "without being told what is right" | Label-free core: unsupervised fit + zero-shot; labels optional | label-free 1.18 / 0.99 / 0.88; fallback `models/real_v1` 1.21 / 1.01 / 0.98 ([`results/labelfree_*.json`](results/README.md)) |
+| Scoring: +1 / -2 identification, +1 / -2 / -3 stock | The answer with the best expected score under exactly these rules | [`scoring.py`](scoring.py) (`best_stock`) |
+| UI/UX for staff (tie-breaker) | Static staff app: Do now list, gondola view, products, insights; Portuguese with English toggle; works offline and on a phone | [`ui/`](ui/), [`sensei/dashboard.py`](sensei/dashboard.py) |
+| Future potential: restocking, waste, planogram adherence, sales by hour | Insights tab from the day's fill timeline: running out soon, sales speed, adherence per camera view, freshness watch | prototype on one day of data, not scored ([HOW_IT_WORKS](docs/HOW_IT_WORKS.md#1-the-pipeline), step 7) |
+| Fleet scale: "no extra hardware and no labelling effort" | Inputs are only the existing frames + `planogram.json`; one CPU core | [Cost](#cost) |
+| Processing cost (judging criterion added at the event, not in the brief text) | Small models in bf16 on one core; about 300 times cheaper than asking Claude Sonnet 5.5 about each image | [`results/benchmark/`](results/README.md#cost-benchmark) |
 
 ## How it works
 
-```
- ceiling frame + planogram.json
-            |
-            v
- warp every planogram area (perspective quad -> 224x224 crop + visibility mask)
-            |
-            +--> DINOv2 patch features -> clusters, named by CLIP as "surface"
-            |    (crates, trays: same under every product) or "product"
-            |    -> fill = share of product patches -> p(empty / half / full)
-            |
-            +--> CLIP zero-shot at base-product level (banana vs orange vs apple)
-            |    -> p(compliant)
-            v
- cost-aware decision from the scoring rules (best expected score, leans low)
-            |
-            v
- predictions.json: every area of every image  <-- the submission
-            |
-            +--> OWLv2 open-vocabulary detections -> product boxes + visible-unit counts
-            v
- staff dashboard (static page): Do now | Gondolas | Products | Insights
+```mermaid
+flowchart LR
+    A["Camera frame + planogram"] --> B["Cut out every area"]
+    B --> C["DINOv2: how much is product?"]
+    B --> D["CLIP: which product is it?"]
+    C --> E["Stock: empty / half / full"]
+    D --> F["Compliant or wrong product"]
+    G["Optional: AI labels from earlier today"] --> E
+    E --> H["Cost-aware decision"]
+    F --> H
+    H --> I["predictions.json"]
+    I --> J["Staff app"]
 ```
 
-1. **Crops.** Each planogram quad (a perspective trapezoid, sometimes partly outside the frame) is warped to a
-   224x224 crop, shrunk slightly to avoid neighbours, with a mask of the visible part.
-2. **Stock (fill).** DINOv2 patch features are clustered. Crates, trays and boxes look the same under every
-   product, so clusters spread over many products are "surface" and product-specific clusters are "product"
-   (CLIP prompts help name them). Fill is the share of visible patches that are product, normalised per area over
-   the day; soft ordered thresholds in rank space give p(empty), p(half), p(full).
-3. **Product recognition (compliance).** CLIP zero-shot. Portuguese product names are translated to English
-   ("MACA GALA KG" becomes "gala apple") and turned into prompts such as "a photo of a pile of gala apple in a
-   supermarket". A crop is scored against the whole catalogue, mainly at the base-fruit level, with image
-   prototypes as supporting evidence. The planogram is often not followed in the real data, so an area's own
-   history is not trusted as a reference. Variety-level confusions (Gala vs Fuji) need strong evidence. Empty,
-   occluded or barely visible crops count as compliant, because nothing wrong is shown.
-4. **Cost-aware decisions.** The answer with the best *expected* score under the scoring rules: compliance
-   threshold 0.5, stock via `scoring.best_stock` (leans low, because too high costs -3 and too low costs -2).
-   Every area is always answered, because a missing area costs -2 and -3.
-5. **Optional calibration.** A few self-labelled crops (`label`, then `calibrate`) fit cost-sensitive heads on top
-   of the same features, with a cross-validated challenge score. Without labels the pipeline is unchanged.
-   **Per-area memory:** the cameras are fixed, so the heads keep every labelled crop (embedding + label, npz) and a
-   second stock head adds, for each new crop, the label mix of the most similar labelled crops of the *same area*
-   from *earlier* frames (patch-cluster histogram and colour features, cosine similarity). It is trained on
-   earlier-frames-only memories (also with the latest frame dropped, so it does not over-trust 2-3 h old labels);
-   areas with no labelled history (a new camera) use the plain head.
-   Time-neighbour smoothing is off by default (`smoothing_weight = 0`); the per-area time series only feeds the
-   dashboard timeline, the "empty in ~N min" forecast and the Insights tab.
-6. **Boxes and counts.** OWLv2 (free, local) finds products in each frame. Boxes with score of at least 0.28 are
-   drawn; for counting, boxes with score of at least 0.20 whose centre is inside an area are merged (IoU 0.5),
-   hands, baskets, shelf-sized boxes and specks are dropped, and in areas the stock model calls empty only boxes
-   of at least 0.35 count. The app shows "about N visible units" (visible packs for packaged products) per
-   area and per product, always labelled as an estimate.
-7. **Insights tab** (all computed from the day's fill timeline):
-   - *Running out soon*: low or wrong-product areas forecast to be empty within 2 hours, soonest first (the same
-     rule as the "Do now" forecast, so the two never disagree).
-   - *Sales speed*: per product, the average share of a shelf lost per hour; sharp rises count as restocks and are
-     listed, tiny drops as noise; plus a store-wide bar chart by hour.
-   - *Planogram adherence*: share of compliant areas per gondola, gondolas with a wrong product first.
-   - Peak-hour highlights appear only when a window is clearly above the product's daily average.
+1. **Cut out** each planogram area as a 224x224 crop (perspective-corrected, with a mask for parts outside the
+   picture).
+2. **Stock**: DINOv2 patches are clustered; clusters found under every product (crates, trays) are "surface",
+   the rest "product". The product share of the area, ranked against the whole day, gives empty / half / full.
+3. **Product**: CLIP compares the crop with every product in the catalogue (Portuguese names translated to
+   English). It flags a wrong product only when the evidence is clear.
+4. **Calibration (optional, used by the submission)**: one small stock head plus a per-area memory of AI labels
+   from earlier the same day; wrong-product flags are carried forward while the area looks the same. Compliance
+   otherwise stays zero-shot.
+5. **Decide** with the scoring rules, leaning low on stock.
 
-A `lite` backend (handcrafted colour features only, no torch) exists for tests and quick checks.
+Details, glossary and every threshold: [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md).
+
+## Results
+
+**Protocol:** each test refits the calibration on the remaining cameras or frames and scores the held-out ones
+against the AI answer key with the challenge's rules (`scoring.py`, max 2 points per area).
+
+| Points per area | Unseen cameras (1,962 areas) | Last two frames (304) | Last frame (152) |
+|---|---:|---:|---:|
+| Always "compliant" + "full" | 0.76 | 0.46 | 0.18 |
+| Label-free (core of the submission model) | 1.18 | 0.99 | 0.88 |
+| Label-free fallback `models/real_v1` | 1.21 | 1.01 | 0.98 |
+| Calibrated, without same-day memory | 1.23 | 1.32 | 1.40 |
+| **Submission `models/real_v3_cal`** | **1.23** | **1.41** | **1.48** |
+
+Sources: [`results/calibration_cv_real_v3_cal.json`](results/calibration_cv_real_v3_cal.json),
+[`results/heldout_v3cal.json`](results/heldout_v3cal.json), [`results/labelfree_real_v1.json`](results/labelfree_real_v1.json);
+script [`results/heldout.py`](results/heldout.py).
+
+- **Most of the late-frame gain comes from AI labels of the same day** (+0.4 to +0.6 points per area over the
+  label-free core). In a new store, or on a day without fresh labels, expect the label-free row.
+- **Assumption, not fact: the hidden frames are late in the day.** The brief's only example file name
+  (`1751052241.jpg`, 20:24 Lisbon time) is later than all 181 frames we were given (latest 20:16). That is why
+  we read the late-frame columns as the closest rehearsal, and the model lowers its stock prior for frames after
+  the last labelled one. If the hidden frames span the whole day, the unseen-camera 1.23 is the better guide.
+- Times the 289 hidden areas, 1.41 to 1.48 would be about 410 to 430 of 578 points (the brief's worked example
+  scores 320). This is a multiplication, not a measurement.
+- Identification is right on 96 to 100% of held-out areas, but "always compliant" already gets 94 to 97%; the
+  real signal is wrong-product recall, which is weak on unseen cameras (31 of 117 found, 2 false alarms).
+
+<details>
+<summary>What makes these numbers optimistic, and the error breakdown</summary>
+
+- The key is AI-made; its stock labels agree with a second model family (Gemini Flash) on only 81% of 192 areas.
+- The unsupervised fit saw the held-out frames' pixels (not their labels); its thresholds and the calibration
+  settings were chosen while looking at this key and these folds.
+- The late columns have 152 to 304 areas from 14 cameras; no confidence intervals were computed, so differences
+  of about 0.1 between models may be noise.
+- Stock errors (right / too low / too high): 1,607 / 179 / 176 on unseen cameras, 258 / 11 / 35 on the last two
+  frames, 130 / 9 / 13 on the last frame.
+- On the older 756-area key: submission 1.17 / 1.35 / 1.43, previous submission 1.25 / 1.30 / 1.39, baseline
+  0.70 / 0.36 / 0.06 ([`results/heldout_v1cal_v3cal_v1mem_v3nomem.json`](results/heldout_v1cal_v3cal_v1mem_v3nomem.json)).
+- Larger embeddings (CLIP-L, SigLIP, DINOv2-base) gave no gain in quick tests whose results were not saved; the
+  cheaper CLIP B/32 was benchmarked for cost only.
+
+Full discussion: [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md#2-how-we-measured).
+</details>
+
+## Cost
+
+| | Per image |
+|---|---:|
+| Fresh Eyes, one CPU core (median of 3 runs: 3.66 / 3.77 / 3.84 CPU-s) | **3.77 CPU-s, ~$0.000047** |
+| Claude Sonnet 5.5, one call per image with the same two pictures our labellers saw | ~$0.014 (~300x) |
+| Claude Opus 5.5 / Haiku 5.5 | ~$0.028 (~600x) / ~$0.0007 (~15x, accuracy untested) |
+
+Measured with [`tools/benchmark_cost.py`](tools/benchmark_cost.py) on one core of an AMD Ryzen AI 7 350 laptop
+(native bf16; without it expect about 5.2 CPU-s), priced at $0.0446 per vCPU-hour (AWS c7i.large on-demand,
+us-east-1). Other runs measured 3.59 and 4.53, i.e. $0.00004 to $0.00006. A 14-camera section photographed
+every 5 minutes for 14 hours a day is 70,560 images a month, about **$3.3 a month**. The optional product
+boxes add 15.7 CPU-s per frame. Files: [`results/benchmark/`](results/README.md#cost-benchmark); full table
+and caveats in [HOW_IT_WORKS](docs/HOW_IT_WORKS.md#3-cost).
 
 ## Run it
 
-### Windows setup (CPU is enough)
+**Validation day (models already fitted):** drag the validation folder or `.zip` onto `SUBMIT.bat`, or run
 
 ```powershell
-python -m venv .venv
-.venv\Scripts\python -m pip install -r requirements.txt
-.venv\Scripts\python -m pytest tests -q                      # lite backend, 187 tests, under a minute
+SUBMIT.bat "D:\path\to\validation.zip"
+.venv\Scripts\python -m sensei submit --images <folder or .zip>      # the same, one command
 ```
 
-The deep backend downloads `openai/clip-vit-base-patch16`, `facebook/dinov2-small` and (for boxes)
-`google/owlv2-base-patch16-ensemble` on first use (free, cached afterwards). On Linux or macOS use
-`.venv/bin/python` instead of `.venv\Scripts\python`.
+Look for `SUBMISSION FORMAT CHECK: PASSED` and `HAND IN THIS FILE: ...\submission\predictions.json`. The staff
+app is `submission\dashboard\index.html`. Exit code 0 = passed, 1 = written but invalid (do not hand in),
+2 = no usable input. Expect 26 images / 289 areas. **Label-free fallback:** add `--model models/real_v1`.
+`--no-detect` skips the product boxes.
 
-**Data and models are not in this repository, on purpose** (the dataset is Sensei's store footage; see
-`.gitignore`). Put the dataset in `data/raw/planogram.json` and `data/raw/images/<camera_id>/<unix_ts>.jpg`
-(train and test images mixed in one folder, so every image is used to fit), then build the model:
+<details>
+<summary>From a fresh clone (install, dataset, fit)</summary>
 
-```powershell
-# the submission model: unsupervised fit on every image + calibration heads from the answer key
-.venv\Scripts\python -m sensei fit --data data/raw/images --planogram data/raw/planogram.json `
-    --model models/real_v3_cal --labels data/labels/teacher_labels_v2.json
-# without --labels you get the pure unsupervised model (models/real_v1 is that, the label-free fallback)
-```
+1. Install (Python 3.10+, CPU is enough):
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\python -m pip install -r requirements.txt
+   .venv\Scripts\python -m pytest tests -q -m "not slow"
+   ```
+   On Linux or macOS use `.venv/bin/python`. Free Hugging Face weights download on first use
+   (`openai/clip-vit-base-patch16`, `facebook/dinov2-small`, `google/owlv2-base-patch16-ensemble` for boxes).
+2. **The dataset is not in this repository** (it is Sensei's store footage). Put it in
+   `data/raw/planogram.json` and `data/raw/images/<camera_id>/<unix_ts>.jpg`.
+3. Fit the submission model (about 12 CPU-minutes of feature extraction for 181 images on one core):
+   ```powershell
+   .venv\Scripts\python -m sensei fit --data data/raw/images --planogram data/raw/planogram.json `
+       --model models/real_v3_cal --labels data/labels/teacher_labels_v2.json
+   ```
+   Without `--labels` you get the label-free model (that is `models/real_v1`).
+4. Run `SUBMIT.bat <validation folder or zip>`, then open `submission\dashboard\index.html`.
 
-Then use `SUBMIT.bat` (see Validation day). Other one-liners:
+**Free Google Colab:** [`colab/sensei_colab.ipynb`](colab/sensei_colab.ipynb) runs the same recipe on a free T4
+(instructions in [HOW_IT_WORKS](docs/HOW_IT_WORKS.md#4-command-line)). All commands, the rehearsal and test
+details are there too.
+</details>
 
-```powershell
-# fit on the dataset, predict, build the dashboard in one go (model goes to outputs\model)
-.venv\Scripts\python -m sensei run --data data/raw/images --planogram data/raw/planogram.json `
-    --images data/raw/images --out outputs
-# local challenge score when you hold annotations in the same format
-.venv\Scripts\python -m sensei score annotations.json predictions.json
-```
+## The staff app
 
-### Free Google Colab
+A single static page that opens without a server or internet, also on a phone. It opens in Portuguese, with an
+English toggle. A shift starts on **Do now**: wrong products and empty shelves first, then low ones, each with
+the time the picture was taken. **Gondolas** shows each camera view with coloured area outlines and the day's fill line; product boxes and "about N visible units" estimates appear on demand.
+**Products** groups the areas of each product. **Insights** shows what is running out soon, how fast each
+product sells, how well each camera view follows the planogram, and freshness reminders from produce biology.
+Counts are always labelled as estimates.
 
-Open `colab/sensei_colab.ipynb` in Colab and choose **Runtime > Change runtime type > T4 GPU**. Put these in
-`MyDrive/sensei/`: `junctionx-sensei.zip` (make it with `python colab/make_zip.py`, which uses forward-slash paths
-and leaves out `.venv`, `cache`, `outputs`; do not use PowerShell `Compress-Archive`), `Frutas e Legumes (train &
-test).zip`, `planogram.json`, and optionally `validation.zip`. Run the cells top to bottom: they mount Drive, unpack
-everything into `data/raw/images/<cam>/<ts>.jpg`, install `requirements.txt`, run `python -m sensei run --labels
-data/labels/teacher_labels_v2.json` (the same recipe as `models/real_v3_cal`), predict on the validation folder when
-given, and zip `outputs/` back to Drive. No paid tier and no keys; a GPU only speeds up the first feature extraction.
-`colab/sensei_bigfeatures.ipynb` computes large-model features and OWLv2 detections for every frame on a free T4
-(about 10 minutes) and downloads `sensei_colab_features.zip`; keep that zip in `cache/colab/` and pass it as
-`--detections` below.
-
-### Command line
-
-All commands are `python -m sensei <command>`:
-
-| Command | Purpose |
-|---|---|
-| `submit --images <folder\|.zip\|files> [--model models/real_v3_cal] [--out submission] [--no-detect] [--detections <zip\|json>] [--password <pw>]` | validation day: unpack, predict, check, build the staff app |
-| `synth --out data_synth [--cameras 4 --images 40]` | write a synthetic dataset for tests and demos |
-| `fit --data <root> --planogram <planogram.json> --model models/m1 [--backend lite\|deep] [--max-images-per-camera N] [--labels ...]` | learn everything from the unlabelled images |
-| `predict --model models/m1 --images <dir> --out predictions.json [--details details.json]` | answer every area of every image in `<dir>` |
-| `score annotations.json predictions.json` | local challenge score against truth |
-| `dashboard --details details.json --data <root> --out dashboard/ [--detections <zip\|json>] [--detect]` | build the static staff dashboard |
-| `label --model models/m1 --data <root> --out labeling/ [--n 150]` | export contact sheets and a labelling page (optional) |
-| `calibrate --model models/m1 --labels labels.json` | fit heads from labels and report a cross-validated score (optional) |
-| `run --data <root> --planogram ... --images <dir> --out outputs/` | fit, predict and build the dashboard in one go |
-
-`-q` (warnings only) works before or after the sub-command. `fit` and `run` also accept `--labels labels.json [...]`
-(annotation format) to fit the calibration heads right after fitting; `predict` then uses `<model>/heads/`
-automatically. Tunables (crop size, inset, number of patch clusters, priors, device, CLIP and DINO model names)
-live in `sensei/config.py`.
-
-### Predict by hand and open the dashboard
-
-`submit` does all of this; the manual steps are:
-
-```powershell
-.venv\Scripts\python -m sensei predict --model models/real_v3_cal --images data/val `
-    --out predictions.json --details details_val.json
-.venv\Scripts\python -m sensei dashboard --details details_val.json --data data/val --out dashboard `
-    --detections cache/colab/sensei_colab_features.zip
-start dashboard\index.html
-```
-
-- Images: preferably `data/val/<camera_id>/<unix_ts>.jpg`; `<camera_id>_<ts>.jpg` and a flat folder of `<ts>.jpg`
-  also work (the camera is then recognised from the picture, since the ceiling views are static). `predict` exits
-  with code 2 and writes nothing if no image matches a camera. Keys in `predictions.json` are `<unix_ts>.jpg`
-  (the annotation format), plus the on-disk name when it differs.
-- `predictions.json` is `{camera_id: {image_name: {area_id: {"planogram_compliant": true, "stock_level": "half",
-  "stock_value": 0.5}}}}` with every planogram area of every image (an unreadable image reuses the same area's answer
-  from the nearest readable frame of the batch, else its latest label, else the fit-time median; never a crash).
-  Images of another size than the planogram frame (1280x720) are resized first, and the format check warns about them. With heads, frames later than a camera's last labelled frame get the late-day stock prior,
-  and areas whose latest labelled frame was a wrong product stay flagged while the crop still looks the same.
-- The dashboard is a static page: no server, no build step, no network, so it also opens from a USB stick or a
-  phone. Counters (Empty / Low / Wrong product / OK), a "Do now" list (wrong product and empty first, then low),
-  a gondola view with coloured area polygons and a fill sparkline, a per-product view, the Insights tab, an EN/PT
-  toggle, light and dark mode, from 375 px wide. `--data` must be the folder holding the images in `details.json`.
-- **Boxes and counts** need detections: `--detections` takes the cached `owl_detections.json` (inside the Colab
-  features zip, or that json), or `--detect` runs OWLv2 locally on the shown frames that have none (a few seconds
-  per frame: 3.1 s on 16 threads, 15.7 s on one core, `outputs/benchmark/cost_16t.json` and
-  `cost_1t_real_v3_cal_detect.json`). Without either, the **Show detections** button
-  and the visible-unit counts do not exist. Only the latest frame of each camera is shown, so only those frames
-  need boxes. `DET_*` and `COUNT_*` constants in `sensei/dashboard.py` hold the thresholds. A link such as
-  `index.html#/gondola/6491/6491_1/det` opens a gondola with the boxes already on; `index.html#/insights` opens
-  the Insights tab.
-
-Synthetic data for tests and demos: `python -m sensei synth --out data_synth` writes `planogram.json`,
-`images/<cam>/<ts>.jpg`, `val/<cam>/<ts>.jpg`, `annotations.json` (truth for `val`) and `annotations_train.json`.
-Fit on `data_synth/images` and predict on `data_synth/val`; do not fit on `data_synth` itself.
-
-## Repository layout
+## Repository map
 
 ```
-README.md  SPEC.md  requirements.txt
-SUBMIT.bat                    validation day: double-click, or drop a folder / zip / images on it
-scoring.py, test_scoring.py   local scorer and decision rules (do not change the maths)
-sensei/                       the package
-  config.py data.py products.py features.py stock.py compliance.py temporal.py
-  pipeline.py calibrate.py dashboard.py submit.py synth.py __main__.py
-ui/                           static dashboard assets (index.html, app.js, style.css) copied by dashboard.py
-colab/                        free Colab notebooks (sensei_colab.ipynb, sensei_bigfeatures.ipynb) and make_zip.py
-tests/                        pytest suite (lite backend; the deep smoke test is marked slow)
-data/labels/                  the AI-labelled answer key (annotation format, no images)
-labeler/, tools/              labelling page, AI-labeller sheets, vote aggregation, cost benchmark, change_gate.py
-pitch/                        3-minute pitch: slides.html, pitch.md, demo_script.md, qa_prep.md, build scripts
-docs/brief.txt                text of the challenge brief
-SPEC.md                       build contract: module signatures, file formats, real-data facts
-
-not in the repo (git-ignored): data/raw (the dataset), data/val_sim, models/, cache/, outputs/, experiments/,
-backups/, every .jpg/.png/.zip, pitch/assets pictures and pitch/slides_standalone.html
+README.md                  start here
+SUBMIT.bat                 validation day: double-click or drop a folder / zip on it
+scoring.py                 the challenge scoring rules and the cost-aware decision (test_scoring.py: brief example)
+sensei/                    the package: data, features, stock, compliance, calibrate, pipeline, submit, dashboard, ...
+ui/                        staff app (index.html, app.js, style.css)
+results/                   evidence: score and cost files behind every number, and the scripts that make them
+docs/HOW_IT_WORKS.md       technical detail: pipeline, measurement, cost, command line
+docs/LABELLING_GUIDE.md    how the AI answer key was made, and what it is not
+docs/brief.txt             the challenge brief (text)
+docs/produce_biology_*     sources for the freshness watch
+data/labels/               the AI answer key and every vote (no images)
+tools/                     cost benchmark, LLM cost comparison, change gate, vote aggregation, labelling helpers
+tests/                     pytest suite (lite backend; deep tests marked slow)
+colab/                     free Colab notebooks
+pitch/                     the 3-minute pitch (slides, script, Q&A)
+SPEC.md                    historical build contract from day 1; the README and code are authoritative
 ```
 
-The deck in `pitch/` shows store frames and dashboard screenshots from a local `pitch/assets/` folder that is not
-published; the deck source is.
+Not published (git-ignored): the dataset (`data/raw`), fitted models, caches, outputs, and every image.
 
 ## Limitations
 
-- **Half versus full is the hard call**, especially for large fruit in deep crates, where a top-down view cannot see
-  how deep the pile is. Stock level is right on about 82 to 86% of held-out areas (full key). Identification is
-  right on 96% with an unseen camera (99 to 100% on late frames), but answering "compliant" everywhere already
-  gets 94 to 97%; the real signal is wrong-product recall, 31 of 117 on an unseen camera.
-- **Counts are visible-unit estimates**, not inventory: boxes only see what is on top, piles hide items, and for
-  produce that comes in bunches one "unit" can be a bunch (bananas). The app says "estimate" wherever it shows one.
-- **One day of data** from one store: the sales-speed, peak-hour and "running out soon" figures come from a single
-  day's timeline of fill estimates and are a prototype of forecasting, not a scored feature.
-- **The answer key is AI-labelled** (not the store's truth) and was also used to choose defaults; expect the hidden
-  set to differ from the held-out numbers above.
-- Zero-shot recognition is strong at the base-fruit level and weak between varieties, so the system only flags a
-  wrong product when the evidence is clear. Portuguese-to-English translation is dictionary based; unknown words
-  are kept as variety words.
-- Stock depends on how crates and products look; unusual containers can shift the fill estimate, which is what the
-  optional calibration step is for.
-- Store images, models and outputs are deliberately not published, so a fresh clone needs the dataset and a fit
-  (above) before it can predict.
+- **Half versus full is the hard call**, especially for large fruit in deep crates seen from above. Stock level
+  is right on 82 to 86% of held-out areas.
+- **Wrong products on a new camera are mostly missed** (31 of 117). The model only flags clear cases.
+- **The answer key is AI-made** and was used to choose defaults; expect the hidden set to score differently.
+- **The late-day prior rests on an assumption** about when the hidden pictures were taken.
+- **The empty / half / full cut points are fixed shares** of the fitted pictures (about 7% / 16% / 77%), chosen
+  on this store's key; a store with a very different share of empty shelves needs them re-checked.
+- **Counts are visible-unit estimates**, never checked against a hand count; piles hide items.
+- **One day, one store**: forecasts and sales speed are a prototype.
+- **Empty counts as compliant**: our reading of the brief, not stated in it.
+- A fresh clone needs the dataset and a fit before it can predict.
+
+## Team
+
+**QuantumLotus**: Sérgio Kuts Pires and Inês Matias Medeiros, JunctionX Lisbon 2026.

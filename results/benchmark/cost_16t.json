@@ -1,0 +1,13 @@
+{
+ "threads": 16,
+ "images": 14,
+ "areas": 152,
+ "model_load_s": 6.67,
+ "wall_s_per_image": 1.373,
+ "cpu_s_per_image": 18.191,
+ "areas_per_image": 10.9,
+ "peak_ram_mb": 0,
+ "owl_load_s": 1.5,
+ "owl_wall_s_per_image": 3.11,
+ "owl_cpu_s_per_image": 43.02
+}
