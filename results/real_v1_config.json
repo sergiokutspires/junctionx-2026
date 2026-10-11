@@ -1,0 +1,25 @@
+{
+  "backend": "deep",
+  "device": "auto",
+  "crop_size": 224,
+  "inset": 0.06,
+  "max_images_per_camera": 150,
+  "batch_size": 32,
+  "clip_model": "openai/clip-vit-base-patch16",
+  "dino_model": "facebook/dinov2-small",
+  "n_patch_clusters": 24,
+  "pca_dims": 48,
+  "level_prior": [
+    0.15,
+    0.35,
+    0.5
+  ],
+  "compliance_prior": 0.93,
+  "smoothing_window_s": 300,
+  "smoothing_weight": 0.0,
+  "seed": 0,
+  "extra": {},
+  "int8_clip": false,
+  "int8_dino": false,
+  "bf16": false
+}

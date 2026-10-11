@@ -1,4 +1,4 @@
-"""Fresh shelf monitor (team QuantumLotus, JunctionX Lisbon 2026, Sensei challenge).
+"""Fresh shelf monitor (team NovaLotus, JunctionX Lisbon 2026, Sensei challenge).
 
 Reads ceiling-camera images of a produce section and, for every planogram area, answers the stock
 level (empty / half / full) and whether the planned product is there. ``python -m sensei --help`` lists

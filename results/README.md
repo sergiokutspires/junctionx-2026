@@ -16,15 +16,45 @@ none of them reads the hidden validation set.
 | `heldout.py` | The held-out script behind the README results table (copy of `experiments/final_integration/heldout.py`, paths only changed). Refits the heads per fold for four recipes: `v1cal` (previous submission), `v3cal` (submission), `v1mem`, `v3nomem`. | `python results/heldout.py [recipes]` |
 | `heldout_v1cal_v3cal_v1mem_v3nomem.json` | Its output for all four recipes, on the full key (`|v2`) and the original 756-area key (`|756`). | `python results/heldout.py` |
 | `heldout_v3cal.json` | The same script re-run for the submission recipe only on 2026-10-11, from this folder: 1.233 / 1.411 / 1.480, identical to the file above. | `python results/heldout.py v3cal` |
-| `labelfree.py` | Scores a model's label-free outputs (no heads) on the same test sets. | `python results/labelfree.py models/real_v3_cal models/real_v1` |
-| `labelfree_real_v3_cal.json` | Label-free core of the submission model: 1.183 / 0.990 / 0.882 (equals `baseline` above). | as above |
-| `labelfree_real_v1.json` | Label-free fallback model `models/real_v1`: 1.210 / 1.007 / 0.980. | as above |
+| `labelfree.py` | Scores a model's label-free outputs (no heads) on the same test sets. Writes `outputs/labelfree/labelfree_<model>.json` by default, so a run never overwrites the tracked files below; to regenerate those on purpose, add `--out results`. | `python results/labelfree.py models/real_v3_cal models/real_v1` |
+| `labelfree_real_v3_cal.json` | Label-free core of the submission model: 1.183 / 0.990 / 0.882 (equals `baseline` above). | `python results/labelfree.py models/real_v3_cal --out results` |
+| `labelfree_real_v1.json` | Label-free fallback model `models/real_v1`: 1.210 / 1.007 / 0.980. | `python results/labelfree.py models/real_v1 --out results` |
+| `real_v1_config.json` | The fit settings of `models/real_v1` written out in full: its saved `config.json` plus `bf16`, `int8_clip`, `int8_dino` all `false` (it was fitted in fp32, before bf16 became the default). See [below](#label-free-fallback-rebuild). | copy of `models/real_v1/config.json` + the three fields |
+
+### Label-free fallback rebuild
+
+A fit without `--labels` uses today's defaults (bf16 image encoders) and gives the label-free core of the
+submission model (1.183 / 0.990 / 0.882), not `models/real_v1`. To rebuild `real_v1` itself, pass its config:
+
+```
+python -m sensei fit --data data/raw/images --planogram data/raw/planogram.json --model models/repro_v1 --config results/real_v1_config.json
+python results/labelfree.py models/repro_v1          # -> outputs/labelfree/labelfree_repro_v1.json
+python -m sensei predict --model models/repro_v1 --images data/val_sim --out outputs/repro_v1/predictions.json
+```
+
+Outcome on 2026-10-11, twice: once with the local feature cache (fp32 features computed earlier) and once
+recomputing every feature in an empty working folder (372 s wall-clock on the laptop while other jobs ran).
+Both rebuilds scored exactly 1.210 / 1.007 / 0.980 (their `labelfree_*.json` is byte-identical to
+`labelfree_real_v1.json`), and their `predictions.json` on `data/val_sim` (14 images, 152 areas) is
+byte-identical to that of the shipped `models/real_v1`. The model arrays are identical except the stock
+model's k-means centres, which differ by at most 6e-8 (float32 rounding; see `reproduce.md`); `config.json`
+now lists the three precision fields explicitly and `model.json` differs only in the data path, the fit time and
+the order of two keys. Without `--config results/real_v1_config.json` a label-free fit gives
+1.183 / 0.990 / 0.882 instead (reported by the clean-room test; the same as `labelfree_real_v3_cal.json`).
 | `final_numbers_real_v3_cal.json` | The same held-out folds in staff terms (copy of `pitch/research/evidence/final_numbers_real_v3_cal.json`): confusion matrices, wrong-product hits and false alarms (31 of 117 found, 2 false alarms on unseen cameras), empties reaching the to-do list, restock tasks on full shelves, for `heads`, `unsup` (label-free) and `always_compliant_full`. | `python pitch/research/evidence/final_numbers_v3.py <out.json>` (imports `experiments/final_integration/heldout.py`, not published) |
 
 ## Cost (`benchmark/`)
 
 All measured on one laptop, an AMD Ryzen AI 7 350 (native bf16), 14 frames / 152 areas, no feature cache. Each
 file records the model, precision, threads, wall and CPU seconds per image and peak RAM.
+
+To reproduce, run on mains power with the machine otherwise idle (a clean-room test on a busy machine measured
+about 5.8 CPU-s per image instead of 3.8):
+
+```
+$env:SENSEI_THREADS="1"; .venv\Scripts\python tools\benchmark_cost.py     # PowerShell
+SENSEI_THREADS=1 .venv/bin/python tools/benchmark_cost.py                 # bash
+```
 
 | File | What it holds | Regenerate with |
 |---|---|---|
@@ -36,7 +66,7 @@ file records the model, precision, threads, wall and CPU seconds per image and p
 | `cost_1t.json` | Previous submission `models/real_v1_cal` (fp32): 5.16 | `... --model models/real_v1_cal` |
 | `cost_16t.json` | 16 threads, earlier fp32 measurement: 1.37 s wall, 18.2 CPU-s; OWLv2 3.1 s wall | `SENSEI_THREADS=16 ...` |
 | `cost_1t_bf16.json`, `cost_1t_b32*.json`, `cost_1t_*int8*.json` | Precision and model-size experiments (cost only; no accuracy result was saved for them; `sensei/config.py` notes why int8 was not used) | `tools/benchmark_cost.py` with the matching options |
-| `llm_cost_compare.json` | Our cost per image ($0.0000467) against one Claude call per image with the labellers' two pictures (Sonnet 5.5 $0.0141, Opus 5.5 $0.0282, Haiku 5.5 $0.0007) | `python tools/llm_cost_compare.py` |
+| `llm_cost_compare.json` | Our cost per image ($0.0000467) against one Claude call per image with the labellers' two pictures (Sonnet 5.5 $0.0141, Opus 5.5 $0.0282, Haiku 5.5 $0.0007) | `python tools/render_teacher_sheets.py` first (the labellers' picture sheets in `data/teacher/` are not published; needs `data/raw`), then `python tools/llm_cost_compare.py` (it stops with this hint when the sheets are missing) |
 | `change_gate.json` | Study of skipping areas whose pixels did not change between consecutive frames (AUC 0.888; 3.8% skipped for 1 of 281 changes missed). Not shipped. | `python tools/change_gate.py` |
 
 Not included: `pitch/research/evidence/results_final.txt`, which predates the final answer key (02:00 vs 02:06)

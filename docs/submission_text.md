@@ -15,7 +15,7 @@ picture: they are Sensei's data, and `pitch/slides_standalone.html` and the staf
 | Field | Text |
 |---|---|
 | Project name | **Fresh.** |
-| Team | **QuantumLotus**: Sérgio Kuts Pires, Inês Matias Medeiros |
+| Team | **NovaLotus**: Sérgio Kuts Pires, Inês Matias Medeiros (NOVA FCT, IMS & SBE) |
 | Challenge | Sensei: "Fresh eyes on fresh produce" |
 | Tagline (short) | Your ceiling cameras, turned into a produce restock list. |
 | GitHub | https://github.com/sergiokutspires/junctionx-2026 |

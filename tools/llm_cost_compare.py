@@ -8,6 +8,7 @@ Estimates one Messages API call per camera frame with the same two pictures our 
   .venv/Scripts/python tools/llm_cost_compare.py
 """
 import json
+import sys
 from pathlib import Path
 
 from PIL import Image
@@ -34,6 +35,10 @@ def image_tokens(path: Path, long_edge: int = 1568) -> float:
 
 def main() -> None:
     teacher = sorted((ROOT / "data/teacher").glob("*/*_areas.jpg"))
+    if not teacher:
+        sys.exit("No teacher sheets found in data/teacher/ (they are not published). Render them first with\n"
+                 "  .venv/Scripts/python tools/render_teacher_sheets.py\n"
+                 "(needs the dataset in data/raw/), then run this script again.")
     areas_per_frame = 1962 / 181
     img_tok = sum(image_tokens(p) + image_tokens(Path(str(p).replace("_areas", "_overview"))) for p in teacher) / len(teacher)
     tok_in = img_tok + PROMPT_TOKENS

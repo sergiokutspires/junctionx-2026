@@ -29,6 +29,9 @@ from typing import IO, Any, Iterator, Sequence
 
 from .data import IMAGE_EXTS
 
+# harmless Hugging Face notice on Windows without symlink rights (the model cache still works): keep it quiet
+os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
+
 log = logging.getLogger("sensei.submit")
 
 ROOT = Path(__file__).resolve().parents[1]

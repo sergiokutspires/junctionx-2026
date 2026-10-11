@@ -543,7 +543,7 @@ def predict_dir(model: SenseiModel, images: str | Path, out: str | Path | None =
         if strict:
             raise FileNotFoundError(f"image folder not found: {root}")
         log.warning("image folder not found: %s", root)
-    records = discover_images(root, model.areas_by_cam)
+    records = discover_images(root, model.areas_by_cam, infer_cameras=root.is_dir())
     missed = 0
     if root.is_dir():
         extra, missed = _flat_records(model, root, {r.path for r in records})

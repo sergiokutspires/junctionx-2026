@@ -221,7 +221,7 @@ the fit-time median; it never crashes. Exit codes of `python -m sensei submit` (
 passed, 1 file written but invalid (do not hand it in), 2 no usable input (nothing written). `submit` runs
 Hugging Face in offline mode when the weights are cached; other commands may try to reach huggingface.co.
 
-**Rehearsal.** `SUBMIT.bat data\val_sim`, where `data/val_sim/<camera>/<ts>.jpg` is the last frame of each camera
+**Rehearsal.** `.\SUBMIT.bat data\val_sim` (PowerShell), where `data/val_sim/<camera>/<ts>.jpg` is the last frame of each camera
 copied from `data/raw/images` (14 images, 152 areas). Those frames were in the fit and in the AI key, so it rehearses the plumbing, not the
 score.
 
@@ -231,9 +231,11 @@ score.
 data/labels/teacher_labels_v2.json` (the submission recipe) and zip `outputs/` back to Drive. No keys, no paid
 tier. `colab/sensei_bigfeatures.ipynb` precomputes OWLv2 boxes for every frame; pass its zip as `--detections`.
 
-**Tests.** `python -m pytest tests -q -m "not slow"` runs the lite-backend suite (184 passed in about 20 s on
-2026-10-11); `-m slow` adds the deep-backend
-tests (downloads about 600 MB of weights). Tests that need `data/raw` skip on a fresh clone.
+**Tests.** `python -m pytest tests -q -m "not slow"` runs the lite-backend suite. On 2026-10-11, with
+`data/raw` in place and no fitted models or caches (a fresh clone plus the dataset): 193 passed, 4 skipped (they
+need the Colab bundle or local caches), 3 deselected, in about 75 s. The full suite (`python -m pytest tests -q`, adds the deep-backend tests; downloads about 600 MB of weights
+on first use) gave 196 passed, 4 skipped there, and 200 passed on the team laptop with its caches. Tests that need
+`data/raw` skip when it is missing.
 `python test_scoring.py` reproduces the brief's worked example (320 of 578).
 
 **Tested with** Python 3.14.7, torch 2.14.1+cpu, transformers 5.19.0, numpy 2.5.3, scikit-learn 1.9.1,

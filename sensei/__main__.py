@@ -10,9 +10,13 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import sys
 import time
 from pathlib import Path
+
+# harmless Hugging Face notice on Windows without symlink rights (the model cache still works): keep it quiet
+os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:   # scoring.py lives in the project root

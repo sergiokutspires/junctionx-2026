@@ -10,7 +10,7 @@ says whether the right product is there and whether it is empty, half or full. I
 $0.00005 per image and needs no labels to run.**
 
 JunctionX Lisbon 2026, Sensei challenge "Fresh eyes on fresh produce" ([brief](docs/brief.txt)). Team
-**QuantumLotus**.
+**NovaLotus**.
 
 | | |
 |---|---|
@@ -135,7 +135,10 @@ Full discussion: [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md#2-how-we-measured).
 
 Measured with [`tools/benchmark_cost.py`](tools/benchmark_cost.py) on one core of an AMD Ryzen AI 7 350 laptop
 (native bf16; without it expect about 5.2 CPU-s), priced at $0.0446 per vCPU-hour (AWS c7i.large on-demand,
-us-east-1). Other runs measured 3.59 and 4.53, i.e. $0.00004 to $0.00006. A 14-camera section photographed
+us-east-1). Other runs measured 3.59 and 4.53, i.e. $0.00004 to $0.00006. To reproduce, run on mains power with
+the machine otherwise idle (a clean-room test on a busy machine measured about 5.8 CPU-s per image):
+`$env:SENSEI_THREADS="1"; .venv\Scripts\python tools\benchmark_cost.py` in PowerShell, or
+`SENSEI_THREADS=1 .venv/bin/python tools/benchmark_cost.py` in bash. A 14-camera section photographed
 every 5 minutes for 14 hours a day is 70,560 images a month, about **$3.3 a month**. The optional product
 boxes add 15.7 CPU-s per frame. Files: [`results/benchmark/`](results/README.md#cost-benchmark); full table
 and caveats in [HOW_IT_WORKS](docs/HOW_IT_WORKS.md#3-cost).
@@ -145,35 +148,65 @@ and caveats in [HOW_IT_WORKS](docs/HOW_IT_WORKS.md#3-cost).
 **Validation day (models already fitted):** drag the validation folder or `.zip` onto `SUBMIT.bat`, or run
 
 ```powershell
-SUBMIT.bat "D:\path\to\validation.zip"
+.\SUBMIT.bat "D:\path\to\validation.zip"
 .venv\Scripts\python -m sensei submit --images <folder or .zip>      # the same, one command
 ```
 
 Look for `SUBMISSION FORMAT CHECK: PASSED` and `HAND IN THIS FILE: ...\submission\predictions.json`. The staff
 app is `submission\dashboard\index.html`. Exit code 0 = passed, 1 = written but invalid (do not hand in),
-2 = no usable input. Expect 26 images / 289 areas. **Label-free fallback:** add `--model models/real_v1`.
-`--no-detect` skips the product boxes.
+2 = no usable input. Expect 26 images / 289 areas. `--no-detect` skips the product boxes. A Hugging Face notice
+"You are sending unauthenticated requests to the HF Hub" may appear: it is harmless (no token is needed).
+Pictures in a flat folder (no camera folder in the path or name) are fine: the camera is recognised from the picture.
+
+- **Label-free fallback** (no AI labels used anywhere): `.\SUBMIT_LABEL_FREE.bat "D:\path\to\validation.zip"`,
+  the same as `submit --model models/real_v1 --out submission_label_free`; hand in
+  `submission_label_free\predictions.json`.
+- **Show the staff app on phones:** `.\SHARE_APP.bat` (optionally `--dir outputs\rehearsal_0850\dashboard`) serves
+  the newest app from this laptop and opens a QR code. Phones on the same Wi-Fi scan it; a secret key inside the
+  QR code is required, only clients on the laptop's own network are served, the server stops by itself after
+  4 hours, and nothing is uploaded. Close the window to stop.
 
 <details>
 <summary>From a fresh clone (install, dataset, fit)</summary>
 
+0. **On Windows, clone to a short path** (for example `git clone <repo> C:\fe`) or enable long paths: some
+   torch header files exceed the 260-character path limit, and the install fails in a deep folder.
 1. Install (Python 3.10+, CPU is enough):
    ```powershell
    python -m venv .venv
    .venv\Scripts\python -m pip install -r requirements.txt
-   .venv\Scripts\python -m pytest tests -q -m "not slow"
    ```
    On Linux or macOS use `.venv/bin/python`. Free Hugging Face weights download on first use
    (`openai/clip-vit-base-patch16`, `facebook/dinov2-small`, `google/owlv2-base-patch16-ensemble` for boxes).
-2. **The dataset is not in this repository** (it is Sensei's store footage). Put it in
-   `data/raw/planogram.json` and `data/raw/images/<camera_id>/<unix_ts>.jpg`.
-3. Fit the submission model (about 12 CPU-minutes of feature extraction for 181 images on one core):
+2. **The dataset is not in this repository** (it is Sensei's store footage). Extract
+   `Frutas e Legumes (train & test).zip`, rename its folder `Frutas e Legumes (train & test)` to `data/raw/images`
+   (one folder per camera, `<camera_id>/<unix_ts>.jpg`; ignore the `__MACOSX` folder if your unzip created one),
+   and copy `planogram.json` to `data/raw/planogram.json`. Then run the tests:
+   ```powershell
+   .venv\Scripts\python -m pytest tests -q -m "not slow"
+   ```
+   With `data/raw` in place and nothing else (no fitted models or caches) this gives `193 passed, 4 skipped,
+   3 deselected` (the 4 skipped need the Colab bundle or local caches; the 3 deselected are the slow deep-backend
+   tests; the full suite, without `-m "not slow"`, gives `196 passed, 4 skipped`).
+3. Fit the submission model (about 12 CPU-minutes of feature extraction for 181 images, about 5 minutes
+   wall-clock on an 8-core laptop):
    ```powershell
    .venv\Scripts\python -m sensei fit --data data/raw/images --planogram data/raw/planogram.json `
        --model models/real_v3_cal --labels data/labels/teacher_labels_v2.json
    ```
-   Without `--labels` you get the label-free model (that is `models/real_v1`).
-4. Run `SUBMIT.bat <validation folder or zip>`, then open `submission\dashboard\index.html`.
+   **Label-free fallback `models/real_v1`:** it was fitted in full precision (fp32), before bf16 became the
+   default, so a fit without `--labels` and without `--config` does *not* rebuild it (it gives the label-free core
+   of the submission model, 1.18 / 0.99 / 0.88). Its settings are written out in
+   [`results/real_v1_config.json`](results/real_v1_config.json); rebuild it with
+   ```powershell
+   .venv\Scripts\python -m sensei fit --data data/raw/images --planogram data/raw/planogram.json `
+       --model models/real_v1 --config results/real_v1_config.json
+   ```
+   Checked on 2026-10-11 (built into `models/repro_v1`, once from the local feature cache and once recomputing
+   every feature): label-free score 1.210 / 1.007 / 0.980, the same file as `results/labelfree_real_v1.json`,
+   and `data/val_sim` predictions byte-identical to the shipped `real_v1`
+   ([details](results/README.md#label-free-fallback-rebuild)).
+4. Run `.\SUBMIT.bat "D:\path\to\validation.zip"` (or a folder), then open `submission\dashboard\index.html`.
 
 **Free Google Colab:** [`colab/sensei_colab.ipynb`](colab/sensei_colab.ipynb) runs the same recipe on a free T4
 (instructions in [HOW_IT_WORKS](docs/HOW_IT_WORKS.md#4-command-line)). All commands, the rehearsal and test
@@ -256,6 +289,8 @@ estimates.
 ```
 README.md                  start here
 SUBMIT.bat                 validation day: double-click or drop a folder / zip on it
+SUBMIT_LABEL_FREE.bat      the same with the label-free fallback models/real_v1 (writes submission_label_free\)
+SHARE_APP.bat              staff app on phones: local server + QR code with a secret key (nothing is uploaded)
 scoring.py                 the challenge scoring rules and the cost-aware decision (test_scoring.py: brief example)
 sensei/                    the package: data, features, stock, compliance, calibrate, pipeline, submit, dashboard, ...
 ui/                        staff app (index.html, app.js, style.css)
@@ -290,4 +325,4 @@ Not published (git-ignored): the dataset (`data/raw`), fitted models, caches, ou
 
 ## Team
 
-**QuantumLotus**: Sérgio Kuts Pires and Inês Matias Medeiros, JunctionX Lisbon 2026.
+**NovaLotus**: Sérgio Kuts Pires and Inês Matias Medeiros, JunctionX Lisbon 2026.

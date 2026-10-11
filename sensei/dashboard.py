@@ -60,7 +60,7 @@ from .config import Config
 log = logging.getLogger(__name__)
 
 UI_DIR = Path(__file__).resolve().parent.parent / "ui"
-UI_FILES = ("index.html", "app.js", "style.css")
+UI_FILES = ("index.html", "app.js", "style.css", "theme.css")
 MAX_FRAME_W = 1280          # downscaled frame width limit (px)
 JPEG_QUALITY = 80
 CROP_LONG_SIDE = (200, 360)  # min / max long side of an area crop (px)

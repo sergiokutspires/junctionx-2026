@@ -179,6 +179,8 @@ def test_ui_assets_are_offline():
     """No CDN, font, or other network references anywhere in ui/."""
     for name in dashboard.UI_FILES:
         text = (UI / name).read_text(encoding="utf-8")
+        # the SVG namespace in inline data: icons is an identifier, not a network request
+        text = re.sub(r"""xmlns=(['"]|%22|%27)http://www\.w3\.org/2000/svg\1""", "xmlns", text)
         assert not re.search(r"https?://|(?<![:\w])//[a-z0-9.-]+\.[a-z]{2,}|@import|fonts\.googleapis", text), name
     html = (UI / "index.html").read_text(encoding="utf-8")
     assert 'src="data.js"' in html and 'src="app.js"' in html and 'href="style.css"' in html

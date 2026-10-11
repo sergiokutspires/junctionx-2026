@@ -1,12 +1,14 @@
 """Label-free score of a model: its zero-shot (no heads, no labels) answers scored against the AI answer key.
 
-  .venv/Scripts/python results/labelfree.py [models/real_v1 ...]
+  .venv/Scripts/python results/labelfree.py [models/real_v1 ...] [--out DIR]
 
 Same test sets as results/heldout.py: all 1,962 labelled areas ("camera"; no heads are fitted, so nothing needs
 holding out), the last two labelled frames of every camera ("time2") and the last one ("time1"). Uses the
 model's unsupervised outputs exactly as the "baseline" method of `python -m sensei calibrate`. Needs the fitted
-model in models/ (not published); reads no images. Writes results/labelfree_<model>.json.
+model in models/ (not published); reads no images. Writes <DIR>/labelfree_<model>.json, by default under
+outputs/labelfree/ so a run never overwrites the tracked evidence; pass --out results to regenerate it on purpose.
 """
+import argparse
 import json
 import logging
 import sys
@@ -42,7 +44,16 @@ def evaluate(model: str) -> dict:
 
 
 if __name__ == "__main__":
-    for model in sys.argv[1:] or ["models/real_v1"]:
+    ap = argparse.ArgumentParser(description="Label-free score of fitted models on the AI answer key.")
+    ap.add_argument("models", nargs="*", default=["models/real_v1"], help="model folders (default models/real_v1)")
+    ap.add_argument("--out", default="outputs/labelfree",
+                    help="folder for labelfree_<model>.json (default outputs/labelfree; 'results' overwrites the tracked files)")
+    args = ap.parse_args()
+    out_dir = Path(args.out) if Path(args.out).is_absolute() else ROOT / args.out
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for model in args.models:
         r = evaluate(model)
         print(model, " | ".join(f"{s} {v['per_area']:.3f} (n {v['areas']})" for s, v in r.items()), flush=True)
-        (ROOT / "results" / f"labelfree_{Path(model).name}.json").write_text(json.dumps(r, indent=1))
+        dest = out_dir / f"labelfree_{Path(model).name}.json"
+        dest.write_text(json.dumps(r, indent=1))
+        print(f"wrote {dest}", flush=True)

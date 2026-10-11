@@ -96,7 +96,7 @@ def _timestamp(stem: str, camera_id: str) -> int:
 
 
 def discover_images(root: str | Path, camera_ids: Iterable[str],
-                    splits: Iterable[str] | None = None) -> list[ImageRecord]:
+                    splits: Iterable[str] | None = None, infer_cameras: bool = False) -> list[ImageRecord]:
     """Find camera frames under ``root`` (any depth), sorted by (camera, timestamp, name).
 
     Camera = nearest folder name equal to a known camera id (``root`` itself counts), else a
@@ -104,6 +104,8 @@ def discover_images(root: str | Path, camera_ids: Iterable[str],
     Split = nearest folder in {train, test, val, validation}, else "unknown".
     ``splits`` filters by split; if the tree has no split folders at all (the real dataset:
     train and test are mixed), the filter cannot apply and every image is returned.
+    ``infer_cameras``: the caller recognises the camera of the left-out images from the picture
+    (``predict_dir``), so they are reported at INFO level instead of as a warning.
     """
     root = Path(root)
     cams = {str(c) for c in camera_ids}
@@ -131,7 +133,10 @@ def discover_images(root: str | Path, camera_ids: Iterable[str],
                 continue
             records.append(ImageRecord(path=Path(dirpath) / name, camera_id=cam, image_name=name,
                                        timestamp=_timestamp(stem, cam), split=split))
-    if unknown_cam:
+    if unknown_cam and infer_cameras:
+        log.info("discover_images: %d image(s) without a camera folder: the camera will be recognised "
+                 "from the picture", unknown_cam)
+    elif unknown_cam:
         log.warning("discover_images: ignored %d image(s) of cameras not in the planogram", unknown_cam)
 
     if splits is not None:

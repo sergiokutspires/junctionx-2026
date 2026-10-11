@@ -2,7 +2,7 @@
 
 Deck: `pitch/slides.html` (arrow keys, F for fullscreen, 1-9 jump, 0 = the close). Ten main slides, then five
 appendix slides (A1-A5) for Q&A only. Single-file copy for another laptop: `pitch/slides_standalone.html`
-(rebuild with `.venv/Scripts/python pitch/build_standalone.py`). Team: QuantumLotus (Sérgio Kuts Pires, Inês Matias
+(rebuild with `.venv/Scripts/python pitch/build_standalone.py`). Team: NovaLotus (Sérgio Kuts Pires, Inês Matias
 Medeiros), see `pitch/team.md`.
 
 **Timing.** The spoken text below is **390 words** including the optional lines, **367 words** without
@@ -30,7 +30,7 @@ empty. Two banana crates hold oranges. The plan says where things go. The camera
 
 ## 2. Fresh. (Inês, 0:15 - 0:30)
 
-**Inês:** Your brief calls produce the most demanding section of a store for computer vision. We are QuantumLotus,
+**Inês:** Your brief calls produce the most demanding section of a store for computer vision. We are NovaLotus,
 and this is Fresh. It reads the produce shelf from the cameras Sensei already has, on one CPU core.
 
 ## 3. For staff (Inês, 0:30 - 0:55)
