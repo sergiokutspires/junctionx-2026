@@ -1,10 +1,11 @@
 """Measure the compute cost per analysed image (Sensei's resource-efficiency criterion).
 
-  .venv/Scripts/python tools/benchmark_cost.py [--images 14] [--detect]
+  .venv/Scripts/python tools/benchmark_cost.py [--model models/real_v3_cal] [--images 14] [--repeat 2] [--detect]
   SENSEI_THREADS=1 .venv/Scripts/python tools/benchmark_cost.py     # cost on a single CPU core
 
-Reports wall seconds and CPU-seconds per image (marginal, model loading excluded and reported
-separately), peak RAM, and writes outputs/benchmark/cost_<threads>t.json. No feature cache is used.
+Reports wall seconds and CPU-seconds per image (marginal: the models are loaded by a first warm-up call
+and reused, loading is reported separately; best of --repeat timed passes), peak RAM, the model's
+feature precision settings, and writes outputs/benchmark/cost_<threads>t_<model>.json. No feature cache.
 """
 import argparse
 import ctypes
@@ -44,8 +45,9 @@ def timed(fn):
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default="models/real_v1_cal")
+    ap.add_argument("--model", default="models/real_v3_cal")
     ap.add_argument("--images", type=int, default=14, help="frames to time (spread over cameras)")
+    ap.add_argument("--repeat", type=int, default=2, help="timed passes over the frames (the best is kept)")
     ap.add_argument("--detect", action="store_true", help="also time the optional OWLv2 boxes (dashboard only)")
     a = ap.parse_args()
     logging.basicConfig(level=logging.WARNING)
@@ -67,11 +69,14 @@ def main() -> None:
     areas = sum(len(model.areas_by_cam[r.camera_id]) for r in picked)
 
     _, w1, c1 = timed(lambda: pipeline.predict(model, picked[:1], cfg))       # includes loading CLIP + DINOv2
-    _, wn, cn = timed(lambda: pipeline.predict(model, picked, cfg))
+    passes = [timed(lambda: pipeline.predict(model, picked, cfg))[1:] for _ in range(max(1, a.repeat))]
+    wn, cn = min(p[0] for p in passes), min(p[1] for p in passes)
     n = len(picked)
-    res = {"threads": threads, "images": n, "areas": areas,
+    res = {"model": a.model, **{f: getattr(cfg, f) for f in ("clip_model", "dino_model", "int8_clip", "int8_dino", "bf16")},
+           "threads": threads, "images": n, "areas": areas,
            "model_load_s": round(t_load + max(0.0, w1 - wn / n), 2),
            "wall_s_per_image": round(wn / n, 3), "cpu_s_per_image": round(cn / n, 3),
+           "cpu_s_per_area": round(cn / max(areas, 1), 3),
            "areas_per_image": round(areas / n, 1), "peak_ram_mb": round(peak_rss_mb() or 0)}
     if a.detect:
         from sensei.dashboard import make_owl_detector  # noqa: PLC0415
@@ -81,7 +86,8 @@ def main() -> None:
         res.update({"owl_load_s": round(w_l, 1), "owl_wall_s_per_image": round(wd / len(imgs), 2),
                     "owl_cpu_s_per_image": round(cd / len(imgs), 2), "peak_ram_mb": round(peak_rss_mb() or 0)})
     out = Path("outputs/benchmark"); out.mkdir(parents=True, exist_ok=True)
-    (out / f"cost_{threads}t.json").write_text(json.dumps(res, indent=1))
+    tag = f"_{Path(a.model).name}"
+    (out / f"cost_{threads}t{tag}.json").write_text(json.dumps(res, indent=1))
     print(json.dumps(res, indent=1))
 
 

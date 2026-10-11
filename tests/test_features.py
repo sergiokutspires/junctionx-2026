@@ -117,3 +117,42 @@ def test_deep_smoke(real_images_dir, real_areas):
     assert np.allclose(np.linalg.norm(patches[0].astype(np.float32), axis=-1), 1, atol=1e-2)
     txt = ext.clip_text(["a pile of bananas", "a pile of oranges"])
     assert txt.shape == (2, 512) and ext.logit_scale > 1
+
+
+def test_precision_fields_cache_key_and_legacy_configs(tiny_dataset, monkeypatch):
+    from sensei import features
+    root, plan = tiny_dataset
+    areas = load_planogram(plan)
+    recs = discover_images(root, areas.keys())
+    fp32 = Config(int8_clip=False, int8_dino=False, bf16=False)
+    keys = {features._cache_key(recs, areas, c) for c in
+            (fp32, fp32.replace(int8_clip=True), fp32.replace(int8_dino=True), fp32.replace(bf16=True))}
+    assert len(keys) == 4                      # int8 / bf16 features never reuse fp32 cache entries
+    k = features._cache_key(recs, areas, fp32)
+    monkeypatch.setattr(features, "PRECISION_CFG_FIELDS", ())
+    assert features._cache_key(recs, areas, fp32) == k   # fp32 keys unchanged: old cache entries stay valid
+    # a model config written before these fields existed loads with the precision it was fitted with
+    new = Config(int8_clip=True, int8_dino=True, bf16=True)
+    old = {f: v for f, v in new.to_dict().items() if f not in ("int8_clip", "int8_dino", "bf16")}
+    c = Config.from_dict(old)
+    assert not (c.int8_clip or c.int8_dino or c.bf16)
+    c = Config.from_dict(new.to_dict())
+    assert c.int8_clip and c.int8_dino and c.bf16
+
+
+@pytest.mark.slow
+def test_deep_reduced_precision_close_to_fp32(real_images_dir, real_areas):
+    cfg = Config(backend="deep", device="cpu", batch_size=8, int8_clip=False, int8_dino=False, bf16=False)
+    if not _weights_cached(cfg):
+        pytest.skip("model weights not cached")
+    recs = [r for r in discover_images(real_images_dir, real_areas.keys()) if r.camera_id == "6215"][:1]
+    ref, ref_p = compute_features(recs, real_areas, cfg, cache_dir=None)
+    cos = lambda a, b: (a.astype(np.float32) * b.astype(np.float32)).sum(-1)  # noqa: E731
+    bf, bf_p = compute_features(recs, real_areas, cfg.replace(bf16=True), cache_dir=None)
+    assert cos(bf.clip, ref.clip).min() > 0.99 and cos(bf.dino_cls, ref.dino_cls).min() > 0.99
+    assert cos(bf_p, ref_p).mean() > 0.99
+    q, q_p = compute_features(recs, real_areas, cfg.replace(int8_dino=True, bf16=True), cache_dir=None)
+    assert q_p.shape == ref_p.shape and cos(q.clip, bf.clip).min() > 0.999   # CLIP stays bf16
+    assert cos(q.dino_cls, ref.dino_cls).mean() > 0.9 and cos(q_p, ref_p).mean() > 0.9
+    t_q = Extractor(cfg.replace(int8_clip=True)).clip_text(["a pile of bananas"])
+    assert np.allclose(t_q, Extractor(cfg).clip_text(["a pile of bananas"]), atol=1e-5)  # text stays fp32

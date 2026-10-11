@@ -237,3 +237,55 @@ def test_dashboard_problems_never_fail_the_submission(synth, mdir, tmp_path, mon
     cli(["submit", "--images", str(synth["val_dir"]), "--model", str(mdir), "--out", str(out), "--no-detect", "-q"])
     text = capsys.readouterr().out
     assert "NOT built" in text and "HAND IN THIS FILE" in text and (out / "predictions.json").is_file()
+
+
+def test_encrypted_zip_exits_2_with_a_clear_message(synth, mdir, tmp_path, capsys):
+    src = discover_images(synth["val_dir"], load_planogram(mdir / "planogram.json"))[0]
+    zp = tmp_path / "locked.zip"
+    with zipfile.ZipFile(zp, "w") as z:
+        z.write(src.path, f"{src.camera_id}/{src.image_name}")
+    raw = bytearray(zp.read_bytes())
+    cd = raw.index(b"PK\x01\x02")
+    raw[cd + 8] |= 1                                  # central directory: "encrypted" flag
+    zp.write_bytes(bytes(raw))
+    with pytest.raises(SystemExit) as exc:
+        _submit(zp, mdir, tmp_path / "sub")
+    assert exc.value.code == 2 and not (tmp_path / "sub" / "predictions.json").exists()
+    assert "password-protected" in capsys.readouterr().err
+
+
+def test_unanswered_check_uses_paths_not_names(tmp_path):
+    planogram = {"1001": ["1001_1", "1001_2"], "1002": ["1002_1"]}
+    e = {"planogram_compliant": True, "stock_level": "half", "stock_value": 0.5}
+    p = tmp_path / "p.json"
+    p.write_text(json.dumps({"1001": {"1751000000.jpg": {"1001_1": e, "1001_2": e}}}), encoding="utf-8")
+    good = tmp_path / "1001" / "1751000000.jpg"
+    other = tmp_path / "9999" / "1751000000.jpg"     # same name, camera not in the planogram
+    flat = tmp_path / "flat" / "1751000001.jpg"      # unanswered, not an explicit other camera
+    for f, size in ((good, 3), (other, 5), (flat, 7)):
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_bytes(b"x" * size)
+    rows = [{"image_path": str(good), "fallback": False}] * 2
+    rep = submit.validate_predictions(p, planogram, [good, other], rows, root=tmp_path)
+    assert rep["ok"] and any("not in the planogram" in w for w in rep["warnings"])
+    rep = submit.validate_predictions(p, planogram, [good, flat], rows, root=tmp_path)
+    assert not rep["ok"] and any("1751000001.jpg" in x for x in rep["errors"])
+
+
+def test_digit_folder_and_resized_frames(synth, mdir, tmp_path, capsys):
+    import cv2
+    import numpy as np
+    model = pipeline.SenseiModel.load(mdir)
+    assert model.meta.get("frame_size")
+    src = discover_images(synth["val_dir"], model.areas_by_cam)[0]
+    root = tmp_path / "in"
+    (root / "2025").mkdir(parents=True)               # a date folder, not a camera: camera inferred
+    shutil.copy(src.path, root / "2025" / src.image_name)
+    big = cv2.resize(cv2.imread(str(src.path)), None, fx=2, fy=2, interpolation=cv2.INTER_NEAREST)
+    cv2.imwrite(str(root / "2025" / "1751099998.png"), big)   # 2x the planogram frame, lossless
+    out = tmp_path / "sub"
+    _submit(root, mdir, out)
+    text = capsys.readouterr().out
+    assert "PASSED" in text and "resized" in text
+    preds = _read(out / "predictions.json")[src.camera_id]
+    assert preds[src.image_name] == preds["1751099998.jpg"]   # same answers after resizing back

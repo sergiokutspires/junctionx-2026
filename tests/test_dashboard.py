@@ -498,7 +498,9 @@ def test_ui_has_insights_and_counts_in_both_languages():
     assert ".ins-card" in (UI / "style.css").read_text(encoding="utf-8")
 
 
-REAL_DETAILS = Path(__file__).resolve().parents[1] / "outputs" / "real_v1_cal" / "details.json"
+REAL_DETAILS = next((p for p in (Path(__file__).resolve().parents[1] / "outputs" / m / "details.json"
+                     for m in ("real_v3_cal", "real_v1_cal")) if p.is_file()),
+                    Path(__file__).resolve().parents[1] / "outputs" / "real_v3_cal" / "details.json")
 
 
 @pytest.mark.skipif(not (REAL_DETS.is_file() and REAL_DETAILS.is_file()), reason="real details / Colab bundle not available")
@@ -512,3 +514,113 @@ def test_real_counts_are_plausible():
     assert set(counts) == {r["area_id"] for r in rows}
     assert max(counts.values()) > 5 and all(0 <= v <= 150 for v in counts.values())
     assert counts["6215_6"] == 0 and counts["6215_8"] == 0                           # the two bare shelves: nothing visible
+
+
+# --------------------------------------------------------------------------- freshness watch + ethylene neighbours
+
+from sensei import freshness  # noqa: E402
+
+BIO_HEADER = ("type;product_english;planogram_name_pt;loose_or_packed;areas;shelf_life_class;hours_on_display_before_checking;"
+              "ethylene_producer;ethylene_sensitive;visible_spoilage_signs;source;confidence")
+EDGE = Path("C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe")
+
+
+def bio_dict(tmp_path, lines):
+    p = tmp_path / "bio.csv"
+    p.write_text("\n".join([BIO_HEADER, *lines]) + "\n", encoding="utf-8-sig")
+    return freshness.load_biology(p, None)
+
+
+@pytest.fixture
+def fake_bio(tmp_path):
+    return bio_dict(tmp_path, [
+        "banana;banana;BANANA CAT I CNT KG;loose;;medium;24;medium;high;Brown spots;USDA AH-66 Banana pp.224-229: https://x.org;high",
+        "tomato;cherry tomato;TOMATE CHERRY EMB. 250 G;packed;;fast;0.5;medium;high;Soft, leaking;USDA AH-66 Tomato;medium",
+        "apple;gala apple;MAÇÃ GALA KG;loose;;slow;48;high;medium;Wrinkles;USDA AH-66 Apple;medium",
+    ])
+
+
+def test_build_adds_freshness_on_the_shelf_product(fake, fake_bio, tmp_path):
+    out = tmp_path / "site"
+    dashboard.build(fake, tmp_path / "raw", out, biology=fake_bio)
+    d = read_data_js(out)
+    areas = {a["id"]: a for a in d["areas"]}
+    tom, ban, wrong = areas["1001_10"], areas["1001_1"], areas["1001_2"]
+    assert tom["fresh"] == {"h": 1.0, "lim": 0.5, "since": TS_OLD, "basis": "first", "due": True}   # no restock: first picture
+    assert tom["status"] == "ok" and tom["pri"] == 0                     # a freshness check never outranks stock tasks
+    assert ban["fresh"]["due"] is False and ban["level"] == "empty"      # empty: nothing left to check
+    assert wrong["bk"] == "11" and wrong["fresh"]["lim"] == 24            # wrong spot: biology of the banana seen there
+    assert set(d["bio"]) == {"11", "33"}                                  # the Gala is planned but not on any shelf
+    assert d["bio"]["11"]["src"] == "USDA AH-66 Banana pp.224-229" and d["bio"]["33"]["cls"] == "fast"
+    assert "http" not in json.dumps(d["bio"])
+    assert d["insights"]["layout"] == {"pairs": [], "mild": 0}            # the fixture's quads are far apart
+
+
+def test_build_flags_ethylene_neighbours_with_likely_product(tmp_path):
+    bio = bio_dict(tmp_path, [
+        "avocado;ready-to-eat avocado;ABACATE HASS PRONTO COMER;loose;;fast;8;high;high;Soft;USDA AH-66 Avocado;medium",
+        "lettuce;frisee lettuce;ALFACE FRISADA SACO;packed;;fast;8;low;high;Brown spots;USDA AH-66 Lettuce;medium",
+        "potato;potato;BATATA BRANCA KG;loose;;slow;12;low;low;Green skin;Larsen 2022;high",
+    ])
+    qa = [[0, 0], [100, 0], [100, 100], [0, 100]]
+    qb = [[104, 0], [200, 0], [200, 100], [104, 100]]                     # 4 px from the avocado
+    qc = [[204, 0], [300, 0], [300, 100], [204, 100]]                     # next to the lettuce
+    qd = [[600, 0], [700, 0], [700, 100], [600, 100]]                     # far away
+    rows = [row("7", TS_NEW, "7_1", "1", "ABACATE HASS PRONTO COMER", quad=qa),
+            row("7", TS_NEW, "7_2", "2", "ALFACE FRISADA SACO", quad=qb),
+            row("7", TS_NEW, "7_3", "3", "BATATA BRANCA KG", ok=False, quad=qc, likely_product_id="1",
+                likely_product_name="ABACATE HASS PRONTO COMER", likely_english="ready-to-eat avocado"),
+            row("7", TS_NEW, "7_4", "1", "ABACATE HASS PRONTO COMER", quad=qd)]
+    out = tmp_path / "site"
+    dashboard.build({"rows": rows}, None, out, biology=bio)
+    lay = read_data_js(out)["insights"]["layout"]
+    assert [(p["src"], p["dst"], p["dst_type"]) for p in lay["pairs"]] == [("7_1", "7_2", "lettuce"), ("7_3", "7_2", "lettuce")]
+    assert lay["mild"] == 0
+
+
+def test_build_degrades_without_biology(fake, tmp_path):
+    out = tmp_path / "site"
+    dashboard.build(fake, tmp_path / "raw", out, biology=False)
+    d = read_data_js(out)
+    assert d["bio"] == {} and not any("fresh" in a or "bk" in a for a in d["areas"])
+    assert d["insights"]["layout"] == {"pairs": [], "mild": 0}
+    dashboard.build(fake, tmp_path / "raw", tmp_path / "missing", biology=tmp_path / "no_such.csv")   # missing file: no crash
+    assert "bio" in read_data_js(tmp_path / "missing")
+    details = tmp_path / "details.json"
+    details.write_text(json.dumps(fake), encoding="utf-8")
+    dashboard.main(["--details", str(details), "--data", str(tmp_path / "raw"), "--out", str(tmp_path / "cli"), "--no-biology"])
+    assert read_data_js(tmp_path / "cli")["bio"] == {}
+
+
+def test_ui_has_freshness_and_layout_in_both_languages():
+    js = (UI / "app.js").read_text(encoding="utf-8")
+    html = (UI / "index.html").read_text(encoding="utf-8")
+    css = (UI / "style.css").read_text(encoding="utf-8")
+    for en, pt in (("Check freshness / rotate stock", "Verificar frescura / rodar stock"),
+                   ("Layout & waste", "Disposição e desperdício"), ("Layout suggestion", "Sugestão de disposição"),
+                   ("Estimate:", "Estimativa:"), ("not on the picture", "não na imagem"),
+                   ("When there is time: freshness checks", "Quando houver tempo: verificar frescura")):
+        assert en in js and pt in js, (en, pt)
+    assert 'id="i-leaf"' in html and 'id="i-gas"' in html
+    assert css.count("--fresh:") == 3 and ".s-fresh" in css                    # light, auto-dark and forced-dark tokens
+    assert "INS.layout" in js and "D.bio" in js and "#/insights/layout" in js
+
+
+def _edge_dom(index: Path, route: str, tmp_path: Path) -> str:
+    res = subprocess.run([str(EDGE), "--headless=new", "--disable-gpu", f"--user-data-dir={tmp_path / 'edge'}",
+                          "--virtual-time-budget=3000", "--dump-dom", index.resolve().as_uri() + route],
+                         capture_output=True, text=True, encoding="utf-8", timeout=90)
+    return res.stdout
+
+
+@pytest.mark.skipif(not EDGE.is_file(), reason="Microsoft Edge not installed")
+def test_freshness_tasks_render_below_stock_tasks(fake, fake_bio, tmp_path):
+    """Real browser: the freshness task is its own last group, below wrong-product / empty tasks; badge in the panel."""
+    out = tmp_path / "site"
+    index = dashboard.build(fake, tmp_path / "raw", out, biology=fake_bio)
+    dom = _edge_dom(index, "#/tasks", tmp_path)
+    first, fresh = dom.find("Primeiro: produto errado e vazio"), dom.find("Quando houver tempo: verificar frescura")
+    assert 0 < first < fresh, "freshness group must come after the urgent group"
+    assert dom.find('data-key="1001_10|') > fresh and dom.find('data-key="1001_1|') < fresh
+    panel = _edge_dom(index, "#/gondola/1001/1001_10", tmp_path)
+    assert "Verificar frescura / rodar stock" in panel and "Estimativa" in panel and "USDA AH-66 Tomato" in panel

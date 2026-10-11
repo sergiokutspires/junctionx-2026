@@ -1,0 +1,44 @@
+== Final numbers, produced 2026-10-11 (answer key v2: data/labels/teacher_labels_v2.json, 1,962 areas, 181 frames; model models/real_v2, bf16)
+== final_numbers.py models/real_v2  (full detail in final_numbers_real_v2.json; real_v1_cal fp32 predecessor in final_numbers_real_v1_cal.json)
+-- real_v2
+  keyV2_1962/camera        heads                  1.2401  areas 1962  ident 0.9597 stock 0.8170 | empty on to-do list 181/183, empty shown full 2/183 | restock tasks 535, shelf is full 150 | wrong product found 31/108, false alarms 2/1854
+  keyV2_1962/camera        unsup                  1.2018  areas 1962  ident 0.9597 stock 0.8068 | empty on to-do list 171/183, empty shown full 12/183 | restock tasks 510, shelf is full 151 | wrong product found 31/108, false alarms 2/1854
+  keyV2_1962/camera        always_compliant_full  0.7727  areas 1962
+  keyV2_1962/time2         heads                  1.3454  areas 304  ident 0.9934 stock 0.8289 | empty on to-do list 38/40, empty shown full 2/40 | restock tasks 94, shelf is full 13 | wrong product found 6/8, false alarms 0/296
+  keyV2_1962/time2         unsup                  0.9901  areas 304  ident 0.9868 stock 0.7303 | empty on to-do list 34/40, empty shown full 6/40 | restock tasks 91, shelf is full 25 | wrong product found 4/8, false alarms 0/296
+  keyV2_1962/time2         always_compliant_full  0.4605  areas 304
+  keyV2_1962/time1         heads                  1.4211  areas 152  ident 1.0000 stock 0.8421 | empty on to-do list 24/24, empty shown full 0/24 | restock tasks 58, shelf is full 6 | wrong product found 4/4, false alarms 0/148
+  keyV2_1962/time1         unsup                  0.8816  areas 152  ident 0.9868 stock 0.7039 | empty on to-do list 22/24, empty shown full 2/24 | restock tasks 52, shelf is full 12 | wrong product found 2/4, false alarms 0/148
+  keyV2_1962/time1         always_compliant_full  0.1842  areas 152
+-- real_v1_cal
+  keyV2_1962/camera        heads                  1.2278  areas 1962  ident 0.9602 stock 0.8135 | empty on to-do list 181/183, empty shown full 2/183 | restock tasks 539, shelf is full 153 | wrong product found 31/108, false alarms 1/1854
+  keyV2_1962/camera        unsup                  1.2222  areas 1962  ident 0.9602 stock 0.8129 | empty on to-do list 174/183, empty shown full 9/183 | restock tasks 510, shelf is full 148 | wrong product found 31/108, false alarms 1/1854
+  keyV2_1962/camera        always_compliant_full  0.7727  areas 1962
+  keyV2_1962/time2         heads                  1.2434  areas 304  ident 0.9934 stock 0.7993 | empty on to-do list 39/40, empty shown full 1/40 | restock tasks 95, shelf is full 16 | wrong product found 6/8, false alarms 0/296
+  keyV2_1962/time2         unsup                  1.0066  areas 304  ident 0.9868 stock 0.7336 | empty on to-do list 36/40, empty shown full 4/40 | restock tasks 97, shelf is full 28 | wrong product found 4/8, false alarms 0/296
+  keyV2_1962/time2         always_compliant_full  0.4605  areas 304
+  keyV2_1962/time1         heads                  1.4013  areas 152  ident 1.0000 stock 0.8355 | empty on to-do list 24/24, empty shown full 0/24 | restock tasks 59, shelf is full 7 | wrong product found 4/4, false alarms 0/148
+  keyV2_1962/time1         unsup                  0.9803  areas 152  ident 0.9868 stock 0.7303 | empty on to-do list 22/24, empty shown full 2/24 | restock tasks 54, shelf is full 12 | wrong product found 2/4, false alarms 0/148
+  keyV2_1962/time1         always_compliant_full  0.1842  areas 152
+
+== unseen_camera_756_real_v2.py  (older 756-area protocol, heads trained on the 1,240-area key; real_v1_cal gave 1.2526 / 1.1892)
+heads 1.2235 756 ident 0.9762 stock 0.8029
+unsup 1.1362 756 ident 0.9762 stock 0.7765
+
+== forecast_backtest_real_v2.py  (models/real_v2/series.json vs key v2)
+evaluable (area,frame) pairs: 1658
+BASE: any not-yet-empty area (truth)                       n=1549 empty-within-2h=  60 (4%)
+model says half (low)                                      n= 174 empty-within-2h=  17 (10%)
+model says half AND forecast < 2h  (= 'Running out soon')  n=  25 empty-within-2h=   8 (32%)
+model says half, NOT flagged by forecast                   n= 149 empty-within-2h=   9 (6%)
+model says full                                            n=1352 empty-within-2h=  41 (3%)
+TRUTH half now (oracle)                                    n= 265 empty-within-2h=  42 (16%)
+areas not empty now that were empty within 2h: 60 | model said half: 17 | flagged by forecast: 8
+
+== wrong_product_persistence.py (key v2 line is the final key)
+key1240 (headline key) | wrong (area,frame) instances: 72 | distinct areas ever wrong: 23 of 152
+  share of labelled frames each such area is wrong: [0.14, 0.14, 0.14, 0.14, 0.14, 0.17, 0.17, 0.29, 0.29, 0.29, 0.29, 0.29, 0.29, 0.29, 0.29, 0.43, 0.43, 0.43, 0.43, 0.71, 0.77, 0.83, 0.83]
+  wrong/total by local hour: {6: '17/152', 7: '3/31', 8: '3/31', 9: '12/152', 10: '3/31', 11: '3/44', 12: '5/88', 13: '4/72', 14: '2/32', 15: '4/35', 16: '5/130', 17: '4/152', 18: '5/152', 19: '2/129', 20: '0/9'}
+v2 (all 181 frames, pending) | wrong (area,frame) instances: 108 | distinct areas ever wrong: 23 of 152
+  share of labelled frames each such area is wrong: [0.15, 0.15, 0.15, 0.15, 0.17, 0.17, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.23, 0.31, 0.31, 0.31, 0.62, 0.62, 0.62, 0.69, 0.77, 0.83, 0.83]
+  wrong/total by local hour: {6: '18/152', 7: '15/152', 8: '15/152', 9: '12/152', 10: '8/152', 11: '7/152', 12: '5/110', 13: '4/110', 14: '6/121', 15: '4/128', 16: '5/139', 17: '3/152', 18: '4/152', 19: '2/129', 20: '0/9'}

@@ -1,0 +1,958 @@
+[
+{
+"key": "6376|1751001169.jpg|6376_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "kiwi packs in yellow net bags, partly filled",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "yellow net bags of lemons, not kiwi packs",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751001169.jpg|6376_4",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "kiwi packs in yellow net bags with cardboard",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "yellow net bags of lemons",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751001169.jpg|6376_5",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "kiwi packs in net bags, lower part covered",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "lemon net bags with kraft labels",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751005774.jpg|6376_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "yellow net bags with cardboard labels piled (kiwi packs)",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "yellow net bags with cardboard labels, packed kiwi",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "lemons in yellow net bags with kraft labels, not kiwi packs",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751005774.jpg|6376_4",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "yellow net bags with cardboard labels piled (kiwi packs)",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "net bags with cardboard sleeves, packed kiwi",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bagged lemons (yellow net, kraft label), not kiwi",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751005774.jpg|6376_5",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few yellow net packs with cardboard labels, upper part bare",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "net bags with cardboard label, packed kiwi",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bagged lemons in yellow nets, not kiwi packs",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751009380.jpg|6376_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "yellow net bags with cardboard labels piled (kiwi packs)",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "yellow net bags with cardboard labels, packed kiwi",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "lemons in yellow net bags with kraft labels, not kiwi",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751009380.jpg|6376_4",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "yellow net bags with cardboard labels piled (kiwi packs)",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "net bags with cardboard sleeves, packed kiwi",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bagged lemons (yellow net, kraft label), not kiwi",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751009380.jpg|6376_5",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few yellow net packs with cardboard labels, upper part bare",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "net bags with cardboard label, packed kiwi",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bagged lemons in yellow nets, not kiwi packs",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751013482.jpg|6376_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "kiwi packs in net bags, partly filled",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "yellow net bags of lemons",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751013482.jpg|6376_4",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "kiwi packs in net bags with cardboard",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "yellow net bags of lemons",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751013482.jpg|6376_5",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "kiwi packs in net bags, lower part covered",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "lemon net bags",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751017831.jpg|6376_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "yellow net bags with cardboard labels piled (kiwi packs)",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "yellow net bags with cardboard labels, packed kiwi",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "lemons in yellow net bags with kraft labels, not kiwi",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751017831.jpg|6376_4",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "yellow net bags with cardboard labels piled (kiwi packs)",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "net bags with cardboard sleeves, packed kiwi",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bagged lemons (yellow net, kraft label), not kiwi",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751017831.jpg|6376_5",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few yellow net packs with cardboard labels, upper part bare",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "a few net bags, teal tray visible at back",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "bagged lemons in yellow nets, some crate visible",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751025657.jpg|6376_4",
+"votes": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "nearly empty crate, one net pack at bottom",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "one lemon net bag, rest bare",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751037379.jpg|6376_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": true,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "orange cardboard trays with packs, not kiwi",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "kiwi gold trays (orange labels)",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751037379.jpg|6376_4",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "teal tray and brown packaged bag, not kiwi",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "kiwi packs (teal/dark trays)",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6376|1751037379.jpg|6376_5",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "brown packaged bag of other product, not kiwi",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "brown bagged kiwi packs",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6383|1751048924.jpg|6383_7",
+"votes": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": false,
+"src": "teacher_labels_late.json"
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": false,
+"seen": "basket bare except one eggplant, no chuchu",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "empty",
+"compliant": true,
+"seen": "nearly empty basket, 1-2 stray eggplants",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6443|1751016838.jpg|6443_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"seen": "loose large red tomatoes instead of packs",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "half",
+"compliant": true,
+"seen": "edge of a bag of large red tomatoes with a tan tag, teal crate edge visible",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "large red tomatoes with tags, maybe bagged",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6443|1751016838.jpg|6443_5",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "loose large red round tomatoes instead of 1kg packs",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "large glossy red tomatoes, probably a 1 kg bag with tan tag, filling compartment",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "large red tomatoes, likely 1kg bags with tags",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6443|1751036374.jpg|6443_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"src": "teacher_labels_late.json"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "large red tomatoes, left edge of compartment",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "thin strip at left of bottom crate, large red tomatoes, floor and crate edge",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6443|1751040209.jpg|6443_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"src": "teacher_labels_late.json"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "large red tomatoes, left edge of compartment",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "thin strip at left of bottom crate, large red tomatoes, floor and crate edge",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6443|1751044079.jpg|6443_3",
+"votes": [
+{
+"L": "A",
+"stock_level": "half",
+"compliant": false,
+"src": "teacher_labels_late.json"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "large red tomatoes, some crate visible",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "thin strip at left of bottom crate, large red tomatoes, floor and crate edge",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6468|1751001157.jpg|6468_14",
+"votes": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"src": "teacher_labels_mid.json"
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "few cooking bananas, not mango",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": false,
+"seen": "two or three bananas, crate mostly bare",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6591|1751005287.jpg|6591_5",
+"votes": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "crate almost bare, only two small dark potato packs at bottom",
+"confidence": "high",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "only two small potato packs on bare crate",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "two small dark packs of baby mixed potatoes, crate mostly empty",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6591|1751009443.jpg|6591_5",
+"votes": [
+{
+"L": "A",
+"stock_level": "empty",
+"compliant": true,
+"seen": "crate almost bare, only two small dark potato packs at bottom",
+"confidence": "high",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "empty",
+"compliant": true,
+"seen": "only two small potato packs on bare crate",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "half",
+"compliant": false,
+"seen": "two small dark packs of baby mixed potatoes, crate mostly empty",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6594|1751005322.jpg|6594_13",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "orange onions in net bags filling crate",
+"confidence": "high",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "orange onions in net bags filling crate",
+"confidence": "high",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "brown onions in orange net bags, not sweet onion packs",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6594|1751008928.jpg|6594_13",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": true,
+"seen": "orange onions in net bags filling crate",
+"confidence": "high",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": true,
+"seen": "orange onions in net bags filling crate",
+"confidence": "high",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": false,
+"seen": "brown onions in orange net bags, not sweet onion packs",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6594|1751017278.jpg|6594_13",
+"votes": [
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "yellow potato net bags, planogram is sweet onions",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "yellow potatoes in net bags, not sweet onions",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "sweet onions in yellow net bags",
+"confidence": "medium",
+"src": "new"
+}
+]
+},
+{
+"key": "6594|1751021279.jpg|6594_6",
+"votes": [
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "onions in orange net mesh",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "small orange onions that look like net bags, not loose onions",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "onions in orange net bags (bagged, not loose)",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6594|1751029354.jpg|6594_6",
+"votes": [
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "onions in orange net mesh",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "small orange onions that look like net bags, not loose onions",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "onions in orange net bags (bagged, not loose)",
+"confidence": "low",
+"src": "new"
+}
+]
+},
+{
+"key": "6594|1751033482.jpg|6594_6",
+"votes": [
+{
+"L": "C",
+"stock_level": "full",
+"compliant": true,
+"seen": "onions in orange net mesh",
+"confidence": "medium",
+"src": "new"
+},
+{
+"L": "A",
+"stock_level": "full",
+"compliant": false,
+"seen": "small orange onions in net bags, not loose onions",
+"confidence": "low",
+"src": "new"
+},
+{
+"L": "B",
+"stock_level": "full",
+"compliant": false,
+"seen": "onions in orange net bags (bagged, not loose)",
+"confidence": "low",
+"src": "new"
+}
+]
+}
+]

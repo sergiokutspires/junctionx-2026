@@ -334,3 +334,122 @@ def test_heads_with_band_fills_save_load(data, tmp_path):
     back = Heads.load(tmp_path / "heads")
     assert np.allclose(back.stock_proba(feats, fill), p, atol=1e-5)
     assert "fill_bands" not in fit_heads(feats, fill, labels, CFG).layout   # no productness: old layout
+
+
+# --------------------------------------------------------------------------- per-area memory
+
+def make_persistent(seed: int = 1):
+    """Areas keep their level all day (area-specific), the crop codes identify the area's look, and the
+    generic features carry no level signal: only a per-area memory can learn the level."""
+    feats, fill, labels, level, comp, zs_comp = make_data(seed)
+    rng = np.random.default_rng(seed)
+    n = len(feats)
+    areas = np.array(feats.area_ids)
+    uniq = sorted(set(areas))
+    area_level = {a: int(rng.choice(3, p=[0.3, 0.3, 0.4])) for a in uniq}
+    level = np.array([area_level[a] for a in areas])
+    look = {a: rng.integers(0, 24, 256) for a in uniq}           # every area has its own crate/product look
+    codes = np.array([np.where(rng.random(256) < 0.9, look[a], rng.integers(0, 24, 256)) for a in areas])
+    feats.patch_codes = codes.astype(np.int16)
+    feats.clip = rng.normal(size=feats.clip.shape).astype(np.float32)
+    feats.dino_cls = rng.normal(size=feats.dino_cls.shape).astype(np.float32)
+    fill = rng.random(n).astype(np.float32)
+    for (cam, img, area), lv in zip(feats.keys, level):
+        labels[cam][img][area] = scoring.make_entry(True, (0.0, 0.5, 1.0)[lv])
+    return feats, fill, labels, level
+
+
+def test_memory_features_are_causal_and_per_area(data):
+    feats, fill, labels, level, comp, _ = data
+    idx, ys, yc = label_arrays(feats, labels)
+    mem = calibrate.build_memory(feats, ys, yc, ("codes", "hand"), 24)
+    F, has = calibrate.memory_features(mem, feats, [1 / 3] * 3)
+    first = feats.timestamps == feats.timestamps.min()
+    assert not has[first].any() and has[~first].all()            # the first frame has no earlier crop
+    assert F.shape == (len(feats), 6) and np.isfinite(F).all()
+    # a crop identical to an earlier labelled crop of its area gets that crop's level (nearest neighbour)
+    late = feats.subset([len(feats) - 1])
+    cam, img, area = late.keys[0]
+    src = next(i for i, k in enumerate(feats.keys) if k[2] == area and feats.timestamps[i] == feats.timestamps.min())
+    late.patch_codes, late.hand = feats.patch_codes[[src]], feats.hand[[src]]
+    Fl, hl = calibrate.memory_features(mem, late, [1 / 3] * 3, tau=0.001, alpha=0.0)
+    mix = np.exp(np.r_[0.0, Fl[0, 0], Fl[0, 0] + Fl[0, 1]])
+    assert hl[0] and int(np.argmax(mix)) == level[src] and Fl[0, 2] == pytest.approx(1.0, abs=1e-5)
+    # unknown area -> no memory; unknown timestamp (-1) -> every labelled crop of the area counts
+    other = feats.subset([0, 1])
+    other.keys = [("9999", "x.jpg", "9999_1"), (other.keys[1][0], "y.jpg", other.keys[1][2])]
+    other.timestamps = np.array([1751999999, -1], np.int64)
+    _, h2 = calibrate.memory_features(mem, other, [1 / 3] * 3)
+    assert h2.tolist() == [False, True]
+    # skipping the latest earlier frame: the second frame (only one earlier frame) loses its memory
+    second = feats.timestamps == sorted(set(feats.timestamps))[1]
+    _, hs = calibrate.memory_features(mem, feats, [1 / 3] * 3, skip=1)
+    assert not hs[second].any() and hs[feats.timestamps >= sorted(set(feats.timestamps))[2]].all()
+
+
+def test_memory_head_learns_per_area_levels_and_never_touches_unseen_cameras():
+    feats, fill, labels, level = make_persistent()
+    on = cross_validate(feats, fill, labels, CFG, schemes=("time", "camera"))
+    t, c = on["schemes"]["time"], on["schemes"]["camera"]
+    assert t["memory_rows"] == t["areas"] and c["memory_rows"] == 0
+    assert t["methods"]["heads"]["stock_acc"] > t["methods"]["heads_nomem"]["stock_acc"] + 0.1
+    assert t["methods"]["heads"]["per_area"] > t["methods"]["heads_nomem"]["per_area"]
+    # leave-one-camera-out: no earlier labelled crop of a held-out camera -> exactly the plain head
+    assert c["methods"]["heads"]["total"] == c["methods"]["heads_nomem"]["total"]
+    off = cross_validate(feats, fill, labels, CFG, params=HeadParams(memory=False), schemes=("time",))
+    assert "heads_nomem" not in off["schemes"]["time"]["methods"]
+    assert off["schemes"]["time"]["methods"]["heads"]["total"] == t["methods"]["heads_nomem"]["total"]
+
+
+def test_memory_heads_roundtrip_and_fallback(tmp_path):
+    feats, fill, labels, level = make_persistent()
+    early = np.flatnonzero(feats.timestamps < sorted(set(feats.timestamps))[-1])
+    heads = fit_heads(feats.subset(early), fill[early], labels, CFG)
+    assert heads.mem_stock is not None and heads.memory["names"] == ["codes", "hand"]
+    heads.save(tmp_path / "heads")
+    meta = json.loads((tmp_path / "heads" / "heads.json").read_text())
+    assert meta["version"] == 2 and meta["params"]["mem_skips"] == [0, 1] and "memory" in meta
+    with np.load(tmp_path / "heads" / "heads.npz", allow_pickle=False) as z:
+        assert {"mem_ts", "mem_ys", "mem_area", "mem_emb_codes", "mem_emb_hand", "memstock_coef"} <= set(z.files)
+    back = Heads.load(tmp_path / "heads")
+    assert back.params.mem_embeddings == ("codes", "hand") and back.params.mem_skips == (0, 1)
+    p = heads.stock_proba(feats, fill)
+    assert np.allclose(back.stock_proba(feats, fill), p, atol=1e-5)
+    assert np.allclose(p.sum(axis=1), 1, atol=1e-5)
+    # later frame of an unknown area / camera: plain head, no crash
+    new = feats.subset([0, 1, 2])
+    new.keys = [("8888", "1752000000.jpg", "8888_1")] + list(new.keys[1:])
+    new.timestamps = np.full(3, 1752000000, np.int64)
+    assert back.memory_mask(new).tolist() == [False, True, True]
+    plain = back.stock_proba(new, fill[:3], memory=False)
+    mixed = back.stock_proba(new, fill[:3])
+    assert np.allclose(mixed[0], plain[0]) and np.allclose(mixed.sum(axis=1), 1, atol=1e-5)
+    # input without patch codes: the memory falls back (warning) instead of raising
+    nocodes = feats.subset(np.arange(4))
+    nocodes.patch_codes = None
+    lite_heads = fit_heads(feats.subset(early), fill[early], labels, CFG, HeadParams(code_bands=0, fill_bands=0))
+    assert lite_heads.memory_mask(nocodes).sum() == 0
+    assert lite_heads.stock_proba(nocodes, fill[:4]).shape == (4, 3)
+
+
+def test_heads_without_memory_still_load(tmp_path, data):
+    """Heads saved before the memory existed (no memory keys, no new params) load and predict the same."""
+    feats, fill, labels, *_ = data
+    heads = fit_heads(feats, fill, labels, CFG, HeadParams(memory=False))
+    assert heads.memory is None and heads.mem_stock is None
+    heads.save(tmp_path / "h")
+    meta = json.loads((tmp_path / "h" / "heads.json").read_text())
+    meta["version"] = 1
+    for k in [k for k in meta["params"] if k.startswith("mem")]:
+        meta["params"].pop(k)
+    (tmp_path / "h" / "heads.json").write_text(json.dumps(meta))
+    back = Heads.load(tmp_path / "h")
+    assert back.mem_stock is None and not back.memory_mask(feats).any()
+    assert np.allclose(back.stock_proba(feats, fill), heads.stock_proba(feats, fill), atol=1e-6)
+
+
+def test_lite_heads_use_a_hand_only_memory():
+    feats, fill, labels, *_ = make_data(deep=False)
+    heads = fit_heads(feats, fill, labels, Config(backend="lite"))
+    assert heads.memory is not None and heads.memory["names"] == ["hand"]
+    assert heads.stock_proba(feats, fill).shape == (len(feats), 3)

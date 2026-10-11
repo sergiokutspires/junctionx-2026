@@ -341,7 +341,10 @@ python -m sensei run     --data <root> --planogram ... --images <val dir> --out 
   `Heads.save(dir)` / `Heads.load(dir)` (json + npz); `cross_validate(feats, fill, labels, cfg)
   -> dict` with the challenge score computed by `scoring.score` on held-out folds;
   `export_sheets(feats_or_keys, data_root, areas_by_cam, out_dir, cfg, n=None)`.
-  `pipeline.predict` uses `<model_dir>/heads/` automatically if present.
+  `pipeline.predict` uses `<model_dir>/heads/` automatically if present. Heads version 2 may carry a
+  per-area memory (`HeadParams.memory`): the labelled crops' embeddings and labels (`mem_*` arrays in
+  heads.npz) and a `memstock` head used for crops whose area has earlier labelled crops
+  (`memory_features`, causal in time); version-1 heads load unchanged.
 
 ## 5. Staff dashboard (UI/UX breaks ties: make it excellent)
 

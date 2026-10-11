@@ -5,6 +5,7 @@ import json
 import shutil
 from pathlib import Path
 
+import cv2
 import numpy as np
 import pytest
 
@@ -67,7 +68,7 @@ def test_fit_predict_score_lite(synth, lite_model, tmp_path):
     assert res["total"] > _baseline(truth)          # beats always compliant + full
 
     d = _read(tmp_path / "d.json")
-    assert set(d) == {"section", "generated_at", "backend", "rows", "timeline", "input"}
+    assert set(d) == {"section", "generated_at", "backend", "frame_size", "rows", "timeline", "input"}
     assert d["input"]["areas"] == d["input"]["expected_areas"] == len(d["rows"])
     assert d["backend"] == "lite" and d["section"] == "Frutas e Legumes"
     assert len(d["rows"]) == sum(len(a) for i in preds.values() for a in i.values())
@@ -102,12 +103,17 @@ def test_fallbacks_never_crash(synth, lite_model, tmp_path):
     shutil.copy(src[0].path, root / cam / src[0].image_name)
     (root / cam / "1751099999.jpg").write_bytes(b"not a jpeg")      # corrupt
     (root / "7777").mkdir()
-    shutil.copy(src[0].path, root / "7777" / "1751050000.jpg")     # unknown camera: ignored
+    noise = np.random.default_rng(0).integers(0, 255, (72, 128, 3), dtype=np.uint8)
+    cv2.imwrite(str(root / "7777" / "1751050000.jpg"), noise)       # unknown camera, unknown view: ignored
     preds, doc = pipeline.predict_dir(model, root)
     assert set(preds) == {cam} and set(preds[cam]) == {src[0].image_name, "1751099999.jpg"}
     _check_coverage(preds, model.areas_by_cam, discover_images(root, model.areas_by_cam))
     bad = [r for r in doc["rows"] if r["image_name"] == "1751099999.jpg"]
-    assert all(r["planogram_compliant"] and r["visible"] is None and r["fallback"] for r in bad)
+    good = {r["area_id"]: r for r in doc["rows"] if r["image_name"] == src[0].image_name}
+    assert all(r["visible"] is None and r["fallback"] for r in bad)
+    # an unreadable picture reuses the same area's answer from the readable frame of this batch
+    assert all((r["stock_level"], r["planogram_compliant"]) ==
+               (good[r["area_id"]]["stock_level"], good[r["area_id"]]["planogram_compliant"]) for r in bad)
     # dashboard: the newest READABLE frame is shown; fallback rows are never counters or tasks
     from sensei.dashboard import build
     build(doc, root, tmp_path / "dash")
@@ -235,3 +241,10 @@ def test_heads_late_shift_passthrough_and_carry(synth, lite_model, tmp_path):
     feats_like = type("F", (), {})()
     feats_like.camera_ids, feats_like.timestamps = [cam, cam], [h.stock["last_ts"][cam], h.stock["last_ts"][cam] + 1]
     assert h.late_mask(feats_like).tolist() == [False, True]
+
+
+def test_precision_settings_are_feature_fields():
+    # predict must run the image encoders with the precision the model was fitted with
+    assert {"int8_clip", "int8_dino", "bf16", "clip_model", "dino_model"} <= set(pipeline.FEATURE_FIELDS)
+    from sensei.features import FEATURE_CFG_FIELDS, PRECISION_CFG_FIELDS
+    assert set(pipeline.FEATURE_FIELDS) == set(FEATURE_CFG_FIELDS) | set(PRECISION_CFG_FIELDS)

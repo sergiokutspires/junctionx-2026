@@ -52,12 +52,27 @@ def list_images(root: Path) -> list[Path]:
                   if p.is_file() and p.suffix.lower() in IMAGE_EXTS and not _hidden(p.relative_to(root).parts))
 
 
-def extract_zip(src: Path | IO[bytes], dest: Path, depth: int = 0) -> int:
+ZIP_LOCKED = ("the zip is password-protected or uses a compression Python cannot read ({exc}): unzip it in "
+              "Explorer or 7-Zip and give the folder instead (or pass --password)")
+
+
+def extract_zip(src: Path | IO[bytes], dest: Path, depth: int = 0, password: str | None = None) -> int:
     """Unpack the image files of a zip into ``dest`` (structure kept). Skips ``__MACOSX``, ``._*``,
     ``.DS_Store`` and everything that is not an image; refuses paths that escape ``dest``; unpacks
-    zips inside the zip (two levels). Returns the number of images written."""
+    zips inside the zip (two levels). Returns the number of images written. An encrypted entry without
+    the right ``password``, or an unsupported compression (e.g. AES), raises ValueError."""
+    try:
+        return _extract_zip(src, dest, depth, password)
+    except (RuntimeError, NotImplementedError, zipfile.BadZipFile, EOFError) as exc:
+        raise ValueError(ZIP_LOCKED.format(exc=exc) if not isinstance(exc, (zipfile.BadZipFile, EOFError))
+                         else f"the zip is damaged ({exc}): download it again or unzip it by hand") from exc
+
+
+def _extract_zip(src: Path | IO[bytes], dest: Path, depth: int, password: str | None) -> int:
     n = total = 0
     with zipfile.ZipFile(src) as zf:
+        if password:
+            zf.setpassword(password.encode("utf-8"))
         for info in zf.infolist():
             if info.is_dir():
                 continue
@@ -72,7 +87,8 @@ def extract_zip(src: Path | IO[bytes], dest: Path, depth: int = 0) -> int:
             if total > MAX_UNZIPPED:
                 raise ValueError("zip is unreasonably large when unpacked")
             if suffix == ".zip" and depth < 2:
-                n += extract_zip(io.BytesIO(zf.read(info)), dest.joinpath(*parts[:-1], Path(parts[-1]).stem), depth + 1)
+                n += _extract_zip(io.BytesIO(zf.read(info)), dest.joinpath(*parts[:-1], Path(parts[-1]).stem),
+                                  depth + 1, password)
             elif suffix in IMAGE_EXTS:
                 target = dest.joinpath(*parts)
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -94,7 +110,7 @@ def _fresh_images_dir(out: Path) -> Path:
     return d
 
 
-def prepare_images(sources: Sequence[str | Path], out: Path) -> tuple[Path, list[str]]:
+def prepare_images(sources: Sequence[str | Path], out: Path, password: str | None = None) -> tuple[Path, list[str]]:
     """Folder that holds the validation images, plus notes to show. A single folder with images is
     used in place; a zip, a folder of zips, or several files/folders are gathered in ``<out>/val_images``."""
     srcs = [_clean_path(s) for s in sources]
@@ -122,9 +138,9 @@ def prepare_images(sources: Sequence[str | Path], out: Path) -> tuple[Path, list
                 n += 1
         elif s.suffix.lower() == ".zip":
             try:
-                n += extract_zip(s, dest)
-            except zipfile.BadZipFile as exc:
-                raise ValueError(f"{s.name} is not a valid zip file ({exc})") from exc
+                n += extract_zip(s, dest, password=password)
+            except ValueError as exc:
+                raise ValueError(f"{s.name}: {exc}") from exc
         elif s.suffix.lower() in IMAGE_EXTS:
             shutil.copyfile(s, dest / s.name)
             n += 1
@@ -157,12 +173,35 @@ def _read_strict(path: Path) -> tuple[Any, list[str]]:
     return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=hook), dupes
 
 
+def _resolved(p: str | Path) -> str:
+    try:
+        return os.path.normcase(str(Path(p).resolve()))
+    except OSError:
+        return os.path.normcase(str(p))
+
+
+def _unknown_camera_named(path: Path, root: Path | None, planogram: dict) -> str | None:
+    """The camera-like id (all digits, as long as a planogram camera id, not in the planogram) in the
+    image's folders or ``<id>_`` name prefix, else None."""
+    lengths = {len(c) for c in planogram}
+    try:
+        parts = list(path.relative_to(root).parent.parts) if root is not None else [path.parent.name]
+    except ValueError:
+        parts = [path.parent.name]
+    parts.append(re.split(r"[_-]", path.stem)[0] if re.search(r"[_-]", path.stem) else "")
+    return next((p for p in reversed(parts) if p.isdigit() and len(p) in lengths and p not in planogram), None)
+
+
 def validate_predictions(pred_path: str | Path, planogram: dict[str, Sequence[str]],
-                         image_files: Sequence[Path] = (), rows: Sequence[dict] | None = None) -> dict:
+                         image_files: Sequence[Path] = (), rows: Sequence[dict] | None = None,
+                         root: str | Path | None = None) -> dict:
     """Check the file that will be handed in, as the scorer would read it.
 
     ``planogram``: camera id -> area ids (read from the planogram, not from the pipeline).
-    ``image_files``: every image on disk; each must be answered. ``rows``: details rows (fallback check).
+    ``image_files``: every image on disk; each must be answered (matched by path against the details
+    ``rows`` when given, else by name). Unanswered files under an explicit non-planogram camera folder
+    (or ``<cam>_`` prefix) are warnings, since they cannot be scored; any other is an error.
+    ``rows``: details rows (also the fallback check). ``root``: the images folder.
     Returns {ok, errors, warnings, images, cameras, areas, expected_areas, levels, wrong, fallback}.
     """
     errors: list[str] = []
@@ -228,10 +267,35 @@ def validate_predictions(pred_path: str | Path, planogram: dict[str, Sequence[st
                         levels[e["stock_level"]] += 1
                         wrong += e.get("planogram_compliant") is False
 
-    unanswered = [p for p in image_files if p.name not in all_keys and _canon(p.name) not in all_keys]
+    if rows:
+        done = {_resolved(r["image_path"]) for r in rows if r.get("image_path")}
+        unanswered = [p for p in image_files if _resolved(p) not in done]
+    else:
+        unanswered = [p for p in image_files if p.name not in all_keys and _canon(p.name) not in all_keys]
+    base = Path(root) if root is not None else None
+
+    def _show(ps: Sequence[Path]) -> str:
+        names = [str(p.relative_to(base)) if base is not None and p.is_relative_to(base) else p.name for p in ps]
+        return ", ".join(names[:5]) + (" ..." if len(names) > 5 else "")
+    other_cam = [p for p in unanswered if _unknown_camera_named(p, base, planogram)]
+    unanswered = [p for p in unanswered if p not in other_cam]
+    if rows and unanswered:      # a second copy of an answered picture (same name and bytes count)
+        def _sig(p: str | Path) -> tuple[str, int]:
+            try:
+                return Path(p).name.lower(), Path(p).stat().st_size
+            except OSError:
+                return Path(p).name.lower(), -1
+        answered = {_sig(r["image_path"]) for r in rows if r.get("image_path")}
+        dupes = [p for p in unanswered if _sig(p) in answered]
+        unanswered = [p for p in unanswered if p not in dupes]
+        if dupes:
+            warnings.append(f"{len(dupes)} image file(s) are copies of answered pictures (answered once): {_show(dupes)}")
+    if other_cam:
+        warnings.append(f"{len(other_cam)} image file(s) of cameras that are not in the planogram were not "
+                        f"answered (they cannot be scored): {_show(other_cam)}")
     if unanswered:
-        errors.append(f"{len(unanswered)} image file(s) got no answer (camera not recognised?): "
-                      + ", ".join(p.name for p in unanswered[:5]) + (" ..." if len(unanswered) > 5 else ""))
+        errors.append(f"{len(unanswered)} image file(s) got no answer (camera not recognised, or a duplicate "
+                      f"name?): {_show(unanswered)}")
     fallback = sum(1 for r in rows or [] if r.get("fallback"))
     if rows and fallback:
         share = fallback / len(rows)
@@ -245,6 +309,28 @@ def validate_predictions(pred_path: str | Path, planogram: dict[str, Sequence[st
     return {"ok": not errors, "errors": errors, "warnings": warnings, "images": len(images),
             "cameras": len({c for c, _ in images}), "areas": areas, "expected_areas": expected,
             "levels": levels, "wrong": wrong, "fallback": fallback}
+
+
+def _input_warnings(files: Sequence[Path], rows: Sequence[dict], frame_size) -> list[str]:
+    """Inputs that are answered but less trustworthy: pictures of another size than the planogram frame
+    (resized before the areas are cut out) and file names without a Unix timestamp (the late-day rules
+    then treat the picture as later than every labelled frame)."""
+    from .data import image_size  # noqa: PLC0415
+    out = []
+    if frame_size:
+        ref = tuple(int(v) for v in frame_size)
+        odd = [(p, sz) for p in files if (sz := image_size(p)) is not None and sz != ref]
+        if odd:
+            sizes = Counter(f"{w}x{h}" for _, (w, h) in odd)
+            out.append(f"{len(odd)} image(s) are not {ref[0]}x{ref[1]} like the planogram frame ("
+                       + ", ".join(f"{n} at {k}" for k, n in sizes.most_common(3))
+                       + "): resized before reading the areas; check the boxes in the staff app")
+    no_ts = sorted({r["image_name"] for r in rows if int(r.get("timestamp", 0)) < 0})
+    if no_ts:
+        out.append(f"{len(no_ts)} image name(s) hold no Unix timestamp (treated as later than every labelled "
+                   f"frame; answer keys use the file name as is): " + ", ".join(no_ts[:5])
+                   + (" ..." if len(no_ts) > 5 else ""))
+    return out
 
 
 # --------------------------------------------------------------------------- weights / dashboard
@@ -309,8 +395,9 @@ def _banner(lines: Sequence[str]) -> None:
     print("\n".join([bar, *lines, bar]), flush=True)
 
 
-def run(images: Sequence[str | Path], model: str | Path = "models/real_v1_cal", out: str | Path = "submission",
-        detect: bool = True, detections: str | None = None, device: str | None = None) -> int:
+def run(images: Sequence[str | Path], model: str | Path = "models/real_v3_cal", out: str | Path = "submission",
+        detect: bool = True, detections: str | None = None, device: str | None = None,
+        password: str | None = None) -> int:
     """Whole validation-day flow; returns the exit code (0 passed, 1 failed validation, 2 input error)."""
     from . import pipeline  # noqa: PLC0415
     from .data import load_planogram  # noqa: PLC0415
@@ -328,7 +415,12 @@ def run(images: Sequence[str | Path], model: str | Path = "models/real_v1_cal", 
             and (ROOT / model_dir / "model.json").is_file():
         model_dir = ROOT / model_dir
     try:
-        folder, notes = prepare_images(images, out_dir)
+        try:
+            folder, notes = prepare_images(images, out_dir, password)
+        except (FileNotFoundError, ValueError):
+            raise
+        except Exception as exc:  # noqa: BLE001 - permissions, disk full, odd archives: a clear message, exit 2
+            raise ValueError(f"could not read the input ({type(exc).__name__}: {exc})") from exc
         files = list_images(folder)
         for n in notes:
             print(n, flush=True)
@@ -347,8 +439,9 @@ def run(images: Sequence[str | Path], model: str | Path = "models/real_v1_cal", 
             t2 = time.perf_counter()
             planogram = {c: [a.area_id for a in areas]
                          for c, areas in load_planogram(model_dir / "planogram.json").items()}
-            rep = validate_predictions(pred_path, planogram, files, doc.get("rows"))
-            _banner(["SENSEI SUBMISSION CHECK: " + ("PASSED" if rep["ok"] else "FAILED - DO NOT HAND IN YET"),
+            rep = validate_predictions(pred_path, planogram, files, doc.get("rows"), root=folder)
+            rep["warnings"] += _input_warnings(files, doc.get("rows") or [], sensei.meta.get("frame_size"))
+            _banner(["SUBMISSION FORMAT CHECK: " + ("PASSED" if rep["ok"] else "FAILED - DO NOT HAND IN YET"),
                      f" images : {rep['images']}  (brief: {BRIEF_IMAGES}; image files found: {len(files)})",
                      f" cameras: {rep['cameras']} of {len(planogram)} planogram cameras",
                      f" areas  : {rep['areas']} of {rep['expected_areas']} expected"

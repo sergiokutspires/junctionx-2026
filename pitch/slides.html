@@ -3,13 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sensei shelf monitor - JunctionX Lisbon 2026</title>
+<title>Fresh Eyes - JunctionX Lisbon 2026</title>
 <!--
-  Offline 16:9 deck. No CDN, no web fonts, no network. Images are read from ./assets/.
+  Offline 16:9 deck, 12 slides. No CDN, no web fonts, no network. Images are read from ./assets/.
   Keys: Right / Space / PageDown = next, Left / PageUp = previous, Home / End, F = fullscreen,
-  click = next (left quarter = previous), swipe on touch screens, 1-9 jump to a slide and 0 to the last, #5 in the address opens slide 5.
+  P = highlight provisional numbers (class "fin"; none left), click = next (left quarter = previous),
+  swipe on touch screens, 1-9 jump to a slide and 0 to the last, #11 in the address opens slide 11.
   Print (Ctrl+P, landscape, no margins) gives one slide per page. pitch/build_standalone.py makes a
-  single-file copy with the images embedded.
+  single-file copy with the images embedded. Plan behind this deck: pitch/sensei_brief.md.
+  Numbers are final as of 2026-10-11 (answer key v2, 1,962 areas; model models/real_v3_cal); sources in pitch.md and
+  in the title="..." tooltip of each number. Anything that must change again gets class="fin", so P highlights it
+  (none left).
 -->
 <style>
   :root {
@@ -34,57 +38,117 @@
   body { font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif; color: var(--ink); }
 
   .stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: 0 0; background: var(--paper); overflow: hidden; box-shadow: 0 0 40px rgba(0,0,0,.25); }
-  .slide { position: absolute; inset: 0; padding: 64px 96px 84px 96px; display: none; flex-direction: column; background: var(--paper); }
+  .slide { position: absolute; inset: 0; padding: 60px 96px 84px 96px; display: none; flex-direction: column; background: var(--paper); }
   .slide.active { display: flex; }
   .slide::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 18px; background: var(--blue); }
 
   .kicker { font-size: 28px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--blue); }
-  h1, h2, h3, p { margin: 0; }
-  h2 { font-size: 70px; line-height: 1.08; font-weight: 800; letter-spacing: -.01em; margin-top: 6px; max-width: 1600px; }
-  h2, .hook, .punch, .newstore, .insight { text-wrap: balance; }
-  .lead { font-size: 44px; line-height: 1.25; font-weight: 600; }
-  .body { font-size: 36px; line-height: 1.32; }
-  .cap { font-size: 27px; line-height: 1.3; color: var(--muted); }
+  h1, h2, h3, h4, p { margin: 0; }
+  h2 { font-size: 66px; line-height: 1.08; font-weight: 800; letter-spacing: -.01em; margin-top: 6px; max-width: 1700px; }
+  h2, .hook, .punch, .insight { text-wrap: balance; }
+  .body { font-size: 34px; line-height: 1.3; }
+  .cap { font-size: 25px; line-height: 1.3; color: var(--muted); }
+  .src { font-size: 21px; line-height: 1.3; color: var(--muted); }
   b, strong { font-weight: 800; }
   .hl-blue { color: var(--blue); } .hl-empty { color: var(--empty); } .hl-wrong { color: var(--wrong); } .hl-ok { color: var(--ok); }
-  .grow { flex: 1; min-height: 0; }
   .row { display: flex; gap: 48px; }
-  .col { display: flex; flex-direction: column; gap: 24px; }
+  .col { display: flex; flex-direction: column; gap: 22px; }
 
-  .card { background: var(--card); border: 2px solid var(--line); border-radius: 22px; padding: 28px 32px; }
+  .card { background: var(--card); border: 2px solid var(--line); border-radius: 22px; padding: 26px 30px; }
   .shot { display: block; border-radius: 16px; border: 2px solid var(--line); box-shadow: var(--shadow); background: #fff; }
-  .pill { display: inline-flex; align-items: center; gap: 12px; font-weight: 800; font-size: 28px; border-radius: 999px; padding: 6px 22px; border: 3px solid currentColor; }
+  .pill { display: inline-flex; align-items: center; gap: 12px; font-weight: 800; font-size: 28px; border-radius: 999px; padding: 6px 22px; border: 3px solid currentColor; white-space: nowrap; }
   .pill.empty { color: var(--empty); background: var(--empty-soft); }
   .pill.low   { color: #7a5300; background: var(--low-soft); }
   .pill.wrong { color: var(--wrong); background: var(--wrong-soft); }
   .pill.ok    { color: var(--ok); background: var(--ok-soft); }
-  .num { display: inline-flex; align-items: center; justify-content: center; width: 58px; height: 58px; flex: none; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 800; font-size: 34px; }
-  svg.ico { width: 1em; height: 1em; flex: none; }
+  .pill.blue  { color: var(--blue); background: var(--blue-soft); }
+  .num { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; flex: none; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 800; font-size: 30px; }
   code, .mono { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; }
+  q { quotes: "\201C" "\201D"; }
+  .fin { border-radius: 6px; }
+  body.show-final .fin { background: #fff4b8 !important; color: #5a4300 !important; outline: 3px dashed #9a7b00; }
+  .tagline { display: inline-block; font-size: 21px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; border-radius: 8px; padding: 2px 10px; vertical-align: middle; }
+  .tagline.design { color: #7a5300; background: var(--low-soft); border: 2px solid #c99a2e; }
+  .tagline.next { color: var(--muted); background: #eceef1; border: 2px solid var(--line); }
 
   /* 1 title */
-  #s1 .row { align-items: center; flex: 1; gap: 72px; }
-  #s1 h1 { font-size: 108px; line-height: 1; font-weight: 800; letter-spacing: -.02em; }
-  #s1 .hook { font-size: 56px; line-height: 1.22; font-weight: 600; margin-top: 40px; max-width: 900px; }
-  #s1 .tag { font-size: 32px; font-weight: 700; color: var(--muted); }
-  #s1 .frame { width: 800px; flex: none; position: relative; }
+  #s1 .row { align-items: center; flex: 1; gap: 64px; }
+  #s1 .tag { font-size: 30px; font-weight: 700; color: var(--muted); }
+  #s1 h1 { font-size: 132px; line-height: .95; font-weight: 800; letter-spacing: -.025em; }
+  #s1 .sub { font-size: 40px; font-weight: 700; color: var(--blue); margin-top: 18px; }
+  #s1 .hook { font-size: 46px; line-height: 1.24; font-weight: 600; margin-top: 44px; max-width: 900px; text-wrap: pretty; }
+  #s1 .promises { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 40px; }
+  #s1 .promises .pill { font-size: 32px; padding: 8px 26px; }
+  #s1 .frame { width: 760px; flex: none; }
   #s1 .frame img { width: 100%; }
+  #s1 .teamline { font-size: 30px; font-weight: 700; color: var(--muted); }
 
-  /* 2 problem */
-  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 34px; }
-  .trio .card { display: flex; flex-direction: column; gap: 18px; padding: 34px 36px; border-width: 4px; }
-  .trio h3 { font-size: 46px; line-height: 1.1; font-weight: 800; }
-  .trio .chain { font-size: 36px; line-height: 1.3; color: var(--ink); }
-  .trio .chain span { display: block; }
-  .trio .arrow { font-size: 40px; font-weight: 800; line-height: 1; }
-  .trio .c-empty { border-color: var(--empty); } .trio .c-over { border-color: var(--ok); } .trio .c-wrong { border-color: var(--wrong); }
-  .trio .big-ico { width: 84px; height: 84px; }
-  .band { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 30px; }
-  .band .card { background: var(--blue-soft); border-color: var(--blue); font-size: 38px; line-height: 1.3; }
-  .punch { margin-top: auto; font-size: 46px; font-weight: 800; line-height: 1.2; }
+  /* 2 what Sensei has built */
+  .timeline { position: relative; display: grid; grid-template-columns: 1fr 1fr 1.1fr 1.75fr; gap: 22px; margin-top: 40px; padding-top: 34px; }
+  .timeline::before { content: ""; position: absolute; left: 10px; right: 10px; top: 10px; height: 6px; background: var(--blue); border-radius: 3px; }
+  .tl-node { position: relative; background: var(--card); border: 2px solid var(--line); border-radius: 18px; padding: 20px 22px; }
+  .tl-node::before { content: ""; position: absolute; left: 22px; top: -38px; width: 22px; height: 22px; border-radius: 50%; background: var(--paper); border: 6px solid var(--blue); }
+  .tl-node .yr { font-size: 28px; font-weight: 800; color: var(--blue); }
+  .tl-node h4 { font-size: 30px; line-height: 1.12; font-weight: 800; margin-top: 4px; }
+  .tl-node p { font-size: 24px; line-height: 1.28; color: var(--muted); margin-top: 8px; }
+  .tl-node.hero { background: var(--blue-soft); border: 4px solid var(--blue); }
+  .tl-node.hero::before { background: var(--blue); }
+  .tl-node.hero h4 { font-size: 33px; }
+  .tl-node.hero p { color: var(--ink); font-size: 25px; }
+  #s2 .awards { margin-top: 18px; font-size: 25px; color: var(--muted); font-weight: 600; }
+  #s2 .awards b { color: var(--ink); }
+  #s2 .pair { display: grid; grid-template-columns: 1fr 1.15fr; gap: 32px; margin-top: 30px; }
+  #s2 .pair .card { padding: 26px 32px; }
+  #s2 .pair h3 { font-size: 36px; font-weight: 800; line-height: 1.12; }
+  #s2 .pair h3 .by { font-size: 25px; font-weight: 600; color: var(--muted); }
+  #s2 .have ul { margin: 14px 0 0 0; padding-left: 34px; }
+  #s2 .have li { font-size: 30px; line-height: 1.3; margin-bottom: 6px; }
+  #s2 .have li small { font-size: 23px; color: var(--muted); font-weight: 600; }
+  #s2 .ask { border: 4px solid var(--blue); }
+  #s2 .ask .credit { font-size: 31px; line-height: 1.27; font-weight: 700; margin-top: 12px; }
+  #s2 .ask .quote { font-size: 30px; line-height: 1.27; margin-top: 12px; color: var(--blue); font-weight: 700; }
+  #s2 .src { margin-top: auto; }
 
-  /* 3 data */
-  #s3 .row { flex: 1; margin-top: 24px; gap: 48px; }
+  /* 3 the constraints */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 34px; }
+  .three .card { display: flex; flex-direction: column; gap: 14px; border-width: 4px; padding: 26px 30px 28px; }
+  .three h3 { display: flex; align-items: center; gap: 16px; font-size: 40px; line-height: 1.1; font-weight: 800; }
+  .three .q { font-size: 28px; line-height: 1.3; font-style: italic; color: var(--muted); }
+  .three .ans { margin-top: auto; font-size: 31px; line-height: 1.25; font-weight: 800; color: var(--blue); }
+  .three .c1 { border-color: var(--blue); } .three .c2 { border-color: var(--ok); } .three .c3 { border-color: var(--wrong); }
+  .fails { display: flex; align-items: center; gap: 20px; margin-top: 28px; font-size: 28px; font-weight: 700; color: var(--muted); flex-wrap: wrap; }
+  .fails .pill { font-size: 26px; }
+  .punch { margin-top: 26px; font-size: 40px; font-weight: 800; line-height: 1.2; color: var(--blue); }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: auto; }
+  .fact { display: flex; gap: 26px; align-items: center; background: var(--card); border: 2px solid var(--line); border-radius: 20px; padding: 20px 28px; }
+  .fact .n { font-size: 62px; font-weight: 800; color: var(--blue); white-space: nowrap; line-height: 1; }
+  .fact .t { font-size: 27px; line-height: 1.25; font-weight: 600; }
+  .fact .t .src { display: block; margin-top: 6px; font-weight: 400; }
+
+  /* 4 staff */
+  #s4 h2 { font-size: 56px; }
+  #s4 .row { flex: 1; margin-top: 22px; gap: 36px; align-items: flex-start; }
+  #s4 .phone { width: 318px; flex: none; }
+  #s4 .phone img { width: 100%; }
+  #s4 .verbs { width: 780px; flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; align-items: start; }
+  #s4 .verb { display: flex; flex-direction: column; gap: 10px; }
+  #s4 .verb .pill { align-self: flex-start; font-size: 25px; padding: 4px 18px; }
+  #s4 .verb .pill i { font-style: normal; font-weight: 600; }
+  #s4 .verb.wide img { width: 560px; }
+  #s4 .verb img { width: 100%; }
+  #s4 .verb.wide { grid-column: 1 / 3; }
+  #s4 .shift { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  #s4 .shift h3 { font-size: 31px; font-weight: 800; line-height: 1.15; }
+  .tr { border-left: 8px solid; border-radius: 14px; background: var(--card); padding: 12px 20px 14px; }
+  .tr h4 { font-size: 28px; font-weight: 800; }
+  .tr p { font-size: 25px; line-height: 1.27; margin-top: 4px; }
+  .tr.t-first { border-color: var(--empty); } .tr.t-first h4 { color: var(--empty); }
+  .tr.t-next { border-color: #a37800; } .tr.t-next h4 { color: #7a5300; }
+  .tr.t-unsure { border-color: var(--blue); } .tr.t-unsure h4 { color: var(--blue); }
+  .tr.t-print { border-color: var(--muted); }
+
+  /* 5 what the camera sees */
+  #s5 .row { flex: 1; margin-top: 22px; gap: 48px; }
   .figure { position: relative; width: 960px; flex: none; }
   .figure img.main { width: 100%; }
   .imgwrap { position: relative; }
@@ -94,108 +158,157 @@
   .flag { position: absolute; font-weight: 800; font-size: 28px; line-height: 1.15; padding: 8px 16px; border-radius: 12px; color: #fff; box-shadow: var(--shadow); }
   .flag.f-wrong { background: var(--wrong); left: 24%; top: 81%; }
   .flag.f-empty { background: var(--empty); left: 50%; top: 37%; }
-  .stat { display: flex; align-items: center; gap: 24px; background: var(--wrong-soft); border: 3px solid var(--wrong); border-radius: 20px; padding: 18px 28px; }
-  .stat .n { font-size: 66px; font-weight: 800; color: var(--wrong); line-height: 1; white-space: nowrap; }
-  .stat .t { font-size: 31px; line-height: 1.25; font-weight: 600; }
-  #s3 .strip { width: 100%; border-radius: 12px; border: 2px solid var(--line); display: block; }
-  .insight { font-size: 40px; font-weight: 800; line-height: 1.2; color: var(--blue); }
+  .stat { display: flex; flex-direction: column; gap: 8px; background: var(--ok-soft); border: 3px solid var(--ok); border-radius: 20px; padding: 18px 28px; }
+  .stat .lbl { font-size: 27px; font-weight: 800; color: var(--ok); text-transform: uppercase; letter-spacing: .04em; }
+  .stat .n { font-size: 60px; font-weight: 800; color: var(--wrong); line-height: 1; white-space: nowrap; }
+  .stat .t { font-size: 29px; line-height: 1.25; font-weight: 600; }
+  .stat .t .src { display: block; margin-top: 4px; font-weight: 400; }
+  .insight { font-size: 38px; font-weight: 800; line-height: 1.2; color: var(--blue); }
 
-  /* 4 how */
-  #s4 .top { display: flex; align-items: center; gap: 40px; margin-top: 18px; }
-  #s4 .top img { width: 840px; border-radius: 12px; border: 2px solid var(--line); flex: none; }
-  #s4 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 22px; flex: 1; }
-  #s4 .step { display: flex; flex-direction: column; gap: 10px; padding: 24px 30px; }
-  #s4 .step h3 { display: flex; align-items: center; gap: 18px; font-size: 40px; line-height: 1.1; font-weight: 800; }
-  #s4 .step p { font-size: 31px; line-height: 1.3; }
-  #s4 .step.key { border-color: var(--blue); border-width: 4px; background: var(--blue-soft); }
+  /* 6 how */
+  #s6 .top { display: flex; align-items: center; gap: 40px; margin-top: 30px; }
+  #s6 .top img { width: 840px; border-radius: 12px; border: 2px solid var(--line); flex: none; }
+  #s6 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px; flex: 1; }
+  #s6 .step { display: flex; flex-direction: column; gap: 8px; padding: 20px 28px; }
+  #s6 .step h3 { display: flex; align-items: center; gap: 16px; font-size: 37px; line-height: 1.1; font-weight: 800; }
+  #s6 .step p { font-size: 28px; line-height: 1.28; }
+  #s6 .step.key { border-color: var(--blue); border-width: 4px; background: var(--blue-soft); }
+  #s6 .num { width: 48px; height: 48px; font-size: 28px; }
 
-  /* 5 calibration */
-  #s5 .row { gap: 56px; margin-top: 18px; }
-  #s5 .ruler { width: 760px; flex: none; }
-  #s5 .ruler li { font-size: 34px; line-height: 1.28; margin-bottom: 22px; display: flex; gap: 18px; align-items: flex-start; }
-  #s5 ol { margin: 0; padding-left: 0; list-style: none; }
-  .bars { flex: 1; }
-  .bars h3 { font-size: 34px; font-weight: 800; margin-bottom: 14px; }
-  .bar-row { display: grid; grid-template-columns: 420px 1fr; align-items: center; gap: 18px; margin-bottom: 14px; }
-  .bar-row .lab { font-size: 29px; line-height: 1.15; text-align: right; font-weight: 600; }
-  .bar-row .track { position: relative; height: 56px; background: #ebeef2; border-radius: 10px; }
-  .bar-row .fill { height: 100%; border-radius: 10px; background: var(--blue); display: flex; align-items: center; justify-content: flex-end; padding-right: 14px; color: #fff; font-weight: 800; font-size: 32px; }
-  .bar-row .fill.base { background: #5d6470; }
-  .bar-row .fill.main { background: var(--blue); }
-  .bar-row .fill.hero { background: var(--ok); }
-  .axis { display: grid; grid-template-columns: 420px 1fr; gap: 18px; font-size: 24px; color: var(--muted); }
+  /* 7 measured */
+  #s7 .row { gap: 52px; margin-top: 16px; }
+  #s7 .ruler { width: 640px; flex: none; }
+  #s7 .ruler li { font-size: 29px; line-height: 1.27; margin-bottom: 18px; display: flex; gap: 16px; align-items: flex-start; }
+  #s7 .ruler .num { width: 44px; height: 44px; font-size: 26px; margin-top: 2px; }
+  #s7 .ruler .num.d0 { background: #79a6e0; }
+  #s7 ol { margin: 0; padding-left: 0; list-style: none; }
+  .gbars { flex: 1; }
+  .gbars h3 { font-size: 32px; font-weight: 800; }
+  .legend { display: flex; gap: 28px; font-size: 24px; font-weight: 600; margin: 10px 0 14px 0; flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 10px; }
+  .legend i { width: 26px; height: 18px; border-radius: 4px; display: inline-block; }
+  .grp { display: grid; grid-template-columns: 300px 1fr; gap: 18px; align-items: center; margin-bottom: 16px; }
+  .grp .lab { font-size: 27px; line-height: 1.15; font-weight: 700; text-align: right; }
+  .grp .lab small { display: block; font-size: 21px; font-weight: 500; color: var(--muted); }
+  .grp .bars3 { display: flex; flex-direction: column; gap: 5px; }
+  .gbar { display: flex; align-items: center; height: 31px; background: #ebeef2; border-radius: 8px; }
+  .gbar .fill { height: 100%; border-radius: 8px; }
+  .gbar .v { margin-left: 12px; font-size: 25px; font-weight: 800; }
+  .c-base { background: #8a919c; } .c-free { background: #79a6e0; } .c-cal { background: var(--blue); }
+  .gbar .v.cal { color: var(--blue); font-size: 27px; }
+  .axis { display: grid; grid-template-columns: 300px 1fr; gap: 18px; font-size: 22px; color: var(--muted); }
   .axis div:last-child { display: flex; justify-content: space-between; }
-  .proj { margin-top: 20px; padding: 22px 32px 18px 32px; }
-  .proj h3 { font-size: 34px; font-weight: 800; }
-  .scale { position: relative; height: 54px; margin: 74px 0 6px 0; background: #ebeef2; border-radius: 10px; }
+  .proj { margin-top: 14px; padding: 16px 32px 14px 32px; }
+  .proj h3 { font-size: 30px; font-weight: 800; }
+  .scale { position: relative; height: 46px; margin: 66px 0 44px 0; background: #ebeef2; border-radius: 10px; }
   .scale .band-range { position: absolute; top: 0; bottom: 0; background: var(--ok); border-radius: 10px; }
-  .scale .tick { position: absolute; top: -50px; transform: translateX(-50%); font-size: 26px; font-weight: 700; white-space: nowrap; text-align: center; line-height: 1.1; }
-  .scale .tick::after { content: ""; position: absolute; left: 50%; top: 40px; width: 4px; height: 70px; background: var(--ink); transform: translateX(-50%); }
+  .scale .tick { position: absolute; top: -48px; transform: translateX(-50%); font-size: 25px; font-weight: 700; white-space: nowrap; text-align: center; line-height: 1.1; }
+  .scale .tick::after { content: ""; position: absolute; left: 50%; top: 38px; width: 4px; height: 62px; background: var(--ink); transform: translateX(-50%); }
   .scale .tick.t-ours { color: var(--ok); } .scale .tick.t-ours::after { background: var(--ok); }
   .scale .tick.t-end { transform: translateX(-100%); } .scale .tick.t-end::after { left: 100%; }
   .scale .tick.t-start { transform: none; } .scale .tick.t-start::after { left: 0; }
-  .caveat { font-size: 28px; color: var(--muted); margin-top: 12px; line-height: 1.3; }
-  .scale .tick.t-end.t-brief::after { left: 100%; }
+  .scale .tick.t-below { top: 54px; color: var(--muted); font-size: 23px; font-weight: 600; }
+  .scale .tick.t-below::after { top: -62px; height: 58px; width: 4px; background: #8a919c; }
+  .caveat { font-size: 25px; color: var(--muted); line-height: 1.3; }
 
-  /* 6 app */
-  #s6 .row { flex: 1; margin-top: 20px; gap: 56px; align-items: flex-start; justify-content: center; }
-  #s6 .shot { width: 100%; height: auto; }
-  #s6 .phone { width: 290px; flex: none; }
-  #s6 .gond { width: 1030px; flex: none; }
-  #s6 .calls { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 22px; }
-  #s6 .call { display: flex; gap: 12px; align-items: flex-start; font-size: 27px; line-height: 1.22; }
-  #s6 .call .num { width: 48px; height: 48px; font-size: 28px; }
+  /* 8 trust */
+  #s8 table.tt { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border: 2px solid var(--line); border-radius: 20px; overflow: hidden; margin-top: 26px; }
+  #s8 .tt th, #s8 .tt td { padding: 13px 22px; font-size: 29px; line-height: 1.2; text-align: left; border-bottom: 2px solid #e6e8ec; vertical-align: middle; }
+  #s8 .tt th { font-size: 24px; color: var(--muted); vertical-align: bottom; }
+  #s8 .tt th.c, #s8 .tt td.c { text-align: center; width: 330px; }
+  #s8 .tt th.c b { display: block; font-size: 27px; color: var(--ink); }
+  #s8 .tt td.c { font-weight: 800; font-size: 33px; }
+  #s8 .tt td.c small { display: block; font-size: 21px; font-weight: 500; color: var(--muted); }
+  #s8 .tt tr:last-child td { border-bottom: 0; }
+  #s8 .tt td.h { width: 250px; font-weight: 800; font-size: 27px; }
+  #s8 .tt td.h.miss { color: var(--empty); } #s8 .tt td.h.fa { color: var(--wrong); } #s8 .tt td.h.rem { color: #7a5300; }
+  #s8 .tt td.c.good { color: var(--ok); } #s8 .tt td.c.weak { color: var(--empty); }
+  #s8 .tt td.c.cal { background: var(--ok-soft); }
+  #s8 .below { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: auto; }
+  #s8 .below .tr p { font-size: 25px; }
+  #s8 .below .t-rep { border-color: var(--blue); } #s8 .below .t-rep h4 { color: var(--blue); }
+  #s8 .below .t-read { border-color: var(--ok); } #s8 .below .t-read h4 { color: var(--ok); }
 
-  /* 7 counts and insights */
-  #s7 .row { flex: 1; margin-top: 18px; gap: 44px; align-items: flex-start; }
-  #s7 .shots { display: flex; gap: 28px; flex: none; }
-  #s7 .shotcol { flex: none; }
-  /* both screenshots are shown at the same scale (0.645), cropped to the same height */
-  #s7 .crop { height: 720px; overflow: hidden; border-radius: 16px; border: 2px solid var(--line); box-shadow: var(--shadow); background: #fff; }
-  #s7 .crop img { display: block; width: 100%; }
-  #s7 .crop.c-ins { width: 484px; } #s7 .crop.c-ins img { margin-top: -174px; }
-  #s7 .crop.c-cnt { width: 434px; }
-  #s7 .shotcol .cap { margin-top: 10px; font-size: 25px; }
-  #s7 .feats { display: flex; flex-direction: column; gap: 14px; flex: 1; min-width: 0; }
-  #s7 .feat { padding: 14px 26px 16px; border-width: 3px; }
-  #s7 .feat h3 { font-size: 34px; font-weight: 800; line-height: 1.1; }
-  #s7 .feat p { font-size: 27px; line-height: 1.25; margin-top: 4px; }
-  #s7 .feat.f-count { border-color: var(--blue); background: var(--blue-soft); }
-  #s7 .feat.f-soon { border-color: var(--empty); }
-  #s7 .feat.f-speed { border-color: var(--ok); }
-  #s7 .feat.f-plano { border-color: var(--wrong); }
-  #s7 .est { font-size: 26px; font-weight: 700; color: var(--muted); }
+  /* 9 manager */
+  #s9 .row { flex: 1; margin-top: 20px; gap: 40px; align-items: flex-start; }
+  #s9 .shots { display: flex; gap: 26px; flex: none; }
+  #s9 .crop { height: 730px; overflow: hidden; border-radius: 16px; border: 2px solid var(--line); box-shadow: var(--shadow); background: #fff; }
+  #s9 .crop img { display: block; width: 100%; }
+  #s9 .crop.c-prod { width: 430px; } #s9 .crop.c-prod img { margin-top: 0; }
+  #s9 .crop.c-ins { width: 470px; } #s9 .crop.c-ins img { margin-top: -270px; }
+  #s9 .shotcol .cap { margin-top: 8px; font-size: 23px; }
+  #s9 .feats { display: flex; flex-direction: column; gap: 12px; flex: 1; min-width: 0; }
+  #s9 .feat { padding: 12px 24px 14px; border-width: 3px; }
+  #s9 .feat h3 { font-size: 31px; font-weight: 800; line-height: 1.1; }
+  #s9 .feat h3 small { font-size: 23px; font-weight: 600; color: var(--muted); }
+  #s9 .feat p { font-size: 25px; line-height: 1.25; margin-top: 4px; }
+  #s9 .f-count { border-color: var(--blue); background: var(--blue-soft); }
+  #s9 .f-soon { border-color: var(--empty); }
+  #s9 .f-speed { border-color: var(--ok); }
+  #s9 .f-plano { border-color: var(--wrong); }
+  #s9 .f-slow { border-color: #7a5300; }
+  #s9 .est { font-size: 24px; font-weight: 700; color: var(--muted); }
 
-  /* 8 runs anywhere */
-  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px; }
-  .tile { padding: 30px 34px; display: flex; flex-direction: column; gap: 10px; }
-  .tile .big { font-size: 80px; white-space: nowrap; font-weight: 800; line-height: 1; color: var(--blue); }
-  .tile h3 { font-size: 42px; font-weight: 800; line-height: 1.1; }
-  .tile p { font-size: 34px; line-height: 1.3; }
-  .cmd { margin-top: 48px; background: #12151a; color: #e9f1ff; border-radius: 18px; padding: 30px 38px; font-size: 26px; line-height: 1.6; }
+  /* 10 cost */
+  #s10 h2 { font-size: 76px; }
+  #s10 .row { margin-top: 20px; gap: 40px; align-items: stretch; flex: 1; min-height: 0; }
+  #s10 .tiles { width: 700px; flex: none; display: flex; flex-direction: column; gap: 14px; }
+  #s10 .tile { display: flex; align-items: center; gap: 22px; padding: 12px 24px; flex: 1; }
+  #s10 .tile .big { font-size: 54px; font-weight: 800; color: var(--blue); line-height: 1; white-space: nowrap; width: 250px; flex: none; }
+  #s10 .tile p { font-size: 25px; line-height: 1.24; }
+  #s10 .tile.hero { border: 4px solid var(--ok); background: var(--ok-soft); }
+  #s10 .tile.hero .big { color: var(--ok); }
+  .ladder { flex: 1; display: flex; flex-direction: column; }
+  .ladder h3 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+  .ladder table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border: 2px solid var(--line); border-radius: 20px; overflow: hidden; }
+  .ladder th, .ladder td { padding: 13px 22px; font-size: 30px; text-align: right; border-bottom: 2px solid #e6e8ec; }
+  .ladder th { font-size: 23px; line-height: 1.2; vertical-align: bottom; color: var(--muted); }
+  .ladder th:first-child, .ladder td:first-child { text-align: left; }
+  .ladder td:first-child { font-weight: 600; font-size: 27px; }
+  .ladder tr:last-child td { border-bottom: 0; }
+  .ladder .ours { color: var(--ok); font-weight: 800; background: var(--ok-soft); }
+  .ladder th.ours { color: var(--ok); }
+  .ladder .them { color: var(--muted); }
+  .ladder tr.lab td { font-size: 27px; }
+  .ladder .src { margin-top: 10px; margin-bottom: 12px; }
+  .callout { margin-top: auto; background: var(--blue-soft); border-left: 8px solid var(--blue); border-radius: 14px; padding: 14px 22px; font-size: 26px; line-height: 1.3; }
+  .cmd { margin-top: 22px; background: #12151a; color: #e9f1ff; border-radius: 18px; padding: 18px 32px; font-size: 24px; line-height: 1.55; display: flex; justify-content: space-between; gap: 30px; align-items: center; }
   .cmd .c { color: #93b8ff; } .cmd .dim { color: #aab3c0; } .cmd .go { color: #7fe0a9; font-weight: 700; }
-  .newstore { margin-top: auto; font-size: 46px; font-weight: 800; line-height: 1.2; }
+  .cmd .right { font-family: "Segoe UI", system-ui, sans-serif; font-size: 25px; color: #dfe7f3; text-align: right; }
 
-  /* 9 next steps */
-  .two { display: grid; grid-template-columns: 560px 1fr; gap: 40px; margin-top: 34px; flex: 1; }
-  .built { border-color: var(--ok); border-width: 4px; background: var(--ok-soft); display: flex; flex-direction: column; gap: 16px; }
-  .built h3, .next h3 { font-size: 40px; font-weight: 800; }
-  .built li { font-size: 33px; line-height: 1.28; margin-bottom: 12px; }
-  .built ul, .vals { margin: 0; padding-left: 38px; }
-  .vals { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .vals li { background: var(--card); border: 2px solid var(--line); border-radius: 18px; padding: 20px 26px; font-size: 32px; line-height: 1.25; }
-  .vals li strong { display: block; font-size: 38px; color: var(--blue); margin-bottom: 4px; }
-  .next { display: flex; flex-direction: column; gap: 18px; }
-  .note { font-size: 28px; color: var(--muted); }
+  /* 11 module */
+  .flow { display: grid; grid-template-columns: 1fr 60px 1.1fr 60px 1.25fr; align-items: stretch; margin-top: 26px; }
+  .flow .box { background: var(--card); border: 3px solid var(--blue); border-radius: 18px; padding: 14px 22px; }
+  .flow .box h4 { font-size: 25px; font-weight: 800; color: var(--blue); text-transform: uppercase; letter-spacing: .05em; }
+  .flow .box p { font-size: 26px; line-height: 1.25; margin-top: 4px; }
+  .flow .arr { display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 800; color: var(--blue); }
+  .flowcap { font-size: 22px; color: var(--muted); margin-top: 8px; }
+  .mods2 { display: grid; grid-template-columns: 1.75fr 1fr; gap: 28px; margin-top: 20px; flex: 1; min-height: 0; margin-bottom: 22px; }
+  .mod { display: flex; flex-direction: column; gap: 10px; border-width: 4px; padding: 20px 28px; }
+  .mod h3 { font-size: 36px; font-weight: 800; line-height: 1.1; }
+  .mod ul { margin: 2px 0 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .mod li { font-size: 27px; line-height: 1.25; display: flex; gap: 14px; align-items: flex-start; }
+  .mod li .dot { width: 14px; height: 14px; border-radius: 50%; flex: none; margin-top: 11px; }
+  .mod.m-scale { border-color: var(--ok); background: var(--ok-soft); flex-direction: row; gap: 26px; align-items: stretch; }
+  .mod.m-scale .dot { background: var(--ok); }
+  .mod.m-scale .say { font-size: 29px; font-weight: 800; line-height: 1.22; color: var(--ok); }
+  .scalecrop { width: 300px; height: 250px; flex: none; overflow: hidden; border-radius: 14px; border: 2px solid var(--line); position: relative; background: #fff; }
+  .scalecrop img { position: absolute; width: 660px; left: -330px; top: 0; }
+  .scalecol { display: flex; flex-direction: column; gap: 6px; flex: none; }
+  .scalecol .cap { font-size: 20px; width: 300px; }
+  .mod.m-far { border-color: var(--wrong); } .mod.m-far .dot { background: var(--wrong); }
+  .askband { margin-top: auto; display: flex; gap: 28px; align-items: center; background: #12151a; color: #fff; border-radius: 20px; padding: 18px 32px; }
+  .askband .lim { font-size: 25px; color: #c9d3e0; line-height: 1.3; width: 360px; flex: none; }
+  .askband .ask { font-size: 29px; font-weight: 600; line-height: 1.27; }
+  .askband .ask b { color: #7fe0a9; }
 
-  /* 10 thanks */
-  #s10 { justify-content: center; }
-  #s10 h2 { font-size: 120px; }
-  .recap { display: flex; gap: 28px; margin-top: 44px; }
-  .recap .pill { font-size: 42px; padding: 12px 36px; }
-  .team { margin-top: 72px; font-size: 48px; font-weight: 700; line-height: 1.4; }
-  .team .ph { background: #fff4b8; border: 2px dashed #9a7b00; border-radius: 8px; padding: 0 12px; }
-  .team .small { font-size: 30px; font-weight: 600; color: var(--muted); }
+  /* 12 close */
+  #s12 { justify-content: center; }
+  #s12 h2 { font-size: 112px; letter-spacing: -.02em; }
+  .recap3 { list-style: none; margin: 44px 0 0 0; padding: 0; display: flex; flex-direction: column; gap: 22px; }
+  .recap3 li { display: flex; gap: 22px; align-items: center; font-size: 39px; line-height: 1.2; font-weight: 700; }
+  .team { margin-top: 60px; font-size: 42px; font-weight: 700; line-height: 1.4; }
+  .team .small { font-size: 29px; font-weight: 600; color: var(--muted); }
 
   /* chrome */
   .hud { position: absolute; left: 0; right: 0; bottom: 0; height: 56px; padding: 0 96px 0 96px; display: flex; align-items: center; justify-content: space-between; font-size: 24px; color: var(--muted); z-index: 5; pointer-events: none; }
@@ -215,53 +328,116 @@
 <body>
 <div class="stage" id="stage">
 
-<!-- 1 · Title -->
-<section class="slide" id="s1" data-title="Title">
+<!-- 1 · Title: open on Sensei's cameras and store -->
+<section class="slide" id="s1" data-title="Fresh Eyes">
   <div class="tag">JunctionX Lisbon 2026 &middot; Sensei challenge &middot; &ldquo;Fresh eyes on fresh produce&rdquo;</div>
   <div class="row">
     <div>
-      <h1>Sensei<br>shelf monitor</h1>
-      <p class="hook">Tell staff which shelf to fix first, from ceiling-camera pictures alone.<br><b class="hl-blue">No labels. No new hardware.</b></p>
+      <h1>Fresh Eyes</h1>
+      <p class="sub">A produce-shelf layer for the Sensei platform</p>
+      <p class="hook">Sensei has cameras over every gondola. We teach them to <b class="hl-blue">read the produce shelf.</b></p>
+      <div class="promises">
+        <span class="pill blue">Same cameras</span>
+        <span class="pill blue">No extra hardware</span>
+        <span class="pill blue">No labelling effort</span>
+      </div>
     </div>
     <div class="frame">
       <img class="shot" src="assets/frame_6215_opening.jpg" alt="Ceiling-camera frame of a fruit and vegetable gondola at 06:14 with the planogram areas outlined">
-      <p class="cap" style="margin-top:14px">One real frame: camera 6215, 06:14, planogram areas drawn on it.</p>
+      <p class="cap" style="margin-top:14px">Continente Bom Dia S.&nbsp;Rom&atilde;o, Leiria: camera 6215 at 06:14, from the dataset Sensei shared for this challenge. Planogram areas drawn on it.</p>
+    </div>
+  </div>
+  <p class="teamline">QuantumLotus &middot; S&eacute;rgio Kuts Pires &middot; In&ecirc;s Matias Medeiros</p>
+</section>
+
+<!-- 2 · What Sensei has built (verified facts only; [S] facts said as "Sensei reports") -->
+<section class="slide" id="s2" data-title="What Sensei has built">
+  <div class="kicker">02 &middot; What Sensei has built</div>
+  <h2>From a lab store to a 1,200&nbsp;m&sup2; autonomous supermarket</h2>
+  <div class="timeline">
+    <div class="tl-node"><div class="yr">2021</div><h4>Continente Labs, Lisbon</h4><p>Billed at launch as Europe&rsquo;s first autonomous store</p></div>
+    <div class="tl-node"><div class="yr">2022</div><h4>Muffato Go, Curitiba</h4><p>First store outside Europe</p></div>
+    <div class="tl-node"><div class="yr">2023&ndash;24</div><h4>DAO / Conad, Verona and Trento</h4><p>Verona: fruit, veg and bread sold by weight</p></div>
+    <div class="tl-node hero"><div class="yr">January 2025</div><h4>Continente Bom Dia S.&nbsp;Rom&atilde;o, Leiria</h4><p>1,200&nbsp;m&sup2;, loose fruit and vegetables sold by weight. Your brief: <q>the largest autonomous store in the world</q></p></div>
+  </div>
+  <p class="awards">2026: <b>RTIH</b> winner, AI and Physical Stores &middot; <b>EHI reta</b> AI category, Sonae with Sensei</p>
+  <div class="pair">
+    <div class="card have">
+      <h3>Already on your platform <span class="by">(Sensei reports)</span></h3>
+      <ul>
+        <li>Planogram compliance and automated replenishment alerts for staff <small>(Leiria)</small></li>
+        <li>Real-time shelf inventory visibility <small>(sensei.tech)</small></li>
+      </ul>
+    </div>
+    <div class="card ask">
+      <h3>Leiria proved loose produce sells autonomously, by weight, from a scale on the gondola.</h3>
+      <p class="quote">The shelf is the next step. Your brief: <q>the most demanding section of a store for computer vision.</q></p>
+    </div>
+  </div>
+  <p class="src">Sources: tech.eu (26 May 2021); Sensei case studies (Muffato, DAO Verona, Continente Bom Dia); Forbes Portugal (11 Jan 2025); RTIH (28 Jan 2026); EHI / EuroShop (24 Feb 2026).</p>
+</section>
+
+<!-- 3 · Their real problem: three constraints, in their own words -->
+<section class="slide" id="s3" data-title="The real problem">
+  <div class="kicker">03 &middot; The real problem, in your words</div>
+  <h2>What decides a produce layer across a fleet</h2>
+  <div class="three">
+    <div class="card c1">
+      <h3><span class="num">1</span> Learn without labels</h3>
+      <p class="q"><q>Across hundreds of stores and thousands of cameras, nobody can label every image, every day.</q></p>
+      <p class="ans">&rarr; Learns the shelf from unlabelled pictures</p>
+    </div>
+    <div class="card c2">
+      <h3><span class="num" style="background:var(--ok)">2</span> Near-zero cost</h3>
+      <p class="q">A fleet with <q>cameras over every gondola</q>, and your new criterion: cost per image.</p>
+      <p class="ans">&rarr; One CPU core. No GPU, no paid API</p>
+    </div>
+    <div class="card c3">
+      <h3><span class="num" style="background:var(--wrong)">3</span> Keep staff trusting it</h3>
+      <p class="q"><q>False alarm. Missed problem. Repeated errors.</q> Then staff stop trusting the app.</p>
+      <p class="ans">&rarr; Biggest problems first, and it says when it is unsure</p>
+    </div>
+  </div>
+  <div class="fails">On the shelf, your brief names three failures:
+    <span class="pill empty">Empty &rarr; lost sales</span>
+    <span class="pill ok">Overstocked &rarr; waste</span>
+    <span class="pill wrong">Wrong product &rarr; wrong prices</span>
+  </div>
+  <p class="punch">We designed for all three constraints, and measured each one.</p>
+  <div class="facts">
+    <div class="fact"><div class="n">&minus;50%</div><div class="t">food waste by 2028 against 2020: MC&rsquo;s public commitment.<span class="src">Company commitment; no progress figure published.</span></div></div>
+    <div class="fact"><div class="n">~45%</div><div class="t">of the food Austria&rsquo;s large retailers discarded was fruit and vegetables.<span class="src">Austria, last quarter of 2023, mandatory retailer reporting.</span></div></div>
+  </div>
+</section>
+
+<!-- 4 · Staff: the product, early. The brief's three answers, in Portuguese -->
+<section class="slide" id="s4" data-title="For store staff">
+  <div class="kicker">04 &middot; What a shift sees, in Portuguese</div>
+  <h2><q>What to restock first, what to move back to its place, what to leave alone</q></h2>
+  <div class="row">
+    <div class="phone">
+      <img class="shot" src="assets/pt_mobile.jpg" alt="Phone view of the staff app in Portuguese: counters Vazio, Baixo, Produto errado, OK, the Fazer agora list and the first group: Primeiro, produto errado e vazio, 25">
+      <p class="cap" style="margin-top:8px">Opens in Portuguese, on any phone.</p>
+    </div>
+    <div class="verbs">
+      <div class="verb"><span class="pill empty">Restock first &middot; <i>Repor</i></span><img class="shot" src="assets/pt_card_restock.jpg" alt="Task card: Vazio, Banana, Repor: está vazio"></div>
+      <div class="verb"><span class="pill wrong">Move back &middot; <i>Devolver</i></span><img class="shot" src="assets/pt_card_move.jpg" alt="Task card: Produto errado, Citrinos do Algarve Laranja, Devolver ao lugar: esperado laranja, visto banana"></div>
+      <div class="verb wide"><span class="pill ok">Leave alone &middot; <i>Deixar</i></span><img class="shot" src="assets/pt_leave.jpg" alt="Deixar: 3 zonas estão certas"></div>
+    </div>
+    <div class="shift">
+      <h3>Biggest problems first<br><span class="cap" style="font-size:22px;font-weight:500">All 14 cameras, evening pictures of the dataset day</span></h3>
+      <div class="tr t-first"><h4>Primeiro &middot; 25</h4><p>Wrong product and empty shelves: the first round.</p></div>
+      <div class="tr t-next"><h4>Depois &middot; 41</h4><p>Shelves running low: the next round.</p></div>
+      <div class="tr t-unsure"><h4>Incerto: confirmar &agrave; vista</h4><p>When unsure, it says so. Every card shows the photo, the outlined area and how old the picture is.</p></div>
+      <div class="tr t-print"><h4>Imprimir</h4><p>One printed sheet for the team, with a tick box per task.</p></div>
     </div>
   </div>
 </section>
 
-<!-- 2 · Problem -->
-<section class="slide" id="s2" data-title="The problem">
-  <div class="kicker">02 &middot; The problem</div>
-  <h2>Perishable shelves go wrong fast</h2>
-  <div class="trio">
-    <div class="card c-empty">
-      <svg class="ico big-ico" viewBox="0 0 24 24" fill="none" stroke="#b34700" stroke-width="2.6"><circle cx="12" cy="12" r="8.5"/></svg>
-      <h3 class="hl-empty">Empty gondola</h3>
-      <div class="chain"><span class="arrow hl-empty">&darr;</span><span>lost sales</span><span class="arrow hl-empty">&darr;</span><span>unhappy customers</span></div>
-    </div>
-    <div class="card c-over">
-      <svg class="ico big-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="#0a6b45"/></svg>
-      <h3 class="hl-ok">Overstocked gondola</h3>
-      <div class="chain"><span class="arrow hl-ok">&darr;</span><span>product sits too long</span><span class="arrow hl-ok">&darr;</span><span>waste</span></div>
-    </div>
-    <div class="card c-wrong">
-      <svg class="ico big-ico" viewBox="0 0 24 24" fill="none" stroke="#8f2a6b" stroke-width="2.4" stroke-linejoin="round"><path d="M12 3.5 22 20.5H2z"/><path d="M12 10v5M12 17.6v.4" stroke-linecap="round"/></svg>
-      <h3 class="hl-wrong">Wrong product, wrong place</h3>
-      <div class="chain"><span class="arrow hl-wrong">&darr;</span><span>confused customers</span><span class="arrow hl-wrong">&darr;</span><span>wrong prices</span></div>
-    </div>
-  </div>
-  <div class="band">
-    <div class="card"><b>Today:</b> staff walk the store to find out.</div>
-    <div class="card"><b>Tomorrow:</b> thousands of cameras, every day. Nobody can label them all.</div>
-  </div>
-  <p class="punch hl-blue">So the system has to learn to see the shelf without being told what is right.</p>
-</section>
-
-<!-- 3 · Data -->
-<section class="slide" id="s3" data-title="What we found">
-  <div class="kicker">03 &middot; What we found in the data</div>
-  <h2>The planogram is broken at opening</h2>
+<!-- 5 · What the camera sees -->
+<section class="slide" id="s5" data-title="What the camera sees">
+  <div class="kicker">05 &middot; What the camera sees</div>
+  <h2>The plan says where things go. The camera sees what is there.</h2>
   <div class="row">
     <div class="figure">
       <div class="imgwrap">
@@ -270,185 +446,240 @@
         <div class="flag f-empty">Banana areas 2, 4, 6, 8: empty</div>
         <div class="flag f-wrong">Banana areas 3, 5: oranges</div>
       </div>
-      <p class="cap" style="margin-top:14px">Camera 6215 at 06:14, before the store is busy. Marks added by eye; our answer key agrees.</p>
+      <p class="cap" style="margin-top:12px">Camera 6215 at 06:14, the first picture of the day. Marks added by eye; our answer key agrees.</p>
     </div>
-    <div class="col grow">
-      <p class="body"><b>So the planogram says where things should be, not what is there.</b> We cannot treat it as the answer, only as the question.</p>
-      <div class="stat"><div class="n">72 of 1,240</div><div class="t">areas in our labelled sample show the wrong product</div></div>
+    <div class="col" style="flex:1;min-width:0">
+      <div class="stat">
+        <div class="lbl">Morning set-up, checked by camera</div>
+        <div class="n">1 in 8 &rarr; 1 in 65</div>
+        <div class="t">areas hold a different product than planned: first pictures of the day &rarr; evening.<span class="src">18 of 152 areas at 06h, 2 of 129 at 19h. All 152 areas, AI-labelled key.</span></div>
+      </div>
+      <p class="body">14 cameras, 152 areas, read in <b title="prediction step of the SUBMIT.bat dry run on a zip of the 14 frames, laptop CPU, 16 threads: 27 s (integration run, outputs/dryrun_final_zip)">27 seconds</b> on the laptop&rsquo;s 16 threads.</p>
       <div>
-        <img class="strip" src="assets/empty_strip.jpg" alt="Five empty areas from four cameras: black tray, grey metal tray, teal crates">
-        <p class="cap" style="margin-top:10px">Five empty areas, four cameras: the same few trays and crates under every product.</p>
+        <img class="strip" src="assets/empty_strip.jpg" alt="Five empty areas from four cameras: black tray, grey metal tray, teal crates" style="width:100%;border-radius:12px;border:2px solid var(--line);display:block">
+        <p class="cap" style="margin-top:8px">Five empty areas, four cameras: the same trays and crates under every product.</p>
       </div>
       <p class="insight">The container repeats everywhere. The product is what changes.</p>
     </div>
   </div>
 </section>
 
-<!-- 4 · How it works -->
-<section class="slide" id="s4" data-title="How it works">
-  <div class="kicker">04 &middot; How it works, with no labels</div>
-  <h2>Rectify, look, name, then decide for the score</h2>
+<!-- 6 · How it works -->
+<section class="slide" id="s6" data-title="How it works">
+  <div class="kicker">06 &middot; How it works, with no labels</div>
+  <h2>Seeing the shelf <q>without being told what is right</q></h2>
   <div class="top">
     <img src="assets/warp_strip.jpg" alt="Five planogram areas of camera 6215 warped to square crops">
-    <p class="body"><span class="num">1</span> <b>Perspective-warp</b> every planogram area to a square crop. These are the real crops from the frame on the previous slide.</p>
+    <p class="body"><span class="num">1</span> <b>Perspective-warp</b> every planogram area to a square crop. These are the real crops of camera 6215.</p>
   </div>
   <div class="grid">
     <div class="card step">
-      <h3><span class="num">2</span> How full? <span class="pill low" style="font-size:24px">stock</span></h3>
-      <p>DINOv2 patches are clustered. Clusters found under every product are <b>surface</b>; clusters tied to a few fruits are <b>product</b>. CLIP names them. <b>Fill = share of product patches</b>, then empty / half / full.</p>
+      <h3><span class="num">2</span> How full? <span class="pill low" style="font-size:22px">stock</span></h3>
+      <p>Trays and crates look the same under every product; fruit does not. DINOv2 patches split into <b>surface</b> and <b>product</b>; CLIP names them. <b>Fill = product share.</b> Your brief allowed a fill level: piles defeat counting, fill does not.</p>
     </div>
     <div class="card step">
-      <h3><span class="num">3</span> Right product? <span class="pill wrong" style="font-size:24px">compliance</span></h3>
-      <p>CLIP zero-shot against the catalogue, at <b>base-fruit level</b>: banana vs orange vs apple. Unsure, hidden or empty counts as compliant: no false alarms.</p>
+      <h3><span class="num">3</span> Right product? <span class="pill wrong" style="font-size:22px">compliance</span></h3>
+      <p>CLIP zero-shot on your catalogue names (MACA GALA KG &rarr; gala apple), at <b>base-fruit level</b>: the products were chosen to be <q>recognised generically</q>. Empty or hidden counts as compliant.</p>
     </div>
     <div class="card step key">
-      <h3><span class="num">4</span> Decide for the score</h3>
-      <p>Wrong identification costs 2. Stock too low costs 2, <b>too high costs 3</b>. We pick the answer with the best expected score, so we <b>lean low when unsure</b>.</p>
+      <h3><span class="num">4</span> Your scoring rule is our decision rule</h3>
+      <p>Wrong product costs 2. Too low costs 2, <b>too high costs 3</b>. For every area we pick the answer with the <b>best expected score</b>, so when two stock levels are equally likely, the rule picks the lower one.</p>
     </div>
     <div class="card step">
-      <h3><span class="num">5</span> Boxes and counts <span class="pill ok" style="font-size:24px">detection</span></h3>
-      <p>OWLv2, an open-vocabulary detector, names the products on the shelf. The app draws them behind <b>Show detections</b> and counts them per area: <b>&asymp; N visible units</b>, an estimate.</p>
+      <h3><span class="num">5</span> Boxes and counts <span class="pill ok" style="font-size:22px">for staff</span></h3>
+      <p>OWLv2, a free open-vocabulary detector, draws the products behind <b>Mostrar dete&ccedil;&otilde;es</b> and counts them per area: <b>&asymp; N visible units</b>, always marked as an estimate.</p>
     </div>
   </div>
 </section>
 
-<!-- 5 · Calibration -->
-<section class="slide" id="s5" data-title="Honest measurement">
-  <div class="kicker">05 &middot; Honest calibration</div>
-  <h2>Measured honestly, on frames it never saw</h2>
+<!-- 7 · Measured honestly: day 0 (label-free) and day 1 (calibrated), the fleet recipe -->
+<section class="slide" id="s7" data-title="Measured honestly">
+  <div class="kicker">07 &middot; Measured honestly</div>
+  <h2>Day 0: no labels. Day 1: calibrated.</h2>
   <div class="row">
     <div class="ruler">
       <ol>
-        <li><span class="num" style="width:46px;height:46px;font-size:27px;margin-top:2px">1</span><span>The pipeline itself needs <b>no labels</b>.</span></li>
-        <li><span class="num" style="width:46px;height:46px;font-size:27px;margin-top:2px">2</span><span>To <b>measure</b> it we built a <b>1,240-area answer key</b>: independent AI labellers, <b>3 votes</b> per area, <b>94% unanimous</b>.</span></li>
-        <li><span class="num" style="width:46px;height:46px;font-size:27px;margin-top:2px">3</span><span>Small heads on top of the same features calibrate the stock and compliance decisions.</span></li>
-        <li><span class="num" style="width:46px;height:46px;font-size:27px;margin-top:2px">4</span><span>Scored with the challenge rules, on held-out frames only.</span></li>
+        <li><span class="num d0">0</span><span><b>Day 0, no labels:</b> the label-free core fits itself to the store&rsquo;s own unlabelled pictures: about <span title="derived: 181 frames x 3.765 CPU-s + 11.5 s fit = 693 CPU-s = 12 CPU-minutes">12 CPU-minutes</span>.</span></li>
+        <li><span class="num">1</span><span><b>Day 1, optional:</b> independent AI labellers mark a sample; two small heads are fitted automatically. <b>No person labels anything.</b></span></li>
+        <li><span class="num" style="background:#8a919c">&#10003;</span><span>Scored with your rules against that AI-labelled key, on labels the heads never saw.</span></li>
       </ol>
     </div>
-    <div class="bars">
-      <h3>Points per area (maximum 2), held out</h3>
-      <div class="bar-row"><div class="lab">Always &ldquo;compliant&rdquo; + &ldquo;full&rdquo; (baseline, all 756 areas)</div><div class="track"><div class="fill base" style="width:35%">0.70</div></div></div>
-      <div class="bar-row"><div class="lab">Cameras never seen</div><div class="track"><div class="fill main" style="width:62.5%">1.25</div></div></div>
-      <div class="bar-row"><div class="lab">Late frames: last two of each camera</div><div class="track"><div class="fill main" style="width:65%">1.30</div></div></div>
-      <div class="bar-row"><div class="lab">Last frame of each camera</div><div class="track"><div class="fill hero" style="width:70%">1.40</div></div></div>
+    <div class="gbars">
+      <h3>Points per area (maximum 2)</h3>
+      <div class="legend"><span><i class="c-base"></i>Always &ldquo;compliant&rdquo; + &ldquo;full&rdquo;</span><span><i class="c-free"></i>Day 0: label-free core</span><span><i class="c-cal"></i>Day 1: calibrated (submitted)</span></div>
+      <div class="grp">
+        <div class="lab">Whole day<small>one camera held out of calibration</small></div>
+        <div class="bars3">
+          <div class="gbar"><div class="fill c-base" style="width:37.8%"></div><span class="v" title="baseline, 1,962 areas, key v2: 0.7569">0.76</span></div>
+          <div class="gbar"><div class="fill c-free" style="width:59.1%"></div><span class="v" title="label-free core, 1,962 areas: 1.1825">1.18</span></div>
+          <div class="gbar"><div class="fill c-cal" style="width:61.6%"></div><span class="v cal" title="models/real_v3_cal, one camera held out, 1,962 areas: 1.2329">1.23</span></div>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="lab">Late in the day<small>last two pictures of each camera</small></div>
+        <div class="bars3">
+          <div class="gbar"><div class="fill c-base" style="width:23%"></div><span class="v" title="baseline, last two frames of every camera, 304 areas: 0.4605">0.46</span></div>
+          <div class="gbar"><div class="fill c-free" style="width:49.5%"></div><span class="v" title="label-free core, 304 areas: 0.9901">0.99</span></div>
+          <div class="gbar"><div class="fill c-cal" style="width:70.5%"></div><span class="v cal" title="models/real_v3_cal, 304 areas: 1.4112">1.41</span></div>
+        </div>
+      </div>
+      <div class="grp">
+        <div class="lab">Last picture<small>of each camera</small></div>
+        <div class="bars3">
+          <div class="gbar"><div class="fill c-base" style="width:9%"></div><span class="v" title="baseline, last frame of every camera, 152 areas: 0.1842">0.18</span></div>
+          <div class="gbar"><div class="fill c-free" style="width:44%"></div><span class="v" title="label-free core, 152 areas: 0.8816">0.88</span></div>
+          <div class="gbar"><div class="fill c-cal" style="width:74%"></div><span class="v cal" title="models/real_v3_cal, 152 areas: 1.4803">1.48</span></div>
+        </div>
+      </div>
       <div class="axis"><div></div><div><span>0</span><span>1</span><span>2</span></div></div>
     </div>
   </div>
   <div class="card proj">
-    <h3>Hidden set: 289 areas, maximum 578 points. Projection from the late-frame and last-frame results:</h3>
-    <div class="scale" role="img" aria-label="Scale from 0 to 578 points: the brief's worked example scores 320, our projection is 360 to 400">
-      <div class="band-range" style="left:59.7%;width:9.5%"></div>
+    <h3>Hidden set: 289 areas, maximum 578. Late pictures, same 14 cameras: <span title="1.4112 and 1.4803 on the last two and the last frame of every camera">1.41 to 1.48</span> &times; 289</h3>
+    <div class="scale" role="img" aria-label="Scale from 0 to 578 points: the brief's worked example scores 320; about 355 if the hidden pictures span the day; our projection for late pictures is 410 to 430">
+      <div class="band-range" style="left:70.6%;width:3.5%"></div>
       <div class="tick t-start" style="left:0%">0</div>
-      <div class="tick t-end" style="left:55.4%">Brief&rsquo;s example: 320</div>
-      <div class="tick t-ours t-start" style="left:62.3%; font-size:30px; font-weight:800;">Ours: about 360 &ndash; 400</div>
+      <div class="tick t-end" style="left:55.4%">Your brief&rsquo;s example: 320</div>
+      <div class="tick t-below" style="left:61.4%"><span title="1.2329 x 289 = 356">about 355 if the pictures span the day</span></div>
+      <div class="tick t-ours" style="left:72.35%; font-size:29px; font-weight:800;"><span title="1.4112 x 289 = 408 to 1.4803 x 289 = 428">Ours: about 410 &ndash; 430</span></div>
       <div class="tick t-end" style="left:100%">Maximum 578</div>
     </div>
-    <p class="caveat" style="margin-top:34px">Caveat: the answer key is AI-labelled, not the store&rsquo;s own truth, so this is an estimate. The hidden set decides.</p>
+    <p class="caveat">Calibration adds little over a whole day and most late in the day, when shelves empty. AI-labelled key, not the store&rsquo;s truth: the hidden set decides.</p>
   </div>
 </section>
 
-<!-- 6 · Staff app -->
-<section class="slide" id="s6" data-title="The staff app">
-  <div class="kicker">06 &middot; The staff app</div>
-  <h2>&ldquo;What do I do first?&rdquo; answered in one glance</h2>
-  <div class="row">
-    <div class="phone">
-      <img class="shot" src="assets/dash_mobile_web.jpg" alt="Phone view of the Do now list: counters for empty, low, wrong product and OK">
-      <p class="cap" style="margin-top:10px">Phone, 375 px wide.</p>
-    </div>
-    <div class="gond">
-      <img class="shot" src="assets/dash_gondola_web.jpg" alt="Gondola view with coloured areas, detection boxes and a wrong-product card telling staff to move bananas back">
-      <div class="calls">
-        <div class="call"><span class="num">1</span><span><b>Do now list</b>: wrong product and empty first, then low. Mark done.</span></div>
-        <div class="call"><span class="num">2</span><span><b>Gondola view</b>: tap an area for the photo and one clear action.</span></div>
-        <div class="call"><span class="num">3</span><span><b>Boxes and counts</b> (OWLv2): &asymp; N visible units per area. EN / PT, light / dark.</span></div>
-      </div>
-    </div>
+<!-- 8 · Can staff trust it? Brief's headings, new camera vs calibrated store, weak spots on the slide -->
+<section class="slide" id="s8" data-title="Can staff trust it?">
+  <div class="kicker">08 &middot; Can staff trust it?</div>
+  <h2>Your brief&rsquo;s three headings, weak spots included</h2>
+  <table class="tt">
+    <thead><tr><th>Heading</th><th>What we counted</th><th class="c"><b>Brand-new camera</b>heads fitted on the other 13, whole day</th><th class="c"><b>Calibrated store</b>held-out late pictures</th></tr></thead>
+    <tbody>
+      <tr><td class="h miss">Missed problem</td><td>Empty shelves that land on the to-do list</td><td class="c good"><span title="181 of 182 empty areas, one camera held out, 1,962 areas">99%</span><small>181 of 182</small></td><td class="c cal good"><span title="39 of 40, last two pictures of each camera (97.5%)">98%</span><small>39 of 40</small></td></tr>
+      <tr><td class="h miss">Missed problem</td><td>Wrong products found</td><td class="c weak"><span title="31 of 117">about 1 in 4</span><small>31 of 117</small></td><td class="c cal good"><span title="6 of 8 wrong-product areas in the last two pictures">6 of 8</span><small>last picture: 4 of 4</small></td></tr>
+      <tr><td class="h fa">False alarm</td><td>Wrong-product alert on a correct area</td><td class="c good"><span title="2 of 1,845 correct areas">2 in 1,845</span></td><td class="c cal good"><span title="0 of 296 correct areas">0 in 296</span></td></tr>
+      <tr><td class="h fa">False alarm</td><td>Restock task where the shelf is already full</td><td class="c weak"><span title="148 of 539 restock tasks">about 1 in 4</span></td><td class="c cal"><span title="9 of 91 restock tasks">about 1 in 10</span></td></tr>
+      <tr><td class="h rem">Remaining miss</td><td>Half-full shelf shown as full: the call our AI labellers agreed on least</td><td class="c weak"><span title="130 of 340 half-full areas">4 in 10</span></td><td class="c cal weak"><span title="28 of 71 half-full areas">4 in 10</span></td></tr>
+    </tbody>
+  </table>
+  <div class="below">
+    <div class="tr t-rep"><h4>Repeated errors</h4><p>Today: <b>Incerto: confirmar &agrave; vista</b>, and every task shows its picture&rsquo;s age. <span class="tagline next">Next</span> a task closes itself when the next picture shows the shelf full; <i>Est&aacute; certo assim</i> silences an area until the plan changes.</p></div>
+    <div class="tr t-read"><h4>What it means for a new store</h4><p>Precise from day 0, but it finds about a quarter of wrong products: the first week is <i>confirmar &agrave; vista</i>. Calibrating on that store&rsquo;s own pictures is what lifts it.</p></div>
   </div>
 </section>
 
-<!-- 7 · Counts and Insights -->
-<section class="slide" id="s7" data-title="Counts and Insights">
-  <div class="kicker">07 &middot; Counts and Insights</div>
-  <h2>How much is there, and what is coming</h2>
+<!-- 9 · Manager view -->
+<section class="slide" id="s9" data-title="For the manager">
+  <div class="kicker">09 &middot; For the store manager</div>
+  <h2>The same pictures, <q>before the gondola runs empty</q></h2>
   <div class="row">
     <div class="shots">
       <div class="shotcol">
-        <div class="crop c-cnt"><img src="assets/dash_counts.png" alt="Products tab: Banana shows about 25 visible units in 6 areas, marked as an estimate, with the status of each area"></div>
-        <p class="cap">Products tab</p>
+        <div class="crop c-prod"><img src="assets/pt_products.jpg" alt="Produtos tab: Banana, about 25 visible units in 6 areas, estimate, with the status of each area"></div>
+        <p class="cap">Produtos</p>
       </div>
       <div class="shotcol">
-        <div class="crop c-ins"><img src="assets/dash_insights.png" alt="Insights tab: highlights and the Running out soon list, soonest first"></div>
-        <p class="cap">Insights tab</p>
+        <div class="crop c-ins"><img src="assets/pt_insights.jpg" alt="Análise tab: highlights and the A acabar em breve list, soonest first"></div>
+        <p class="cap">An&aacute;lise</p>
       </div>
     </div>
     <div class="feats">
-      <div class="card feat f-count"><h3>&asymp; N visible units</h3><p>OWLv2 boxes counted inside each area and added up per product (packs for packaged goods). Always labelled an <b>estimate</b>.</p></div>
-      <div class="card feat f-soon"><h3 class="hl-empty">Running out soon</h3><p>Areas forecast to be empty within 2 hours, soonest first. Same rule as the Do now list, so they never disagree.</p></div>
-      <div class="card feat f-speed"><h3 class="hl-ok">Sales speed</h3><p>Share of a shelf lost per hour for each product, restocks spotted, plus a store-wide profile by hour.</p></div>
-      <div class="card feat f-plano"><h3 class="hl-wrong">Planogram adherence</h3><p>How well each gondola follows the plan, wrong-product gondolas first.</p></div>
-      <p class="est">All estimates from one day of pictures.</p>
+      <div class="card feat f-count"><h3>&asymp; N unidades vis&iacute;veis <small>visible units</small></h3><p>Boxes counted per area, then added up per product, as your brief asks.</p></div>
+      <div class="card feat f-soon"><h3 class="hl-empty">A acabar em breve <small>running out soon</small></h3><p>Low areas forecast to be empty within 2 hours, soonest first: proactive replenishment for loose produce.</p></div>
+      <div class="card feat f-speed"><h3 class="hl-ok">Velocidade de vendas <small>sales speed</small></h3><p>Share of a shelf that leaves per hour, per product, with restocks spotted.</p></div>
+      <div class="card feat f-plano"><h3 class="hl-wrong">Cumprimento do planograma <small>adherence</small></h3><p>Per gondola, wrong product first: <q>without manual audits</q>.</p></div>
+      <div class="card feat f-slow"><h3 style="color:#7a5300">Quase n&atilde;o mexeram <small>slow movers</small></h3><p>Products that barely moved all day: <q>check they are still fresh</q>. A first step toward waste.</p></div>
+      <p class="est">All estimates from one day of pictures, labelled as such in the app.</p>
     </div>
   </div>
 </section>
 
-<!-- 8 · Runs anywhere -->
-<section class="slide" id="s8" data-title="Cost per image">
-  <div class="kicker">08 &middot; Cost &amp; efficiency</div>
-  <h2>About $0.00009 per image analysed</h2>
-  <div class="tiles">
-    <div class="card tile"><div class="big">~7 CPU-s</div><h3>per image, measured</h3><p>One CPU core, all ~11 areas of a frame, no GPU, 1.1 GB RAM. At $0.045 per vCPU-hour (on-demand cloud) that is ~$0.00009, or ~9 cents per 1,000 images.</p></div>
-    <div class="card tile"><div class="big">~$6/month</div><h3>per 14-camera store</h3><p>One picture per camera every 5 minutes, 14 h a day = 2,352 images a day: a third of one CPU core. Or $0 extra on a PC the store already has.</p></div>
-    <div class="card tile"><div class="big">Free</div><h3>Open weights, no API calls</h3><p>Small CLIP + DINOv2 models chosen over bigger ones that did not score better. Product boxes are optional (+~$0.0002 per image).</p></div>
+<!-- 10 · Cost per image: the new judging criterion, unmissable -->
+<section class="slide" id="s10" data-title="Cost per image">
+  <div class="kicker">10 &middot; Cost per image: your new criterion</div>
+  <h2><span title="3.765 CPU-s per image (median of three runs) x $0.0446 per vCPU-hour (AWS c7i.large on-demand, $0.0892/h for 2 vCPU) = $0.0000467">$0.00005</span> per image, on one CPU core</h2>
+  <div class="row">
+    <div class="tiles">
+      <div class="card tile"><div class="big" title="outputs/benchmark/cost_1t_real_v3_cal_b2b_run1-3.json: median 3.765 CPU-s (3.661 / 3.765 / 3.837) and 3.63 s wall per image, 1,242 MB peak RAM; 14 frames, 152 areas, 1 thread">3.8&nbsp;CPU&#8209;s</div><p><b>per image, measured</b> (median of 3 runs): one core, ~11 areas of a frame, no GPU, 1.2&nbsp;GB of RAM.</p></div>
+      <div class="card tile hero"><div class="big" title="Claude Sonnet 5.5 $0.0141 per image / ours $0.0000467 = 302 (tools/llm_cost_compare.py); Opus 605, Haiku 15">~300&times;</div><p><b>cheaper than asking Claude Sonnet 5.5</b> about every image. A cost ratio, not an accuracy test.</p></div>
+      <div class="card tile"><div class="big" title="14 cameras / 300 s x 3.765 CPU-s = 0.18 cores; 70,560 images a month x $0.0000467 = $3.29">&#8537; core</div><p>runs the <b>whole 14-camera section</b>, a picture per camera every 5 min: about <b>$3 a month</b>.</p></div>
+      <div class="card tile"><div class="big">$0</div><p><b>labelling as the fleet grows.</b> A new store starts from its own unlabelled pictures.</p></div>
+    </div>
+    <div class="ladder">
+      <h3>What grows with your fleet</h3>
+      <table>
+        <thead><tr><th>Cost</th><th class="ours">Fresh Eyes<br>1 CPU core</th><th>For scale: Claude Sonnet 5.5<br>one call per image</th></tr></thead>
+        <tbody>
+          <tr><td>Per image</td><td class="ours">$0.00005</td><td class="them">$0.014</td></tr>
+          <tr><td>Per camera, per month</td><td class="ours">$0.24</td><td class="them">$71</td></tr>
+          <tr><td>14-camera section, per month</td><td class="ours">$3</td><td class="them">~$1,000</td></tr>
+          <tr><td>1,000 cameras, per month</td><td class="ours">~$235</td><td class="them">~$71,000</td></tr>
+        </tbody>
+      </table>
+      <p class="src">One picture per camera every 5 min, 14 h a day, 30 days; AWS c7i.large on-demand ($0.045 per vCPU-hour); Claude API list price for the two pictures our labellers saw. Opus ~600&times;, Haiku ~15&times; (accuracy untested). Optional product boxes: ~$0.0002 per image.</p>
+      <p class="callout"><b>Switching on a new store:</b> one day of pictures, about 12 CPU-minutes, about <b title="181 frames x 3.765 CPU-s + 11.5 s fit = 693 CPU-s, at $0.045 per vCPU-hour = $0.009">1&nbsp;cent</b>, no labels. Optional AI calibration: <span title="our estimate: 181 pictures x 1 to 3 Claude Sonnet 5.5 votes x $0.0141 = $2.55 to $7.66">$2.5&ndash;7.7</span> (our estimate).</p>
+    </div>
   </div>
-  <div class="cmd mono">
-    <span class="dim">$</span> <span class="c">SUBMIT.bat</span> "validation.zip" <span class="dim">&nbsp;&nbsp;# or: python -m sensei submit --images &lt;folder or .zip&gt;</span><br>
-    <span class="go">SENSEI SUBMISSION CHECK: PASSED</span><br>
-    <span class="go">HAND IN THIS FILE: submission\predictions.json</span> <span class="dim">&nbsp;&nbsp;# staff app: submission\dashboard\index.html</span>
+  <div class="cmd">
+    <div class="mono"><span class="dim">&gt;</span> <span class="c">SUBMIT.bat</span> validation.zip<br><span class="go">SUBMISSION FORMAT CHECK: PASSED</span></div>
+    <div class="right">CPU only: runs on-prem or in the cloud, picture in, checked file out.<br>Tested: skipping unchanged areas saves only 4&ndash;12% at hourly spacing.</div>
   </div>
-  <p class="newstore hl-blue">Next: fixed cameras, so re-analyse only areas that changed.</p>
 </section>
 
-<!-- 9 · Next -->
-<section class="slide" id="s9" data-title="Next steps">
-  <div class="kicker">09 &middot; Next steps and business value</div>
-  <h2>A store that knows its own shelves</h2>
-  <div class="two">
-    <div class="card built">
-      <h3>Already in the prototype</h3>
+<!-- 11 · For Sensei: a module, the scale as teacher, the pilot ask -->
+<section class="slide" id="s11" data-title="A module for Sensei">
+  <div class="kicker">11 &middot; For Sensei and your retailers</div>
+  <h2>A module for your platform, not a project</h2>
+  <div class="flow">
+    <div class="box"><h4>In</h4><p>Ceiling frames and the planogram, from your data API</p></div>
+    <div class="arr">&rarr;</div>
+    <div class="box"><h4>Run</h4><p>One CPU container on your on-prem servers: &#8537; core per 14-camera section</p></div>
+    <div class="arr">&rarr;</div>
+    <div class="box"><h4>Out</h4><p>Area events (area, state, confidence, since) into the replenishment alerts staff already get</p></div>
+  </div>
+  <p class="flowcap"><span class="tagline design">Integration design</span> Built and tested today: your annotation format, plus the staff page as a reference UI.</p>
+  <div class="mods2">
+    <div class="card mod m-scale">
+      <div class="scalecol">
+        <div class="scalecrop"><img src="assets/frame_6215_opening.jpg" alt="Crop of camera 6215: the gondola scale and the sign Pese para adicionar à sua compra"></div>
+        <p class="cap">Camera 6215: <i>Pese aqui</i>, the scale on the gondola.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+        <h3>Your scales can teach our cameras</h3>
+        <p class="say">Your store already weighs every kilo of loose produce it sells. That is free supervision. <span class="tagline design">Pilot design</span></p>
+        <ul>
+          <li><span class="dot"></span><span>Kilos sold per product per hour vs the drop in shelf fill: calibrate each store, no AI labeller</span></li>
+          <li><span class="dot"></span><span>Check sales speed against real sales</span></li>
+          <li><span class="dot"></span><span>Fill drops with no sale: culling or shrink, a waste signal for MC&rsquo;s goal to halve food waste by 2028</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card mod m-far">
+      <h3>And beyond</h3>
       <ul>
-        <li>Priority list for staff, timeline of every area</li>
-        <li>Running out soon: forecast on low shelves</li>
-        <li>Sales speed and restocks per product</li>
-        <li>Planogram adherence per gondola</li>
-      </ul>
-      <p class="note">Estimates from one day. The seed of restock forecasting.</p>
-    </div>
-    <div class="next">
-      <h3>Where the same pictures lead</h3>
-      <ul class="vals">
-        <li><strong>Sharper forecasts</strong>More days of pictures tell us when each shelf really runs out.</li>
-        <li><strong>Less waste</strong>See which products stay too long on the shelf.</li>
-        <li><strong>Audits at scale</strong>Planogram adherence for every store, with no manual walk.</li>
-        <li><strong>Layout analytics</strong>How the gondola layout changes what customers pick.</li>
-        <li><strong>Store by store</strong>Compare how each product sells, hour by hour.</li>
-        <li><strong>Beyond fruit and veg</strong>Other loose products: bakery, flowers.</li>
+        <li><span class="dot"></span><span><q>Most modern stores already have ceiling cameras</q>: beyond autonomous stores</span></li>
+        <li><span class="dot"></span><span>Other loose products: bakery, flowers</span></li>
+        <li><span class="dot"></span><span><span class="tagline next">Next</span> closing-time mode: after a cut-off, only empty and wrong product, so no over-restocking of perishables</span></li>
       </ul>
     </div>
+  </div>
+  <div class="askband">
+    <p class="lim">Honest limit: one store, one day of pictures so far.</p>
+    <p class="ask"><b>Our ask: a 4-week shadow pilot.</b> Week 1 silent at Leiria, against your restock logs; weeks 2&ndash;4 a second store. We propose to pass it at &ge;95% of empty shelves caught and at most 1 wasted walk in 10.</p>
   </div>
 </section>
 
-<!-- 10 · Thanks -->
-<section class="slide" id="s10" data-title="Thank you">
-  <div class="kicker">10 &middot; Thank you</div>
-  <h2>Thank you</h2>
-  <div class="recap">
-    <span class="pill ok">No labels</span>
-    <span class="pill low">No new hardware</span>
-    <span class="pill wrong">Staff know what to do first</span>
-  </div>
-  <p class="team">Team: <span class="ph">[team name]</span> &middot; <span class="ph">[member names]</span><br>
-    <span class="small">Questions welcome. Live demo: the staff dashboard, open on this laptop.</span></p>
+<!-- 12 · Close: the three sentences -->
+<section class="slide" id="s12" data-title="Thank you">
+  <div class="kicker">12 &middot; Obrigado</div>
+  <h2>Fresh eyes on fresh produce</h2>
+  <ol class="recap3">
+    <li><span class="num">1</span><span>Same cameras, <b class="hl-blue">no extra hardware, no labelling effort</b>: switched on the same day.</span></li>
+    <li><span class="num">2</span><span><b class="hl-ok"><span title="3.765 CPU-s x $0.0446 per vCPU-hour">$0.00005</span> per image</b> on one CPU core, and no labelling bill as the fleet grows.</span></li>
+    <li><span class="num">3</span><span><b class="hl-empty">Repor</b>, <b class="hl-wrong">devolver</b>, <b class="hl-ok">deixar</b>: staff know what to do first, and the app says when it is unsure.</span></li>
+  </ol>
+  <p class="team">QuantumLotus &middot; S&eacute;rgio Kuts Pires &middot; In&ecirc;s Matias Medeiros<br>
+    <span class="small">Questions welcome. Live demo: the staff app, open on this laptop.</span></p>
 </section>
 
 <div class="progress" id="progress"></div>
@@ -493,6 +724,7 @@
     else if (k === 'Home') { show(0); }
     else if (k === 'End') { show(slides.length - 1); }
     else if (k === 'f' || k === 'F') { fullscreen(); }
+    else if (k === 'p' || k === 'P') { document.body.classList.toggle('show-final'); }
     else if (/^[1-9]$/.test(k)) { show(+k - 1); }
     else if (k === '0') { show(slides.length - 1); }
     hint.classList.add('off');
@@ -512,6 +744,7 @@
   window.addEventListener('resize', fit);
   window.addEventListener('hashchange', function () { var n = parseInt(location.hash.slice(1), 10); if (n) { show(n - 1, true); } });
   fit();
+  if (/[?&]final\b/.test(location.search)) { document.body.classList.add('show-final'); }
   show((parseInt(location.hash.slice(1), 10) || 1) - 1, true);
   setTimeout(function () { hint.classList.add('off'); }, 5000);
 })();

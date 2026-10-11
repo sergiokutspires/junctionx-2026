@@ -19,7 +19,7 @@ import cv2
 import numpy as np
 
 from .config import Config
-from .data import Area, ImageRecord, load_image, warp_area
+from .data import Area, ImageRecord, image_size, load_image, to_frame_size, warp_area
 
 log = logging.getLogger(__name__)
 
@@ -34,6 +34,7 @@ HAND_NAMES = ([f"hsv_{i}" for i in range(int(np.prod(HSV_BINS)))]
                  "edge_density", "colourfulness"])
 HAND_DIM = len(HAND_NAMES)
 FEATURE_CFG_FIELDS = ("backend", "crop_size", "inset", "clip_model", "dino_model")
+PRECISION_CFG_FIELDS = ("int8_clip", "int8_dino", "bf16")   # in the cache key only when on (old cache keys stay valid)
 CACHE_VERSION = 1
 
 
@@ -179,6 +180,11 @@ class Extractor:
         self._dino = None
         self._torch = None
         self.logit_scale: float = 100.0
+        cpu = self.device == "cpu"
+        self.int8 = {"clip": bool(cfg.int8_clip) and cpu, "dino": bool(cfg.int8_dino) and cpu}
+        self._bf16: bool | None = None
+        if (cfg.int8_clip or cfg.int8_dino) and not cpu:
+            log.warning("int8 is CPU-only: running fp32 on %s (features differ from CPU ones)", self.device)
 
     # -- loading
     def _torch_mod(self):
@@ -188,6 +194,40 @@ class Extractor:
                 torch.set_num_threads(int(os.environ.get("SENSEI_THREADS", 0)) or os.cpu_count() or 1)
             self._torch = torch
         return self._torch
+
+    def _quantize(self, module):
+        """Dynamic int8 for every nn.Linear of ``module`` (in place; weights int8, activations
+        quantized on the fly). CPU only."""
+        import warnings  # noqa: PLC0415
+        torch = self._torch_mod()
+        with warnings.catch_warnings():   # torch.ao.quantization is deprecated in favour of torchao
+            warnings.simplefilter("ignore")
+            from torch.ao.quantization import quantize_dynamic  # noqa: PLC0415
+            return quantize_dynamic(module, {torch.nn.Linear}, dtype=torch.qint8, inplace=True)
+
+    def _bf16_ok(self) -> bool:
+        """Whether this device runs bf16 natively (AVX512-BF16 / AMX on CPU, Ampere+ on CUDA). Emulated
+        bf16 is slower than fp32, so without it the encoders stay fp32 (features within ~0.999 cosine)."""
+        if self._bf16 is None:
+            torch = self._torch_mod()
+            try:
+                ok = (torch.cuda.is_bf16_supported() if self.device.startswith("cuda")
+                      else bool(torch.ops.mkldnn._is_mkldnn_bf16_supported()))
+            except (AttributeError, RuntimeError):
+                ok = False
+            if not ok:
+                log.warning("bf16 is not native on this %s: running the image encoders in fp32", self.device)
+            self._bf16 = ok
+        return self._bf16
+
+    def _autocast(self, encoder: str):
+        """bfloat16 autocast context when ``cfg.bf16`` (and supported) and ``encoder`` is not int8,
+        else a no-op."""
+        import contextlib  # noqa: PLC0415
+        if not self.cfg.bf16 or self.int8[encoder] or not self._bf16_ok():
+            return contextlib.nullcontext()
+        torch = self._torch_mod()
+        return torch.autocast("cuda" if self.device.startswith("cuda") else "cpu", dtype=torch.bfloat16)
 
     @staticmethod
     def _from_pretrained(cls, name: str):
@@ -207,6 +247,8 @@ class Extractor:
         self._clip = self._from_pretrained(CLIPModel, self.cfg.clip_model).to(self.device).eval()
         self._tok = self._from_pretrained(CLIPTokenizer, self.cfg.clip_model)
         self.logit_scale = float(self._clip.logit_scale.exp().item())
+        if self.int8["clip"]:   # image tower only: text embeddings (computed once at fit) stay fp32
+            self._quantize(self._clip.vision_model)
         log.info("loaded %s on %s in %.1fs", self.cfg.clip_model, self.device, time.perf_counter() - t0)
 
     def _load_dino(self) -> None:
@@ -216,6 +258,8 @@ class Extractor:
         from transformers import AutoModel  # noqa: PLC0415
         t0 = time.perf_counter()
         self._dino = self._from_pretrained(AutoModel, self.cfg.dino_model).to(self.device).eval()
+        if self.int8["dino"]:
+            self._quantize(self._dino)
         log.info("loaded %s on %s in %.1fs", self.cfg.dino_model, self.device, time.perf_counter() - t0)
 
     # -- preprocessing
@@ -250,7 +294,7 @@ class Extractor:
         side = int(self._clip.config.vision_config.image_size)
         outs = []
         bs = max(1, self.cfg.batch_size)
-        with torch.inference_mode():
+        with torch.inference_mode(), self._autocast("clip"):
             for i in range(0, len(crops), bs):
                 x = self._batch_tensor(crops[i:i + bs], side, CLIP_MEAN, CLIP_STD)
                 outs.append(self._as_tensor(self._clip.get_image_features(pixel_values=x)).float().cpu().numpy())
@@ -263,9 +307,11 @@ class Extractor:
         self._load_clip()
         torch = self._torch_mod()
         outs = []
+        # some CLIP repos (e.g. openai/clip-vit-base-patch32) ship no tokenizer model_max_length
+        max_len = int(self._clip.config.text_config.max_position_embeddings)
         with torch.inference_mode():
             for i in range(0, len(texts), 256):
-                tok = self._tok(list(texts[i:i + 256]), padding=True, truncation=True,
+                tok = self._tok(list(texts[i:i + 256]), padding=True, truncation=True, max_length=max_len,
                                 return_tensors="pt").to(self.device)
                 outs.append(self._as_tensor(self._clip.get_text_features(**tok)).float().cpu().numpy())
         if not outs:
@@ -280,7 +326,7 @@ class Extractor:
         side = g * DINO_PATCH
         cls_out, patch_out = [], []
         bs = max(1, self.cfg.batch_size)
-        with torch.inference_mode():
+        with torch.inference_mode(), self._autocast("dino"):
             for i in range(0, len(crops), bs):
                 x = self._batch_tensor(crops[i:i + bs], side, IMAGENET_MEAN, IMAGENET_STD)
                 h = self._dino(pixel_values=x).last_hidden_state.float()
@@ -308,7 +354,10 @@ class Extractor:
 def iter_crops(records: Iterable[ImageRecord], areas_by_cam: dict[str, list[Area]],
                cfg: Config) -> Iterator[tuple[tuple[str, str, str], int, np.ndarray, np.ndarray, float, str]]:
     """Yield (key, timestamp, crop uint8, visible mask, visible fraction, image path) per
-    (image, area). A corrupt/missing image is logged and yields nothing."""
+    (image, area). A corrupt/missing image is logged and yields nothing. With ``cfg.extra["frame_size"]``
+    (the fit-time (w, h)), an image of another size is resized to it first: the planogram quads are
+    absolute pixels of that frame."""
+    ref = cfg.extra.get("frame_size")
     for rec in records:
         areas = areas_by_cam.get(rec.camera_id)
         if not areas:
@@ -319,6 +368,10 @@ def iter_crops(records: Iterable[ImageRecord], areas_by_cam: dict[str, list[Area
         except (OSError, ValueError) as exc:
             log.warning("cannot read %s (%s): skipping", rec.path, exc)
             continue
+        if ref and tuple(image.shape[1::-1]) != tuple(int(v) for v in ref):
+            log.info("%s is %dx%d, the planogram frame is %dx%d: resized", Path(rec.path).name,
+                     image.shape[1], image.shape[0], int(ref[0]), int(ref[1]))
+            image = to_frame_size(image, ref)
         for a in areas:
             crop, vis = warp_area(image, a.quad, cfg.crop_size, cfg.inset)
             yield ((rec.camera_id, rec.image_name, a.area_id), int(rec.timestamp), crop, vis,
@@ -327,14 +380,21 @@ def iter_crops(records: Iterable[ImageRecord], areas_by_cam: dict[str, list[Area
 
 def _cache_key(records: Sequence[ImageRecord], areas_by_cam: dict[str, list[Area]], cfg: Config) -> str:
     h = hashlib.sha1()
-    h.update(json.dumps({"v": CACHE_VERSION, **{f: getattr(cfg, f) for f in FEATURE_CFG_FIELDS}},
-                        sort_keys=True).encode())
+    fields = {f: getattr(cfg, f) for f in FEATURE_CFG_FIELDS}
+    fields.update({f: True for f in PRECISION_CFG_FIELDS if getattr(cfg, f, False)})
+    h.update(json.dumps({"v": CACHE_VERSION, **fields}, sort_keys=True).encode())
+    ref = cfg.extra.get("frame_size")
+    ref = tuple(int(v) for v in ref) if ref else None
     for rec in records:
         try:
             st = os.stat(rec.path)
             meta = f"{st.st_size}:{st.st_mtime_ns}"
         except OSError:
             meta = "missing"
+        if ref is not None:      # a resized image: own key (frame-size images keep their old keys)
+            size = image_size(rec.path)
+            if size is not None and size != ref:
+                meta += f":to{ref[0]}x{ref[1]}"
         h.update(f"{rec.camera_id}|{rec.image_name}|{rec.timestamp}|{Path(rec.path).resolve()}|{meta}\n".encode())
         for a in areas_by_cam.get(rec.camera_id, []):
             h.update(f"{a.area_id}:{np.round(np.asarray(a.quad, np.float64), 2).tolist()}\n".encode())

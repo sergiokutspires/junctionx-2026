@@ -11,6 +11,10 @@ from typing import Any
 log = logging.getLogger(__name__)
 
 
+# feature settings that older model configs do not mention: they were fitted with these values
+LEGACY_FEATURE_DEFAULTS: dict[str, Any] = {"int8_clip": False, "int8_dino": False, "bf16": False}
+
+
 @dataclass
 class Config:
     """Pipeline settings. Defaults are the zero-label path; see SPEC.md section 4."""
@@ -23,6 +27,13 @@ class Config:
     batch_size: int = 32
     clip_model: str = "openai/clip-vit-base-patch16"
     dino_model: str = "facebook/dinov2-small"
+    # inference precision of the image encoders (part of the feature-cache key and of the saved model, so
+    # predict always matches fit; CLIP text embeddings stay fp32). int8 = dynamic int8 nn.Linear, CPU only.
+    int8_clip: bool = False          # tested, not used: CLIP image cosine to fp32 only ~0.75, score -0.18
+    int8_dino: bool = False          # tested, not used: late-frame stock score -0.06
+    # bfloat16 autocast for the image encoders that are not int8 (only where bf16 is native, else fp32):
+    # -35% CPU-seconds per image on 1 core, held-out score unchanged within seed noise (tools/benchmark_cost.py)
+    bf16: bool = True
     # stock
     n_patch_clusters: int = 24
     pca_dims: int = 48
@@ -51,8 +62,11 @@ class Config:
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> "Config":
-        """Build from a dict, ignoring (and logging) unknown keys so old/new model dirs still load."""
+        """Build from a dict, ignoring (and logging) unknown keys so old/new model dirs still load.
+        Feature fields missing from an older model's config take the value that model was fitted with
+        (``LEGACY_FEATURE_DEFAULTS``), not today's default, so its predict features still match fit."""
         names = {f.name for f in dataclasses.fields(cls)}
+        d = {**LEGACY_FEATURE_DEFAULTS, **d}
         unknown = sorted(set(d) - names)
         if unknown:
             log.warning("Config: ignoring unknown keys %s", unknown)

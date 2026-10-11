@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import shutil
 import time
 from dataclasses import dataclass, field
@@ -21,14 +22,15 @@ import numpy as np
 import scoring
 
 from .config import Config
-from .data import IMAGE_EXTS, Area, ImageRecord, discover_images, load_image, load_planogram, subsample_even
+from .data import (IMAGE_EXTS, Area, ImageRecord, common_frame_size, discover_images, load_image, load_planogram,
+                   subsample_even)
 from .products import Catalog
 
 log = logging.getLogger(__name__)
 
 MODEL_VERSION = 1
 LEVELS = ("empty", "half", "full")
-FEATURE_FIELDS = ("backend", "crop_size", "inset", "clip_model", "dino_model")
+FEATURE_FIELDS = ("backend", "crop_size", "inset", "clip_model", "dino_model", "int8_clip", "int8_dino", "bf16")
 THUMB_SIZE = (128, 72)         # (w, h) of the per-camera high-pass grey thumbnails
 MIN_THUMB_CORR = 0.35          # below this an image is not assigned to any camera (real data: own camera
 #                                >= 0.53 on all 181 frames, best other camera <= 0.16)
@@ -112,6 +114,19 @@ class SenseiModel:
 
 # --------------------------------------------------------------------------- helpers
 
+_EXTRACTOR: list = []   # [(key, features.Extractor)]: the last one, reused by later fit/predict calls
+
+
+def _extractor(cfg: Config):
+    """The deep feature extractor for ``cfg``, kept loaded between calls in one process (a service that
+    calls ``predict`` per frame pays the CLIP/DINOv2 loading once, not per frame)."""
+    from .features import Extractor  # noqa: PLC0415
+    key = (cfg.resolve_device(), cfg.batch_size, *(getattr(cfg, f) for f in FEATURE_FIELDS))
+    if not (_EXTRACTOR and _EXTRACTOR[0][0] == key):
+        _EXTRACTOR[:] = [(key, Extractor(cfg))]
+    return _EXTRACTOR[0][1]
+
+
 def _cache_dir(cfg: Config) -> str | None:
     return cfg.extra.get("cache_dir", "cache")
 
@@ -123,6 +138,13 @@ def _text_embeddings(cfg: Config, catalog: Catalog, extractor) -> tuple[dict | N
     from .compliance import text_embeddings  # noqa: PLC0415
     from .stock import stock_text_embeddings  # noqa: PLC0415
     return stock_text_embeddings(extractor, catalog), text_embeddings(extractor, catalog)
+
+
+def _with_frame_size(cfg: Config, frame_size) -> Config:
+    """``cfg`` whose crops are taken from frames resized to ``frame_size`` (w, h) when it is known."""
+    if not frame_size:
+        return cfg
+    return cfg.replace(extra={**cfg.extra, "frame_size": [int(v) for v in frame_size]})
 
 
 def _compute(records: Sequence[ImageRecord], areas_by_cam: dict[str, list[Area]], cfg: Config, extractor=None):
@@ -213,9 +235,9 @@ def fit(data_root: str | Path, planogram_path: str | Path, out_dir: str | Path |
 
     extractor = None
     if cfg.backend == "deep":
-        from .features import Extractor  # noqa: PLC0415
-        extractor = Extractor(cfg)
-    feats, patches = _compute(records, areas_by_cam, cfg, extractor)
+        extractor = _extractor(cfg)
+    frame_size = common_frame_size(r.path for r in records)   # the pixels the planogram quads are drawn in
+    feats, patches = _compute(records, areas_by_cam, _with_frame_size(cfg, frame_size), extractor)
     if not len(feats):
         raise ValueError("no readable images to fit on")
     stock_text, comp_text = _text_embeddings(cfg, catalog, extractor)
@@ -232,7 +254,8 @@ def fit(data_root: str | Path, planogram_path: str | Path, out_dir: str | Path |
 
     meta = {"n_images": len(records), "n_crops": len(feats), "data_root": str(data_root),
             "fit_seconds": round(time.perf_counter() - t0, 1),
-            "first_ts": int(feats.timestamps.min()), "last_ts": int(feats.timestamps.max())}
+            "first_ts": int(feats.timestamps.min()), "last_ts": int(feats.timestamps.max()),
+            "frame_size": None if frame_size is None else list(frame_size)}
     model = SenseiModel(cfg=cfg, planogram=planogram, areas_by_cam=areas_by_cam, catalog=catalog,
                         stock=stock, compliance=comp, series=series, fit_feats=feats, meta=meta,
                         cam_thumbs=camera_thumbs(records))
@@ -255,7 +278,9 @@ def _fallback_proba(model: SenseiModel, area_id: str) -> tuple[float | None, np.
 def _apply_heads(model: SenseiModel, feats, fill, p_lv, p_comp) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """(stock posterior, p_compliant, carried) from the calibration heads. Stock: the head with the
     late-day prior shift for frames after the last labelled one. Compliance: the unsupervised
-    p_compliant (pass-through heads), lowered where a non-compliant label is carried forward."""
+    p_compliant (pass-through heads), lowered where a non-compliant label is carried forward. Crops whose
+    area has labelled crops from earlier frames get the per-area memory stock head (heads fitted with
+    ``HeadParams.memory``); the others, e.g. a camera never labelled, get the plain stock head."""
     h = model.heads
     try:
         zs_s = p_lv if h.layout.get("zs_stock") else None
@@ -263,6 +288,8 @@ def _apply_heads(model: SenseiModel, feats, fill, p_lv, p_comp) -> tuple[np.ndar
         carried = h.carried(feats) if hasattr(h, "carried") else np.zeros(len(feats), bool)
         if carried.any():
             log.info("predict: %d area(s) flagged from an earlier non-compliant label", int(carried.sum()))
+        if getattr(h, "mem_stock", None) is not None:
+            log.info("predict: %d of %d crops use the per-area memory", int(h.memory_mask(feats).sum()), len(feats))
         return (h.stock_proba(feats, fill, zs_stock=zs_s), h.compliance_proba(feats, fill, zs_comp=zs_c),
                 carried)
     except (ValueError, KeyError) as exc:   # heads incompatible with these features: stay unsupervised
@@ -326,9 +353,9 @@ def predict(model: SenseiModel, image_records: Sequence[ImageRecord], cfg: Confi
         try:
             extractor = None
             if cfg.backend == "deep":
-                from .features import Extractor  # noqa: PLC0415
-                extractor = Extractor(cfg)
-            feats, patches = _compute(records, model.areas_by_cam, cfg, extractor)
+                extractor = _extractor(cfg)
+            feats, patches = _compute(records, model.areas_by_cam,
+                                      _with_frame_size(cfg, model.meta.get("frame_size")), extractor)
             if len(feats):
                 model.stock.encode(feats, patches)
                 del patches
@@ -369,7 +396,9 @@ def predict(model: SenseiModel, image_records: Sequence[ImageRecord], cfg: Confi
             if f is not None and i is not None:
                 series.add(a.area_id, r.timestamp, f, p)
     if n_fallback:
-        log.warning("predict: %d area answers are fallbacks (unreadable images)", n_fallback)
+        src = _improve_fallbacks(model, rows)
+        log.warning("predict: %d area answers are fallbacks (unreadable images): %s", n_fallback,
+                    ", ".join(f"{n} from {k}" for k, n in src.items() if n))
 
     # ---- forecast (uses fit-time + predicted fills up to each frame)
     for row in rows:
@@ -389,6 +418,48 @@ def predict(model: SenseiModel, image_records: Sequence[ImageRecord], cfg: Confi
                 imgs.setdefault(name, {})[row["area_id"]] = entry
     log.info("predict: %d images, %d areas in %.1fs", len(records), len(rows), time.perf_counter() - t0)
     return preds, rows
+
+
+def _improve_fallbacks(model: SenseiModel, rows: list[dict]) -> dict[str, int]:
+    """Answers for areas of unreadable images, in place, best source first: (1) the same area in the
+    nearest-in-time readable frame of this batch (the model's own answer, with memory and late prior),
+    (2) the area's latest labelled level and compliance before the image (``heads.memory``), (3) the
+    fit-time median fill already in the row. Returns the count per source."""
+    readable: dict[str, list[dict]] = {}
+    for r in rows:
+        if not r["fallback"]:
+            readable.setdefault(r["area_id"], []).append(r)
+    mem = getattr(model.heads, "memory", None) if model.heads is not None else None
+    mem_rows: dict[str, list[int]] = {}
+    if mem is not None:
+        for j, a in enumerate(mem["areas"]):
+            mem_rows.setdefault(a, []).append(j)
+    used = {"another frame of this batch": 0, "the latest label": 0, "the fit-time median": 0}
+    for r in rows:
+        if not r["fallback"]:
+            continue
+        t = r["timestamp"]
+        near = readable.get(r["area_id"])
+        if near:
+            b = min(near, key=lambda x: (abs(x["timestamp"] - t) if t >= 0 and x["timestamp"] >= 0 else 0,
+                                         -x["timestamp"]))
+            for k in ("stock_level", "stock_value", "p_levels", "planogram_compliant", "p_compliant",
+                      "likely_product_id", "likely_product_name", "likely_english"):
+                r[k] = b[k]
+            used["another frame of this batch"] += 1
+            continue
+        js = [j for j in mem_rows.get(r["area_id"], []) if t < 0 or int(mem["ts"][j]) < t]
+        if js:
+            j = max(js, key=lambda j: int(mem["ts"][j]))
+            lv = LEVELS[int(mem["ys"][j])]
+            r["stock_level"], r["stock_value"] = lv, {"empty": 0.0, "half": 0.5, "full": 1.0}[lv]
+            r["p_levels"] = [1.0 if x == lv else 0.0 for x in LEVELS]
+            r["planogram_compliant"] = bool(mem["yc"][j]) or r["stock_value"] == 0.0
+            r["p_compliant"] = 1.0 if r["planogram_compliant"] else 0.0
+            used["the latest label"] += 1
+            continue
+        used["the fit-time median"] += 1
+    return used
 
 
 def _row(model: SenseiModel, rec: ImageRecord, a: Area, level: str, value: float, fill: float | None,
@@ -422,27 +493,32 @@ def details_doc(model: SenseiModel, rows: list[dict]) -> dict:
     wanted = {r["area_id"] for r in rows}
     ts = [r["timestamp"] for r in rows if r["timestamp"] >= 0]
     return {"section": model.section, "generated_at": max(ts) if ts else int(time.time()),
-            "backend": model.cfg.backend, "rows": rows,
+            "backend": model.cfg.backend, "frame_size": model.meta.get("frame_size"), "rows": rows,
             "timeline": {a: [tl[a][t] for t in sorted(tl[a])] for a in sorted(tl) if a in wanted}}
 
 
 def _flat_records(model: SenseiModel, root: Path, known: set[Path]) -> tuple[list[ImageRecord], int]:
-    """Images under ``root`` with no camera in their path or name (flat layouts): camera found by
-    matching the view against the fit-time cameras. Paths with an all-digit component other than a
-    planogram camera (an unknown camera) are left out. Returns (records, n_unmatched)."""
+    """Images under ``root`` with no planogram camera in their path or name (flat layouts, or folders such
+    as ``2025/`` or ``1/``): camera found by matching the view against the fit-time cameras. Pictures of
+    other cameras match below ``MIN_THUMB_CORR`` and are left out. Returns (records, n_unmatched)."""
     out, missed = [], 0
     for path in sorted(root.rglob("*")):
         if path in known or not path.is_file() or path.suffix.lower() not in IMAGE_EXTS:
             continue
-        parts = [*path.relative_to(root).parent.parts, path.stem.split("_")[0].split("-")[0]]
-        if any(p.isdigit() and p not in model.areas_by_cam and len(p) < 9 for p in parts):
-            continue            # explicit unknown camera id (a long digit run is a timestamp)
+        if any(p.startswith(".") or p.startswith("__MACOSX") for p in path.relative_to(root).parts):
+            continue
         cam, corr = infer_camera(model, path)
         if cam is None:
             missed += 1
+            log.info("%s matches no planogram camera view (best corr %.2f): skipped", path, corr)
             continue
-        stem = path.stem
-        ts = int(stem) if stem.isdigit() else -1
+        parts = [*path.relative_to(root).parent.parts, path.stem.split("_")[0].split("-")[0]]
+        named = [p for p in parts if p.isdigit() and len(p) < 9]       # a long digit run is a timestamp
+        if named:
+            log.warning("%s: folder/name says %s but the picture is camera %s (corr %.2f): using %s",
+                        path.relative_to(root), "/".join(named), cam, corr, cam)
+        m = re.search(r"(?:^|[_-])(\d{9,})$", path.stem)          # <ts> or <anything>_<ts>
+        ts = int(m.group(1)) if m else -1
         log.info("camera of %s inferred from the picture: %s (corr %.2f)", path.name, cam, corr)
         out.append(ImageRecord(path=path, camera_id=cam, image_name=path.name, timestamp=ts, split="unknown"))
     return out, missed
@@ -504,7 +580,8 @@ def calibrate(model_dir: str | Path, label_paths: Sequence[str | Path], cv: bool
     prod = None if coder is None else getattr(coder, "productness", None)   # per-band fills of the stock head
     report: dict = {}
     if cv:
-        report = cross_validate(feats, fill, labels, model.cfg, zs_stock=p_lv, zs_comp=p_comp, productness=prod)
+        report = cross_validate(feats, fill, labels, model.cfg, zs_stock=p_lv, zs_comp=p_comp, productness=prod,
+                                schemes=("camera", "time", "time1"))
         log.info("cross-validation:\n%s", format_report(report))
         (Path(model_dir) / "calibration_cv.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
     heads = fit_heads(feats, fill, labels, model.cfg, zs_stock=p_lv, zs_comp=p_comp, productness=prod)

@@ -14,6 +14,12 @@ packaged products, per area and added up per product; estimates, lower score bar
 An "Insights" tab is built from the day's timeline (``compute_insights``): areas running out within 2 h, sales speed per
 product (fill drop per hour, restocks left out and listed), a store-wide hourly profile, and planogram adherence per gondola.
 
+Produce biology (``sensei.freshness``, ``docs/produce_biology_reference.csv`` overridden by any value typed into
+``docs/produce_biology_template.csv``) adds two staff hints: a "check freshness / rotate stock" badge and low-priority
+task when an area has been on display longer than its product's check interval since the last restock seen
+(``area["fresh"]``, product facts in ``payload["bio"]``), and "Layout & waste" pairs of a high ethylene producer next
+to a highly ethylene-sensitive product (``insights["layout"]``). Without the CSVs both are simply absent.
+
 Usage: ``python -m sensei.dashboard --details details.json --data data/raw --out dashboard/ [--zip]
 [--detections cache/colab/sensei_colab_features.zip] [--detect]``
 Google Colab (free, CPU is enough): ``!python -m sensei.dashboard --details details.json --data data/raw/images
@@ -22,6 +28,7 @@ Google Colab (free, CPU is enough): ``!python -m sensei.dashboard --details deta
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import logging
 import shutil
@@ -34,6 +41,7 @@ import numpy as np
 from PIL import Image
 
 from . import data as sdata
+from . import freshness
 from .config import Config
 
 log = logging.getLogger(__name__)
@@ -561,16 +569,46 @@ def _frame_stem(cam: str, ts: int, image_name: str) -> str:
     return f"{cam}_{ts if ts >= 0 else Path(image_name).stem}"
 
 
+def _load_bio(biology: str | Path | dict | bool | None) -> dict[str, dict]:
+    """Produce biology keyed by ``freshness.name_key``: None = the docs/ CSVs, a dict = already loaded,
+    a path = that reference CSV (plus the docs/ template overrides), False = none."""
+    if biology is False:
+        return {}
+    if isinstance(biology, dict):
+        return biology
+    try:
+        if biology is None:
+            return freshness.load_biology()
+        return freshness.load_biology(biology, freshness.TEMPLATE)
+    except (OSError, ValueError, csv.Error) as exc:          # never block the dashboard on a bad CSV
+        log.warning("dashboard: produce biology unavailable (%s); no freshness or ethylene hints", exc)
+        return {}
+
+
+def _bio_public(b: dict) -> dict:
+    """The part of a biology record the page needs (short source, no URLs)."""
+    out = {k: b[k] for k in ("type", "cls", "lim", "prod", "sens", "signs", "conf") if b.get(k) not in (None, "")}
+    out["src"] = freshness.short_source(b.get("source", ""))
+    if b.get("edited"):
+        out["edited"] = True
+    return out
+
+
 def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str | Path,
           cfg: Config | None = None, detections: str | Path | dict | None = None,
-          detect: bool | Callable[[np.ndarray], list] = False) -> Path:
+          detect: bool | Callable[[np.ndarray], list] = False,
+          biology: str | Path | dict | bool | None = None) -> Path:
     """Write the static dashboard into ``out_dir`` and return the path of its ``index.html``.
 
     ``detections`` (zip / json / dict, see ``load_detections``) and ``detect`` (True runs a local OWLv2 on
     the shown frames that the source lacks; a callable ``rgb -> boxes`` replaces OWLv2) are optional: with
     neither, the pages carry no product boxes and the "Show detections" toggle stays hidden.
+    ``biology`` (see ``_load_bio``; default: the docs/ CSVs) drives the freshness badges and ethylene pairs.
     """
     cfg = cfg or Config()
+    bio = _load_bio(biology)
+    bio_out: dict[str, dict] = {}
+    eth_items: list[dict] = []
     dets = load_detections(detections)
     det_by_frame = _det_lookup(dets)
     detector = detect if callable(detect) else None
@@ -626,7 +664,7 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
         src_path = _find_image(cam_rows[0], index)
         if src_path is not None:
             try:
-                rgb = sdata.load_image(src_path)
+                rgb = sdata.to_frame_size(sdata.load_image(src_path), d.get("frame_size"))  # quads are in these pixels
             except (ValueError, OSError) as exc:
                 log.warning("dashboard: cannot read %s (%s); camera %s shown without picture",
                             src_path, exc, cam)
@@ -686,6 +724,18 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
             if r.get("likely_product_id") is not None:
                 a["lpid"] = str(r["likely_product_id"])
                 a["home"] = [x for x in product_areas.get(a["lpid"], []) if x != area_id][:3]
+            # produce biology of the product actually on the shelf (the likely one when the spot holds the wrong product)
+            shelf_wrong = bool(status == "wrong" and r.get("likely_product_name") and r.get("likely_product_id") is not None)
+            shelf_pid = str(r["likely_product_id"]) if shelf_wrong else a["pid"]
+            b = bio.get(freshness.name_key(r.get("likely_product_name") if shelf_wrong else r.get("product_name")))
+            if b:
+                bio_out.setdefault(shelf_pid, _bio_public(b))
+                a["bk"] = shelf_pid
+                fs = freshness.freshness_status(a["tl"], ts, a["level"], b.get("lim"), RESTOCK_JUMP)
+                if fs is not None:
+                    a["fresh"] = fs
+                eth_items.append({"id": area_id, "cam": cam, "quad": quad, "type": b.get("type"),
+                                  "prod": b.get("prod"), "sens": b.get("sens")})
             areas.append(a)
 
     for cam in sorted(unreadable, key=lambda c: (len(c), c)):
@@ -694,6 +744,8 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
     counts = {s: sum(1 for a in areas if a["status"] == s) for s in STATUS_ORDER}
     insights = compute_insights(areas, {c["id"]: c["ts"] for c in cameras if not c.get("unreadable")})
     insights["totals"] = product_totals(areas)
+    pairs, mild = freshness.ethylene_pairs(eth_items)
+    insights["layout"] = {"pairs": pairs, "mild": mild}
     payload = {
         "version": 1,
         "section": d.get("section", ""),
@@ -707,10 +759,12 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
         "det_labels": det_labels,
         "areas": areas,
         "insights": insights,
+        "bio": bio_out,
     }
     text = "window.SHELF_DATA = " + json.dumps(payload, ensure_ascii=True, separators=(",", ":")) + ";\n"
     (out / "data.js").write_text(text, encoding="utf-8")
-    log.info("dashboard: %d cameras, %d areas %s -> %s", len(cameras), len(areas), counts, out / "index.html")
+    log.info("dashboard: %d cameras, %d areas %s, %d freshness checks due, %d ethylene pairs -> %s", len(cameras),
+             len(areas), counts, sum(1 for a in areas if (a.get("fresh") or {}).get("due")), len(pairs), out / "index.html")
     return out / "index.html"
 
 
@@ -751,9 +805,14 @@ def main(argv: list[str] | None = None) -> None:
                     help="OWLv2 product boxes: a .zip holding owl_detections.json, or that .json (optional)")
     ap.add_argument("--detect", action="store_true",
                     help="run OWLv2 locally on shown frames without boxes (free; slow on CPU)")
+    ap.add_argument("--biology", default=None,
+                    help="produce biology reference CSV (default docs/produce_biology_reference.csv; "
+                         "values typed into docs/produce_biology_template.csv override it)")
+    ap.add_argument("--no-biology", action="store_true", help="no freshness badges or ethylene pairs")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-    index = build(args.details, args.data, args.out, detections=args.detections, detect=args.detect)
+    index = build(args.details, args.data, args.out, detections=args.detections, detect=args.detect,
+                  biology=False if args.no_biology else args.biology)
     print(index)
     if args.zip:
         print(make_zip(args.out))

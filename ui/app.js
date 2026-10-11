@@ -32,25 +32,28 @@
       long_empty: 'Empty: nothing left to sell', long_low: 'Half full: top up soon',
       long_wrong: 'Wrong product on this spot', long_ok: 'Looks right: leave alone',
       lv_empty: 'Empty', lv_half: 'Half', lv_full: 'Full',
-      act_restock: 'Restock', act_restock_x: 'shelf is empty', act_top: 'Top up soon', act_move: 'Move back',
+      act_restock: 'Restock', act_restock_x: 'shelf is empty', act_top: 'Top up soon', act_move: 'Swap',
+      act_move_x: 'this spot should hold {p}, but it holds {q}.', take_to: 'Take {q} to', areas_w: 'areas',
       act_check: 'Check product', expected: 'expected', seen: 'seen', belongs: '{q} belongs in', empty_in: 'Empty in ~{t}', around: 'around {t}',
-      conf: 'Confidence', c_sure: 'Sure', c_likely: 'Likely', c_check: 'Not sure: check by eye', seen_at: 'Seen at {t}',
+      empty_now: 'Probably empty by now: check now', empty_was: 'forecast for {t}',
+      conf: 'Confidence', c_sure: 'High', c_likely: 'Medium', c_check: 'Low: check by eye', seen_at: 'Seen at {t}',
       partly: 'Partly out of view', stock: 'Stock',
-      mark_done: 'Mark done', show_gondola: 'Show on gondola', tasks_title: 'Do now', n_tasks: '{n} tasks', progress: '{d} of {n} done',
+      mark_done: 'Mark done', show_gondola: 'Show on gondola', tasks_title: 'Do now', n_tasks: '{n} tasks', n_tasks1: '1 task', progress: '{d} of {n} done',
       urgent: 'Do first: wrong product and empty', soon: 'Then: running low', by_priority: 'By priority', by_route: 'By gondola',
-      leave: 'Leave alone: {n} areas look right', all_good: 'All good', all_good_x: 'Nothing needs doing right now.',
+      leave: 'Leave alone: {n} areas look right', leave1: 'Leave alone: 1 area looks right', all_good: 'All good', all_good_x: 'Nothing needs doing right now.',
       none_match: 'No area matches these filters.', done_title: 'Done',
       pick_area: 'Tap an area on the picture', no_picture: 'No picture', planned: 'Planned product', seen_instead: 'Seen instead',
       today: 'Stock during the day', visible: 'In view', snapshot_of: 'Picture taken', raw: 'Catalogue name',
       col_product: 'Product', col_do: 'What to do', todo: '{n} to do', every_ok: 'All OK', legend: 'Legend', zoom_out: 'Show full picture', zoom_in: 'Zoom to shelves',
       plain_empty: 'Nothing left to sell. Restock {p}.',
       plain_low: 'About half is left. Top up {p} soon.',
-      plain_wrong: 'This spot should hold {p}, but it looks like {q}. Move it back.',
+      plain_wrong: 'This spot should hold {p}, but it looks like {q}. Swap them.',
       plain_wrong_nq: 'This spot should hold {p}, but another product seems to be there. Check it.',
       plain_ok: 'Right product, well stocked. Leave alone.',
+      plain_ok_fresh: 'Right product, well stocked. When there is time, check freshness and rotate stock.',
       sort_by: 'Sort by', p_attention: 'Needs attention', p_name: 'Name', p_stock: 'Stock', p_areas: 'Areas',
       avg_stock: 'Average stock', elsewhere: 'Found in the wrong place', no_products: 'No product matches.',
-      foot: 'Made automatically from camera pictures ({b}). When it says "check by eye", look before you move stock.',
+      foot: 'Made automatically from camera pictures. When it says “check by eye”, look before you move stock.',
       spark_alt: 'Stock during the day: {a}',
       det_show: 'Show detections', det_n: '{n} products found by the camera model. Hover or tap a box for its name.',
       det_one: '{p} · {c} sure', det_alt: 'Product boxes',
@@ -70,10 +73,37 @@
       sales_title: 'Sales speed', sales_x: 'Share of a full shelf that leaves per hour, from one picture to the next. Jumps up are restocks, not sales.',
       sales_rate: '{r}% of a shelf per hour', sales_lt1: 'under 1% of a shelf per hour', sales_zero: 'no drop seen',
       sales_tops: 'Topped up at {t}', more_n: 'and {n} more',
-      sales_more: 'Show {n} more products', hourly_title: 'Whole store, by hour', hourly_alt: 'Stock lost per hour of the day: {a}',
+      sales_more: 'Show {n} more products', sales_more1: 'Show 1 more product', hourly_title: 'Whole store, by hour', hourly_alt: 'Stock lost per hour of the day: {a}',
       hourly_x: 'Share of a shelf lost per area and hour',
       adh_title: 'Planogram adherence', adh_x: 'Areas that hold the planned product right now, per gondola.',
-      adh_rest: 'Show the {n} gondolas that are all right', adh_all_n: 'Show all {n} gondolas', adh_overall: '{p}% of areas hold the right product', adh_of: '{ok} of {n} areas', adh_fix: '{n} to move back', adh_all: 'All right',
+      adh_rest: 'Show the {n} gondolas that are all right', adh_rest1: 'Show the gondola that is all right', adh_all_n: 'Show all {n} gondolas', adh_all_n1: 'Show the gondola', adh_overall: '{p}% of areas hold the right product', adh_of: '{ok} of {n} areas', adh_fix: '{n} to move back', adh_all: 'All right',
+      fr_badge: 'Check freshness / rotate stock', fr_short: 'Check freshness', fr_group: 'When there is time: freshness checks',
+      fr_est_restock: 'Estimate: about {h} on display since the last restock seen ({t}). Stock left from before it can be older.',
+      fr_est_first: 'Estimate: no restock seen today, so on display at least since the first picture ({t}): {h} or more.',
+      fr_rule: '{c} product: check every {l} h.', cls_fast: 'Highly perishable', cls_medium: 'Medium shelf-life', cls_slow: 'Long shelf-life',
+      fr_why: 'Based only on the time since restock and the product\'s shelf-life class, not on the picture.',
+      fr_src: 'Source: {s} ({e}). Assumes an unrefrigerated display at about 20 °C; chilled displays keep produce longer.',
+      fr_edited: 'values edited by the team', conf_high: 'strong evidence', conf_medium: 'moderate evidence', conf_low: 'weak evidence', conf_none: 'evidence not rated',
+      fr_look: 'What to look for',
+      fr_potato: 'Potatoes keep for weeks, but store lighting can turn them green after 24-60 h of light.',
+      fr_line: 'Freshness: {h} on display, check every {l} h (estimate).', fr_h_about: 'about {h}', fr_h_least: 'at least {h}',
+      fr_also: 'While there: check freshness and rotate stock ({h} on display, estimate).',
+      fr_task: '{h} on display, check every {l} h',
+      lay_title: 'Layout & waste', lay_x: 'Layout suggestions from the planogram and a produce biology table. Not seen in the pictures.',
+      eth_title: 'Neighbours that speed up ripening', eth_gas: 'Gives off a lot of ethylene, a natural ripening gas. Right next to it:', eth_fx: 'can {fx} sooner.',
+      eth_tip: 'Suggestion: leave a gap, or put a product that does not react to ethylene between them.',
+      eth_none: 'No strong ethylene producer sits right next to a highly sensitive product.',
+      eth_calm: 'Ethylene in an open shop is usually low (Warton et al. 2000), so this is a layout suggestion, not an alarm.',
+      eth_mild: '{n} milder pairs (fruit that ripen each other a little faster) are not listed.',
+      eth_src: 'Sources: ethylene classes after Kader (Pesis 2004) and USDA Agriculture Handbook 66 (2016). Neighbours are areas that touch or almost touch in the same camera picture.',
+      eth_panel: 'Layout suggestion', eth_p_dst: 'Next to {p} ({a}), which gives off a lot of ethylene: this product can {fx} sooner.',
+      eth_p_src: 'Gives off a lot of ethylene, and sensitive products are right next to it: {list}.', eth_more: 'See Insights: Layout & waste',
+      fr_ins_title: 'On display longest', fr_ins_x: 'Areas past their product\'s check interval since the last restock seen. An estimate from time and shelf-life class: look for spoilage and move older stock to the front.',
+      fr_ins_none: 'No area is past its check interval.', fr_more: 'Show {n} more', fr_val: 'every {l} h',
+      fx_avocado: 'ripen and go soft', fx_banana: 'ripen and get brown spots', fx_broccoli: 'turn yellow', fx_cabbage: 'turn yellow',
+      fx_cauliflower: 'discolour and drop leaves', fx_cucumber: 'turn yellow and go soft', fx_eggplant: 'get brown patches',
+      'fx_green beans': 'turn yellow', fx_kiwi: 'go soft', fx_lettuce: 'get brown spots and turn yellow', fx_tomato: 'ripen and go soft',
+      fx_watermelon: 'go soft and over-ripe', fx_other: 'ripen or spoil',
     },
     pt: {
       skip: 'Saltar para o conteúdo', title: 'Controlo de prateleiras', tab_tasks: 'Fazer agora', tab_gondola: 'Gôndolas', tab_products: 'Produtos',
@@ -82,28 +112,31 @@
       clear: 'Limpar filtros', theme: 'Mudar tema claro / escuro', print: 'Imprimir lista de tarefas', lang: 'Idioma',
       s_empty: 'Vazio', s_low: 'Baixo', s_wrong: 'Produto errado', s_ok: 'OK',
       areas_n: '{n} zonas', area1: '1 zona', camera: 'Câmara', area: 'zona',
-      long_empty: 'Vazio: nada para vender', long_low: 'A meio: reforçar em breve',
+      long_empty: 'Vazio: nada para vender', long_low: 'Metade: reforçar em breve',
       long_wrong: 'Produto errado neste local', long_ok: 'Tudo certo: deixar como está',
-      lv_empty: 'Vazio', lv_half: 'Meio', lv_full: 'Cheio',
-      act_restock: 'Repor', act_restock_x: 'está vazio', act_top: 'Reforçar em breve', act_move: 'Devolver ao lugar',
+      lv_empty: 'Vazio', lv_half: 'Metade', lv_full: 'Cheio',
+      act_restock: 'Repor', act_restock_x: 'está vazio', act_top: 'Reforçar em breve', act_move: 'Trocar',
+      act_move_x: 'aqui devia estar {p}, mas está {q}.', take_to: 'Levar {q} para', areas_w: 'zonas',
       act_check: 'Verificar produto', expected: 'esperado', seen: 'visto', belongs: '{q} pertence a', empty_in: 'Vazio daqui a ~{t}', around: 'por volta das {t}',
-      conf: 'Confiança', c_sure: 'Certo', c_likely: 'Provável', c_check: 'Incerto: confirmar à vista', seen_at: 'Visto às {t}',
+      empty_now: 'Já deve estar vazio: verificar agora', empty_was: 'previsto para as {t}',
+      conf: 'Confiança', c_sure: 'Alta', c_likely: 'Média', c_check: 'Baixa: confirmar à vista', seen_at: 'Visto às {t}',
       partly: 'Parcialmente fora da imagem', stock: 'Stock',
-      mark_done: 'Marcar feito', show_gondola: 'Ver na gôndola', tasks_title: 'Fazer agora', n_tasks: '{n} tarefas', progress: '{d} de {n} feitas',
+      mark_done: 'Marcar feito', show_gondola: 'Ver na gôndola', tasks_title: 'Fazer agora', n_tasks: '{n} tarefas', n_tasks1: '1 tarefa', progress: '{d} de {n} feitas',
       urgent: 'Primeiro: produto errado e vazio', soon: 'Depois: a ficar baixo', by_priority: 'Por prioridade', by_route: 'Por gôndola',
-      leave: 'Deixar: {n} zonas estão certas', all_good: 'Tudo certo', all_good_x: 'Nada para fazer neste momento.',
+      leave: 'Deixar: {n} zonas estão certas', leave1: 'Deixar: 1 zona está certa', all_good: 'Tudo certo', all_good_x: 'Nada para fazer neste momento.',
       none_match: 'Nenhuma zona corresponde aos filtros.', done_title: 'Feito',
       pick_area: 'Toque numa zona da imagem', no_picture: 'Sem imagem', planned: 'Produto planeado', seen_instead: 'Visto em vez disso',
       today: 'Stock ao longo do dia', visible: 'Visível', snapshot_of: 'Imagem das', raw: 'Nome no catálogo',
       col_product: 'Produto', col_do: 'O que fazer', todo: '{n} por fazer', every_ok: 'Tudo OK', legend: 'Legenda', zoom_out: 'Ver imagem completa', zoom_in: 'Aproximar às prateleiras',
       plain_empty: 'Nada para vender. Repor {p}.',
       plain_low: 'Resta cerca de metade. Reforçar {p} em breve.',
-      plain_wrong: 'Este local devia ter {p}, mas parece haver {q}. Devolver ao lugar.',
+      plain_wrong: 'Este local devia ter {p}, mas parece haver {q}. Trocar.',
       plain_wrong_nq: 'Este local devia ter {p}, mas parece haver outro produto. Verificar.',
       plain_ok: 'Produto certo e bem abastecido. Deixar como está.',
+      plain_ok_fresh: 'Produto certo e bem abastecido. Quando houver tempo, verificar a frescura e rodar o stock.',
       sort_by: 'Ordenar por', p_attention: 'Precisa de atenção', p_name: 'Nome', p_stock: 'Stock', p_areas: 'Zonas',
       avg_stock: 'Stock médio', elsewhere: 'Encontrado no sítio errado', no_products: 'Nenhum produto corresponde.',
-      foot: 'Feito automaticamente a partir de imagens das câmaras ({b}). Quando diz "confirmar à vista", veja antes de mexer no stock.',
+      foot: 'Feito automaticamente a partir de imagens das câmaras. Quando diz «confirmar à vista», veja antes de mexer no stock.',
       spark_alt: 'Stock ao longo do dia: {a}',
       det_show: 'Mostrar deteções', det_n: '{n} produtos encontrados pelo modelo. Passe o rato ou toque numa caixa para ver o nome.',
       det_one: '{p} · {c} de certeza', det_alt: 'Caixas de produtos',
@@ -123,10 +156,37 @@
       sales_title: 'Velocidade de vendas', sales_x: 'Parte de uma prateleira cheia que sai por hora, de uma imagem para a seguinte. Subidas são reposições, não vendas.',
       sales_rate: '{r}% de uma prateleira por hora', sales_lt1: 'menos de 1% de uma prateleira por hora', sales_zero: 'sem descida',
       sales_tops: 'Reposto às {t}', more_n: 'e mais {n}',
-      sales_more: 'Mostrar mais {n} produtos', hourly_title: 'Toda a loja, por hora', hourly_alt: 'Stock perdido por hora do dia: {a}',
+      sales_more: 'Mostrar mais {n} produtos', sales_more1: 'Mostrar mais 1 produto', hourly_title: 'Toda a loja, por hora', hourly_alt: 'Stock perdido por hora do dia: {a}',
       hourly_x: 'Parte de uma prateleira perdida por zona e hora',
       adh_title: 'Cumprimento do planograma', adh_x: 'Zonas com o produto planeado neste momento, por gôndola.',
-      adh_rest: 'Mostrar as {n} gôndolas que estão certas', adh_all_n: 'Mostrar as {n} gôndolas', adh_overall: '{p}% das zonas têm o produto certo', adh_of: '{ok} de {n} zonas', adh_fix: '{n} a devolver ao lugar', adh_all: 'Tudo certo',
+      adh_rest: 'Mostrar as {n} gôndolas que estão certas', adh_rest1: 'Mostrar a gôndola que está certa', adh_all_n: 'Mostrar as {n} gôndolas', adh_all_n1: 'Mostrar a gôndola', adh_overall: '{p}% das zonas têm o produto certo', adh_of: '{ok} de {n} zonas', adh_fix: '{n} a devolver ao lugar', adh_all: 'Tudo certo',
+      fr_badge: 'Verificar frescura / rodar stock', fr_short: 'Verificar frescura', fr_group: 'Quando houver tempo: verificar frescura',
+      fr_est_restock: 'Estimativa: cerca de {h} em exposição desde a última reposição vista ({t}). O stock que já lá estava pode ser mais antigo.',
+      fr_est_first: 'Estimativa: sem reposição vista hoje, por isso em exposição pelo menos desde a primeira imagem ({t}): {h} ou mais.',
+      fr_rule: '{c}: verificar a cada {l} h.', cls_fast: 'Produto muito perecível', cls_medium: 'Produto de conservação média', cls_slow: 'Produto de longa conservação',
+      fr_why: 'Com base apenas no tempo desde a reposição e na classe de conservação do produto, e não na imagem.',
+      fr_src: 'Fonte: {s} ({e}). Pressupõe exposição sem refrigeração, a cerca de 20 °C; em expositores refrigerados os produtos duram mais.',
+      fr_edited: 'valores editados pela equipa', conf_high: 'evidência forte', conf_medium: 'evidência moderada', conf_low: 'evidência fraca', conf_none: 'evidência não classificada',
+      fr_look: 'O que procurar',
+      fr_potato: 'As batatas duram semanas, mas a luz da loja pode torná-las verdes ao fim de 24 a 60 h de exposição à luz.',
+      fr_line: 'Frescura: {h} em exposição, verificar a cada {l} h (estimativa).', fr_h_about: 'cerca de {h}', fr_h_least: 'pelo menos {h}',
+      fr_also: 'Aproveitar para verificar a frescura e rodar o stock ({h} em exposição, estimativa).',
+      fr_task: '{h} em exposição, verificar a cada {l} h',
+      lay_title: 'Disposição e desperdício', lay_x: 'Sugestões de disposição a partir do planograma e de uma tabela de biologia dos produtos. Não são vistas nas imagens.',
+      eth_title: 'Vizinhos que aceleram o amadurecimento', eth_gas: 'Liberta muito etileno, um gás natural de amadurecimento. Mesmo ao lado:', eth_fx: 'pode {fx} mais cedo.',
+      eth_tip: 'Sugestão: deixar espaço ou pôr entre eles um produto que não reaja ao etileno.',
+      eth_none: 'Nenhum grande produtor de etileno está mesmo ao lado de um produto muito sensível.',
+      eth_calm: 'Numa loja aberta o etileno costuma ser baixo (Warton et al. 2000): é uma sugestão de disposição, não um alarme.',
+      eth_mild: 'Não se listam {n} pares menos graves (frutas que fazem amadurecer umas às outras um pouco mais depressa).',
+      eth_src: 'Fontes: classes de etileno segundo Kader (Pesis 2004) e USDA Agriculture Handbook 66 (2016). Vizinhos são zonas que se tocam, ou quase, na mesma imagem de câmara.',
+      eth_panel: 'Sugestão de disposição', eth_p_dst: 'Ao lado de {p} ({a}), que liberta muito etileno: este produto pode {fx} mais cedo.',
+      eth_p_src: 'Liberta muito etileno e tem produtos sensíveis mesmo ao lado: {list}.', eth_more: 'Ver Análise: Disposição e desperdício',
+      fr_ins_title: 'Há mais tempo em exposição', fr_ins_x: 'Zonas que já passaram o intervalo de verificação do produto desde a última reposição vista. Estimativa a partir do tempo e da classe de conservação: procurar sinais de estrago e passar o stock mais antigo para a frente.',
+      fr_ins_none: 'Nenhuma zona passou o intervalo de verificação.', fr_more: 'Mostrar mais {n}', fr_val: 'a cada {l} h',
+      fx_avocado: 'amadurecer e amolecer', fx_banana: 'amadurecer e ganhar pintas castanhas', fx_broccoli: 'amarelecer', fx_cabbage: 'amarelecer',
+      fx_cauliflower: 'escurecer e perder folhas', fx_cucumber: 'amarelecer e amolecer', fx_eggplant: 'ganhar manchas castanhas',
+      'fx_green beans': 'amarelecer', fx_kiwi: 'amolecer', fx_lettuce: 'ganhar manchas castanhas e amarelecer', fx_tomato: 'amadurecer e amolecer',
+      fx_watermelon: 'amolecer e passar do ponto', fx_other: 'amadurecer ou estragar-se',
     },
   };
 
@@ -155,6 +215,7 @@
   const ORDER = { wrong: 0, empty: 1, low: 2, ok: 3 };
   const LV_ICON = { empty: 'i-empty', half: 'i-low', full: 'i-full' };
   const LV_CLASS = { empty: 's-empty', half: 's-low', full: 's-ok' };
+  const SAME_LV = { empty: 'empty', low: 'half', ok: 'full' };      // status words that already say the level
   const S_ICON = { empty: 'i-empty', low: 'i-low', wrong: 'i-wrong', ok: 'i-ok' };
   const VIEWS = ['tasks', 'gondola', 'products', 'insights'];
 
@@ -163,13 +224,15 @@
   const camById = Object.fromEntries(D.cameras.map((c) => [c.id, c]));
   const detLabels = D.det_labels || [];
   const INS = D.insights || {};
+  const BIO = D.bio || {};
+  const PAIRS = (INS.layout && INS.layout.pairs) || [];
   const hasCounts = areas.some((a) => a.n != null);        // item counts exist only when product boxes were available
   const byPid = {};
   areas.forEach((a) => { if (!byPid[a.pid]) byPid[a.pid] = a; });
   const hasDet = (c) => !!(c && c.frame && c.det && c.det.length);
   const detName = (i) => { const en = detLabels[i] || ''; return cap(st.lang === 'pt' ? (DET_PT[en] || en) : en); };
   const st = {
-    view: 'tasks', lang: store.get('sensei.lang', 'en'), theme: store.get('sensei.theme', 'auto'),
+    view: 'tasks', lang: store.get('sensei.lang', (window.SHELF_DATA && window.SHELF_DATA.lang) || 'pt'), theme: store.get('sensei.theme', 'auto'),
     status: null, full: false, cam: 'all', q: '', sort: 'priority', gcam: null, sel: null, psort: 'attention', pdir: 1,
     det: false, dsel: null, dcam: null,   // product boxes: toggle, tapped box index, camera it belongs to
   };
@@ -182,6 +245,8 @@
     if (v) for (const key in v) s = s.split('{' + key + '}').join(v[key]);
     return s;
   };
+  /* count-dependent text: the '<key>1' singular when n is 1 and the language has one */
+  const tn = (k, n, v) => t(n === 1 && T[st.lang][k + '1'] != null ? k + '1' : k, Object.assign({ n }, v || {}));
 
   /* ------------------------------------------------------------------ formatting */
   const tz = D.timezone || 'Europe/Lisbon';
@@ -201,10 +266,10 @@
   const fmtDay = (ts) => fmt('day').format(new Date(ts * 1000));
   const fmtMin = (ts) => parseInt(fmt('min').format(new Date(ts * 1000)), 10) || 0;
   function dur(s) {
-    const m = Math.round(s / 60);
-    if (m < 90) return Math.max(5, Math.round(m / 5) * 5) + ' min';
-    const h = Math.round((s / 3600) * 2) / 2;
-    return String(h).replace('.', st.lang === 'pt' ? ',' : '.') + ' h';
+    const m = Math.max(5, Math.round(s / 300) * 5);        /* 5-minute steps */
+    if (m < 60) return m + ' min';
+    if (m < 180) return Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + (m % 60) + ' min' : '');
+    return Math.round(s / 3600) + ' h';
   }
   const pct = (x) => Math.round(x * 100) + '%';
   const hh = (h) => String(h).padStart(2, '0') + ':00';
@@ -212,7 +277,6 @@
   /* Item counts: "≈ 12 visible units" (loose produce) or "visible packs" (packaged). A wrong-product area is not a pack of the planned product. */
   const isPack = (a) => a.loose === false && a.status !== 'wrong';
   const unitsTxt = (n, pack) => t((pack ? 'cnt_p' : 'cnt_u') + (n === 1 ? '1' : ''), { n });
-  const areaUnits = (a) => (a.n == null ? '' : unitsTxt(a.n, isPack(a)));
 
   /* ------------------------------------------------------------------ names, labels */
   const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -221,13 +285,17 @@
     if (norm(p.main) === norm(p.sub)) p.sub = '';
     return p;
   };
-  const nm = (a) => pair(a.en, a.pt);
+  const nm = (a) => (st.lang === 'pt' ? { main: a.pt, sub: '' } : pair(a.en, a.pt));
   const seenName = (a) => (a.len ? (st.lang === 'pt' ? a.lpt : a.len) : '');
   const loc = (a) => `${t('camera')} ${esc(a.cam)} · ${t('area')} ${esc(a.num)}`;
   const camTs = (a) => (camById[a.cam] ? camById[a.cam].ts : D.snapshot_ts);
   const FC_MAX_S = 4 * 3600;   // longer forecasts are not actionable on this shift
   const fcShow = (a) => a.fc != null && a.fc > 0 && a.fc < FC_MAX_S && (a.status === 'low' || a.status === 'wrong');
-  const OLD_S = 3600;          // pictures older than this vs the newest one get an age chip
+  const OLD_S = 1800;          // pictures older than this vs the newest one get an age chip
+  /* forecast "empty in ~N" counted from the snapshot (the newest picture), not from this camera's older frame */
+  const fcLeft = (a) => camTs(a) + a.fc - (D.snapshot_ts != null ? D.snapshot_ts : camTs(a));
+  const fcText = (a) => (fcLeft(a) <= 0 ? `<b class="now">${t('empty_now')}</b> (${t('empty_was', { t: fmtTime(camTs(a) + a.fc) })})`
+    : t('empty_in', { t: dur(fcLeft(a)) }));
   const ageChip = (ts) => (D.snapshot_ts != null && D.snapshot_ts - ts > OLD_S
     ? `<span class="age">${icon('i-clock')}${t('old', { t: dur(D.snapshot_ts - ts) })}</span>` : '');
   function snapText() {
@@ -241,6 +309,33 @@
   const confKey = (c) => (c >= 0.85 ? 'c_sure' : c >= 0.65 ? 'c_likely' : 'c_check');
   const taskKey = (a) => `${a.id}|${camTs(a)}|${a.status}`;
   const badge = (s) => `<span class="badge s-${s}">${icon(S_ICON[s])}${t('s_' + s)}</span>`;
+
+  /* Freshness watch and ethylene neighbours (sensei/freshness.py): estimates from time since restock and the
+     product's biology, never read from the picture. Absent data = no badge. */
+  const freshDue = (a) => !!(a.fresh && a.fresh.due);
+  const isTask = (a) => a.status !== 'ok' || freshDue(a);     // anything with a card (incl. freshness checks)
+  const isJob = (a) => a.status !== 'ok';                      // counted as a task: freshness checks are extras
+  const bioOf = (a) => (a.bk && BIO[a.bk]) || null;
+  const freshBadge = (short) => `<span class="badge s-fresh">${icon('i-leaf')}${t(short ? 'fr_short' : 'fr_badge')}</span>`;
+  const hrs = (h) => dur(h * 3600);
+  /* hours on display: 'about' since a restock seen, 'at least' when counted from the first picture of the day */
+  const freshH = (a) => t(a.fresh.basis === 'first' ? 'fr_h_least' : 'fr_h_about', { h: hrs(a.fresh.h) });
+  function freshEst(a) {
+    const f = a.fresh; const b = bioOf(a) || {};
+    const est = t(f.basis === 'restock' ? 'fr_est_restock' : 'fr_est_first', { h: hrs(f.h), t: fmtTime(f.since) });
+    const rule = b.cls ? ' ' + t('fr_rule', { c: t('cls_' + b.cls), l: f.lim }) : '';
+    return est + rule + (b.type === 'potato' ? ' ' + t('fr_potato') : '');   /* slow class, short interval: say why */
+  }
+  function freshSrc(a) {
+    const b = bioOf(a) || {};
+    const ev = b.edited ? t('fr_edited') : t(b.conf ? 'conf_' + b.conf : 'conf_none');
+    return t('fr_src', { s: esc(b.src || 'docs/produce_biology_reference.csv'), e: ev });
+  }
+  /* The product actually on the shelf: the likely one when the spot holds the wrong product. */
+  const shelfName = (a) => (a.status === 'wrong' && a.len ? (st.lang === 'pt' ? a.lpt : cap(a.len)) : nm(a).main);
+  const fxText = (type) => t(T.en['fx_' + type] ? 'fx_' + type : 'fx_other');
+  const areaRef = (a) => `${t('area')} ${esc(a.num)}`;
+  const pairsOf = (a) => PAIRS.filter((p) => p.src === a.id || p.dst === a.id);
   const sortRoute = (x, y) => (x.cam === y.cam ? (parseInt(x.num, 10) || 0) - (parseInt(y.num, 10) || 0) : (x.cam < y.cam ? -1 : 1));
 
   function matches(a, ignoreCam) {
@@ -252,7 +347,6 @@
     }
     return true;
   }
-  const inCam = (a) => st.cam === 'all' || a.cam === st.cam;
 
   /* ------------------------------------------------------------------ thumbnails */
   function ctxThumb(a) {
@@ -272,34 +366,39 @@
       <polygon class="poly halo" points="${pts}"/><polygon class="poly ${a.status === 'ok' ? 'ok' : ''}" points="${pts}" style="pointer-events:none"/></svg>`;
   }
   const cropImg = (a, cls = '') => (a.crop
-    ? `<img class="${cls}" src="${esc(a.crop)}" alt="${esc(cap(a.en))}" loading="lazy" decoding="async">`
+    ? `<img class="${cls}" src="${esc(a.crop)}" alt="${esc(nm(a).main)}" loading="lazy" decoding="async">`
     : `<div class="ph">${t('no_picture')}</div>`);
 
   /* ------------------------------------------------------------------ task cards */
   function actionHtml(a) {
     if (a.status === 'empty') return `<strong>${t('act_restock')}</strong>: ${t('act_restock_x')}`;
     if (a.status === 'low') {
-      const f = fcShow(a) ? `. ${t('empty_in', { t: dur(a.fc) })}` : '';
+      const f = fcShow(a) ? `. ${fcText(a)}` : '';
       return `<strong>${t('act_top')}</strong>${f}`;
     }
     if (a.status === 'wrong') {
       const p = esc(nm(a).main); const q = esc(seenName(a));
-      return q ? `<strong>${t('act_move')}</strong>: ${t('expected')} ${p}, ${t('seen')} ${q}`
+      return q ? `<strong>${t('act_move')}</strong>: ${t('act_move_x', { p, q })}`
         : `<strong>${t('act_check')}</strong>: ${t('expected')} ${p}`;
+    }
+    if (freshDue(a)) {
+      return `<strong>${t('fr_badge')}</strong>: ${t('fr_task', { h: freshH(a), l: a.fresh.lim })} <span class="muted">(${t('cnt_est')})</span>`;
     }
     return t('long_ok');
   }
   function homeHtml(a) {
     if (a.status !== 'wrong' || !a.home || !a.home.length) return '';
-    const links = a.home.map((id) => areaById[id]).filter(Boolean)
-      .map((h) => `${t('camera')} ${esc(h.cam)} · ${t('area')} ${esc(h.num)}`).join('; ');
-    return links ? `<p class="home">${t('belongs', { q: esc(cap(seenName(a))) })}: ${links}</p>` : '';
+    const byCam = {};
+    a.home.map((id) => areaById[id]).filter(Boolean).forEach((h) => { (byCam[h.cam] = byCam[h.cam] || []).push(esc(h.num)); });
+    const links = Object.keys(byCam).map((c) => `${t('camera')} ${esc(c)} · ${byCam[c].length === 1 ? t('area') : t('areas_w')} ${
+      byCam[c].join(', ')}`).join('; ');
+    return links ? `<p class="home">${t('take_to', { q: esc(seenName(a)) })}: ${links}</p>` : '';
   }
   function metaHtml(a) {
-    const bits = [`<span>${t('conf')}: <b>${t(confKey(a.conf))}</b></span>`];
+    /* a freshness-only task is a time estimate: the stock model's confidence would read as confidence in freshness */
+    const bits = a.status === 'ok' ? [] : [`<span>${t('conf')}: <b>${t(confKey(a.conf))}</b></span>`];
     if (a.status === 'wrong' && a.level !== 'full') bits.push(`<span>${t('stock')}: <b>${t('lv_' + a.level)}</b></span>`);
     if (a.vis != null && a.vis < 0.7) bits.push(`<span>${t('partly')}</span>`);
-    if (a.n != null) bits.push(`<span title="${esc(t('cnt_est'))}"><b>${areaUnits(a)}</b></span>`);
     bits.push(`<span>${icon('i-clock')} ${t('seen_at', { t: fmtTime(camTs(a)) })}</span>`);
     const age = ageChip(camTs(a));
     if (age) bits.push(age);
@@ -307,10 +406,11 @@
   }
   function taskCard(a) {
     const n = nm(a); const key = taskKey(a); const isDone = !!done[key];
-    return `<article class="task s-${a.status}${isDone ? ' is-done' : ''}" data-key="${esc(key)}">
-      <div class="task-head">${badge(a.status)}<span class="loc">${loc(a)}</span></div>
+    return `<article class="task s-${a.status === 'ok' && freshDue(a) ? 'fresh' : a.status}${isDone ? ' is-done' : ''}" data-key="${esc(key)}">
+      <div class="task-head">${a.status === 'ok' && freshDue(a) ? freshBadge(true) : badge(a.status)}<span class="loc">${loc(a)}</span></div>
       <h3 class="pname"><a href="${hrefOf(a)}">${esc(n.main)}</a><small>${esc(n.sub)}</small></h3>
-      <p class="action">${actionHtml(a)}</p>${homeHtml(a)}
+      <p class="action">${actionHtml(a)}</p>${homeHtml(a)}${
+  a.status !== 'ok' && freshDue(a) ? `<p class="fresh-note">${icon('i-leaf')}<span>${t('fr_also', { h: freshH(a) })}</span></p>` : ''}
       <div class="media">${ctxThumb(a)}${cropImg(a)}</div>
       <div class="meta">${metaHtml(a)}</div>
       <div class="task-foot">
@@ -321,32 +421,39 @@
 
   function renderTasks() {
     const el = $('#view-tasks');
-    const all = areas.filter((a) => a.status !== 'ok');
-    const tasks = all.filter((a) => matches(a));
+    const all = areas.filter(isTask);
+    const tasks = areas.filter((a) => isJob(a) && matches(a));                 /* = the Empty + Low + Wrong counters */
+    const freshAll = areas.filter((a) => a.status === 'ok' && freshDue(a) && matches(a));
     const doneN = tasks.filter((a) => done[taskKey(a)]).length;
     const showOk = st.status === 'ok' || st.status === null;
-    const oks = areas.filter((a) => a.status === 'ok' && matches(a));
-    let html = `<div class="view-head"><h2>${t('tasks_title')} <span class="muted">· ${t('n_tasks', { n: tasks.length })}</span></h2>
+    const oks = areas.filter((a) => a.status === 'ok' && matches(a));          /* = the OK counter */
+    let html = `<div class="view-head"><h2>${t('tasks_title')} <span class="muted">· ${tn('n_tasks', tasks.length)}</span></h2>
       <div class="prog-wrap"><div class="progress" role="progressbar" aria-label="${t('tasks_title')}" aria-valuemin="0" aria-valuemax="${tasks.length}" aria-valuenow="${doneN}"><i style="width:${tasks.length ? (100 * doneN) / tasks.length : 0}%"></i></div>
       <span class="muted" id="prog-txt">${t('progress', { d: doneN, n: tasks.length })}</span></div>
       <div class="seg" role="group" aria-label="${t('sort_by')}">
         <button type="button" data-act="sort" data-v="priority" aria-pressed="${st.sort === 'priority'}">${t('by_priority')}</button>
         <button type="button" data-act="sort" data-v="route" aria-pressed="${st.sort === 'route'}">${t('by_route')}</button></div></div>`;
-    if (!tasks.length && st.status !== 'ok') {
+    /* freshness checks never outrank restock or wrong-product tasks: own group, last, most overdue first */
+    const fresh = freshAll.slice().sort((x, y) => y.fresh.h / y.fresh.lim - x.fresh.h / x.fresh.lim || sortRoute(x, y));
+    const freshGroup = fresh.length ? `<h3 class="group-title">${icon('i-leaf', 'g-fresh')}${t('fr_group')} <span class="count">${fresh.length}</span></h3><div class="cards">${fresh.map(taskCard).join('')}</div>` : '';
+    if (!tasks.length && !fresh.length && st.status !== 'ok') {
       html += all.length ? `<div class="allgood"><h3>${t('none_match')}</h3></div>`
         : `<div class="allgood">${icon('i-ok')}<h3>${t('all_good')}</h3><p class="muted">${t('all_good_x')}</p></div>`;
     } else if (st.sort === 'priority') {
       const sorted = tasks.slice().sort((x, y) => y.pri - x.pri || sortRoute(x, y));
-      const urgent = sorted.filter((a) => a.status !== 'low');
+      /* wrong product first (the item has to be carried elsewhere), then empty */
+      const urgent = sorted.filter((a) => a.status === 'wrong').concat(sorted.filter((a) => a.status === 'empty'));
       const soon = sorted.filter((a) => a.status === 'low');
       if (urgent.length) html += `<h3 class="group-title">${t('urgent')} <span class="count">${urgent.length}</span></h3><div class="cards">${urgent.map(taskCard).join('')}</div>`;
       if (soon.length) html += `<h3 class="group-title">${t('soon')} <span class="count">${soon.length}</span></h3><div class="cards">${soon.map(taskCard).join('')}</div>`;
+      html += freshGroup;
     } else {
       const byCam = {};
       tasks.slice().sort(sortRoute).forEach((a) => { (byCam[a.cam] = byCam[a.cam] || []).push(a); });
       Object.keys(byCam).forEach((c) => {
         html += `<h3 class="group-title">${t('camera')} ${esc(c)} <span class="count">${byCam[c].length}</span></h3><div class="cards">${byCam[c].sort((x, y) => y.pri - x.pri).map(taskCard).join('')}</div>`;
       });
+      html += freshGroup;
     }
     if (showOk && oks.length) html += leaveHtml(oks, st.status === 'ok');
     el.innerHTML = html;
@@ -356,10 +463,10 @@
     oks.slice().sort(sortRoute).forEach((a) => { (byCam[a.cam] = byCam[a.cam] || []).push(a); });
     const body = Object.keys(byCam).map((c) => `<div class="leave-cam"><h4>${t('camera')} ${esc(c)}</h4><div class="pill-row">${
       byCam[c].map((a) => `<a class="pill s-ok" href="${hrefOf(a)}">${icon('i-ok')}${esc(a.num)} · ${esc(nm(a).main)}</a>`).join('')}</div></div>`).join('');
-    return `<details class="leave"${open ? ' open' : ''}><summary>${icon('i-ok')}${t('leave', { n: oks.length })}</summary><div class="leave-body">${body}</div></details>`;
+    return `<details class="leave"${open ? ' open' : ''}><summary>${icon('i-ok')}${tn('leave', oks.length)}</summary><div class="leave-body">${body}</div></details>`;
   }
   function updateProgress() {
-    const tasks = areas.filter((a) => a.status !== 'ok' && matches(a));
+    const tasks = areas.filter((a) => isJob(a) && matches(a));
     const n = tasks.filter((a) => done[taskKey(a)]).length;
     const txt = $('#prog-txt'); if (txt) txt.textContent = t('progress', { d: n, n: tasks.length });
     const bar = $('#view-tasks .progress'); if (bar) {
@@ -427,13 +534,33 @@
     if (a.status === 'empty') return t('plain_empty', { p });
     if (a.status === 'low') return t('plain_low', { p });
     if (a.status === 'wrong') return q ? t('plain_wrong', { p, q }) : t('plain_wrong_nq', { p });
-    return t('plain_ok');
+    return t(freshDue(a) ? 'plain_ok_fresh' : 'plain_ok');
+  }
+  function freshHtml(a) {
+    if (!a.fresh) return '';
+    const b = bioOf(a) || {};
+    if (!freshDue(a)) {
+      return a.level === 'empty' ? '' : `<p class="fresh-line">${icon('i-leaf')}<span>${t('fr_line', { h: freshH(a), l: a.fresh.lim })}</span></p>`;
+    }
+    const look = b.signs && st.lang !== 'pt' ? `<details class="look"><summary>${t('fr_look')}</summary><p>${esc(b.signs)}</p></details>` : '';
+    return `<div class="fresh-box s-fresh">${freshBadge(false)}<p>${freshEst(a)}</p><p class="small muted">${t('fr_why')} ${freshSrc(a)}</p>${look}</div>`;
+  }
+  function ethHtml(a) {
+    const ps = pairsOf(a);
+    if (!ps.length) return '';
+    const lines = [];
+    const asSrc = ps.filter((p) => p.src === a.id).map((p) => areaById[p.dst]).filter(Boolean);
+    if (asSrc.length) lines.push(t('eth_p_src', { list: asSrc.map((x) => `${esc(shelfName(x))} (${areaRef(x)})`).join(', ') }));
+    ps.filter((p) => p.dst === a.id).forEach((p) => {
+      const s = areaById[p.src]; if (s) lines.push(t('eth_p_dst', { p: esc(shelfName(s)), a: areaRef(s), fx: fxText(p.dst_type) }));
+    });
+    return `<div class="eth-box">${icon('i-gas')}<div><b>${t('eth_panel')}</b>${lines.map((l) => `<p>${l}</p>`).join('')}<a href="#/insights/layout">${t('eth_more')}</a></div></div>`;
   }
   function panelHtml(a) {
     if (!a) return `<p class="panel-hint">${t('pick_area')}</p>`;
     const n = nm(a); const key = taskKey(a); const isDone = !!done[key];
     const fcTxt = fcShow(a)
-      ? `<div class="forecast">${icon('i-clock')}<span>${t('empty_in', { t: dur(a.fc) })} (${t('around', { t: fmtTime(camTs(a) + a.fc) })})</span></div>` : '';
+      ? `<div class="forecast">${icon('i-clock')}<span>${fcLeft(a) <= 0 ? fcText(a) : `${fcText(a)} (${t('around', { t: fmtTime(camTs(a) + a.fc) })})`}</span></div>` : '';
     const rows = [[t('planned'), esc(nm(a).main)]];
     if (a.status === 'wrong' && seenName(a)) rows.push([t('seen_instead'), esc(seenName(a))]);
     rows.push([t('conf'), t(confKey(a.conf))]);
@@ -442,13 +569,13 @@
     rows.push([t('snapshot_of'), fmtTime(camTs(a)) + (ageChip(camTs(a)) ? ` (${t('old', { t: dur(D.snapshot_ts - camTs(a)) })})` : '')]);
     rows.push([t('raw'), esc(a.raw)]);
     return `<div class="task-head">${badge(a.status)}<span class="loc">${loc(a)}</span></div>
-      ${a.crop ? `<img class="crop" src="${esc(a.crop)}" alt="${esc(cap(a.en))}">` : ''}
+      ${a.crop ? `<img class="crop" src="${esc(a.crop)}" alt="${esc(nm(a).main)}">` : ''}
       <h3 class="pname">${esc(n.main)}<small>${esc(n.sub)}</small></h3>
-      <p class="plain">${plainText(a)}</p>${homeHtml(a)}
+      <p class="plain">${plainText(a)}</p>${homeHtml(a)}${freshHtml(a)}${ethHtml(a)}
       ${levelsHtml(a)}${fcTxt}${sparkHtml(a)}
       <dl class="kv">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
       ${a.n != null ? `<p class="note">${t('cnt_note')}</p>` : ''}
-      ${a.status !== 'ok' ? `<label class="done"><input type="checkbox" data-act="done" data-key="${esc(key)}"${isDone ? ' checked' : ''}> ${t('mark_done')}</label>` : ''}`;
+      ${isTask(a) ? `<label class="done"><input type="checkbox" data-act="done" data-key="${esc(key)}"${isDone ? ' checked' : ''}> ${t('mark_done')}</label>` : ''}`;
   }
   /* Product boxes: pointer-events are off on the boxes (area polygons stay tappable), so the box under the pointer is found by hand. */
   function detReadout(dets) {
@@ -534,7 +661,8 @@
       frame = `<div class="frame-wrap noframe">${t(cam.unreadable ? 'unreadable' : 'no_picture')}</div>`;
     }
     const legend = `<div class="legend" aria-label="${t('legend')}">${['wrong', 'empty', 'low', 'ok'].map((s) => `<span class="s-${s}">${icon(S_ICON[s])}${t('s_' + s)}</span>`).join('')}</div>`;
-    const list = camAreas.slice().sort(sortRoute).map((a) => `<li><button type="button" class="area-btn s-${a.status}${matches(a, true) ? '' : ' dim'}" data-act="area" data-id="${esc(a.id)}" aria-pressed="${a.id === st.sel}">${icon(S_ICON[a.status])}<b>${esc(a.num)} · ${esc(nm(a).main)}</b><small>${t('s_' + a.status)} · ${t('lv_' + a.level)}${a.n != null ? ' · ' + areaUnits(a) : ''}</small></button></li>`).join('');
+    const list = camAreas.slice().sort(sortRoute).map((a) => `<li><button type="button" class="area-btn s-${a.status}${matches(a, true) ? '' : ' dim'}" data-act="area" data-id="${esc(a.id)}" aria-pressed="${a.id === st.sel}">${icon(S_ICON[a.status])}<b>${esc(a.num)} · ${esc(nm(a).main)}</b><small>${t('s_' + a.status)}${SAME_LV[a.status] === a.level ? '' : ' · ' + t('stock') + ': ' + t('lv_' + a.level)}${
+  freshDue(a) ? ` · <span class="tag-fresh">${icon('i-leaf')}${t('fr_short')}</span>` : ''}${pairsOf(a).length ? ` <span class="tag-eth" title="${esc(t('eth_panel'))}">${icon('i-gas')}<span class="sr">${t('eth_panel')}</span></span>` : ''}</small></button></li>`).join('');
     el.innerHTML = `<div class="view-head"><h2>${t('tab_gondola')}</h2></div><div class="cam-chips" role="group" aria-label="${t('f_camera')}">${chips}</div>
       <div class="gv"><div class="frame-col">${frame}${legend}</div>
       <aside class="panel" id="panel" aria-live="polite">${panelHtml(sel)}</aside>
@@ -602,11 +730,13 @@
     return out;
   }
   function soonHtml() {
-    const rows = (INS.soon || []).map((x) => ({ x, a: areaById[x.id] })).filter((r) => r.a);
+    const now = D.snapshot_ts;
+    const rows = (INS.soon || []).map((x) => ({ x, a: areaById[x.id] })).filter((r) => r.a)
+      .sort((p, q) => p.x.at - q.x.at);                  /* already due (before the snapshot) first */
     const list = rows.map(({ x, a }) => {
-      const n = nm(a);
+      const n = nm(a); const left = now != null ? x.at - now : x.fc;
       return `<li><a class="ins-row s-${a.status}" href="${hrefOf(a)}"><span class="ins-main"><b>${esc(n.main)}</b><small>${loc(a)} · ${t('s_' + a.status)}</small></span>
-        <span class="ins-val"><b>${t('soon_in', { t: dur(x.fc) })}</b><small>${t('soon_at', { t: fmtTime(x.at) })}</small></span></a></li>`;
+        <span class="ins-val"><b>${left <= 0 ? t('empty_now') : t('soon_in', { t: dur(left) })}</b><small>${left <= 0 ? t('empty_was', { t: fmtTime(x.at) }) : t('soon_at', { t: fmtTime(x.at) })}</small></span></a></li>`;
     }).join('');
     return `<section class="ins-card c-soon" aria-labelledby="ins-soon"><h3 id="ins-soon">${icon('i-clock')}${t('soon_title')} <span class="count">${rows.length}</span></h3>
       <p class="muted">${t(rows.length ? 'soon_x' : 'soon_none')}</p>${rows.length ? `<ul class="ins-list">${list}</ul>` : ''}</section>`;
@@ -643,7 +773,7 @@
     const max = Math.max(...sales.map((s) => s.rate), 0.01); const TOP = 8;
     const first = sales.slice(0, TOP).map((s) => salesRow(s, max)).join('');
     const rest = sales.slice(TOP);
-    const more = rest.length ? `<details class="more"><summary>${t('sales_more', { n: rest.length })}</summary><ul class="bar-list">${rest.map((s) => salesRow(s, max)).join('')}</ul></details>` : '';
+    const more = rest.length ? `<details class="more"><summary>${tn('sales_more', rest.length)}</summary><ul class="bar-list">${rest.map((s) => salesRow(s, max)).join('')}</ul></details>` : '';
     return `<section class="ins-card c-sales" aria-labelledby="ins-sales"><h3 id="ins-sales">${icon('i-chart')}${t('sales_title')}</h3><p class="muted">${t('sales_x')}</p>
       ${hourlyHtml()}<ul class="bar-list">${first}</ul>${more}</section>`;
   }
@@ -661,42 +791,81 @@
     const off = ad.cams.filter((c) => c.ok < c.n).sort(byShare);          // gondolas with something to move: always visible
     const fine = ad.cams.filter((c) => c.ok >= c.n).sort(byShare);        // the rest folds away, so the page stays short
     const rows = off.map(row).join('')
-      + (fine.length ? `<li><details class="more"><summary>${t(off.length ? 'adh_rest' : 'adh_all_n', { n: fine.length })}</summary><ul class="ins-list">${fine.map(row).join('')}</ul></details></li>` : '');
+      + (fine.length ? `<li><details class="more"><summary>${tn(off.length ? 'adh_rest' : 'adh_all_n', fine.length)}</summary><ul class="ins-list">${fine.map(row).join('')}</ul></details></li>` : '');
     return `<section class="ins-card c-adh" aria-labelledby="ins-adh"><h3 id="ins-adh">${icon('i-ok')}${t('adh_title')}</h3><p class="muted">${t('adh_x')}</p>
       <p class="big"><b>${t('adh_overall', { p: Math.round(share * 100) })}</b> <span class="muted">(${t('adh_of', { ok: ad.ok, n: ad.n })})</span></p>
       <div class="bar" aria-hidden="true"><i style="width:${pct(share)}"></i></div><ul class="ins-list">${rows}</ul></section>`;
   }
+  function ethGroupsHtml() {
+    const groups = [];
+    PAIRS.forEach((p) => {
+      let g = groups.find((x) => x.src === p.src);
+      if (!g) { g = { src: p.src, dst: [] }; groups.push(g); }
+      g.dst.push(p);
+    });
+    return groups.map((g) => {
+      const s = areaById[g.src]; if (!s) return '';
+      const items = g.dst.map((p) => {
+        const d = areaById[p.dst]; if (!d) return '';
+        return `<li><a href="${hrefOf(d)}"><b>${esc(shelfName(d))}</b> (${areaRef(d)})</a> ${t('eth_fx', { fx: fxText(p.dst_type) })}</li>`;
+      }).join('');
+      return `<li class="eth-row"><div class="eth-head">${icon('i-gas')}<a href="${hrefOf(s)}"><b>${esc(shelfName(s))}</b></a><small>${t('camera')} ${esc(s.cam)} · ${areaRef(s)}</small></div>
+        <p>${t('eth_gas')}</p><ul class="eth-dst">${items}</ul></li>`;
+    }).join('');
+  }
+  function freshRow(a) {
+    return `<li><a class="ins-row s-fresh" href="${hrefOf(a)}"><span class="ins-main"><b>${esc(shelfName(a))}</b><small>${loc(a)}${a.fresh.basis === 'first' ? '' : ' · ' + fmtTime(a.fresh.since)}</small></span>
+      <span class="ins-val"><b>${a.fresh.basis === 'first' ? '≥ ' : ''}${hrs(a.fresh.h)}</b><small>${t('fr_val', { l: a.fresh.lim })}</small></span></a></li>`;
+  }
+  function layoutHtml() {
+    const due = areas.filter(freshDue).sort((x, y) => y.fresh.h / y.fresh.lim - x.fresh.h / x.fresh.lim || sortRoute(x, y));
+    const hasBio = Object.keys(BIO).length > 0;
+    if (!hasBio && !PAIRS.length) return '';
+    const TOP = 6;
+    const mild = INS.layout && INS.layout.mild ? ' ' + t('eth_mild', { n: INS.layout.mild }) : '';
+    const fresh = `<h4>${icon('i-leaf', 'g-fresh')}${t('fr_ins_title')} <span class="count">${due.length}</span></h4><p class="muted small">${t(due.length ? 'fr_ins_x' : 'fr_ins_none')}</p>${
+      due.length ? `<ul class="ins-list">${due.slice(0, TOP).map(freshRow).join('')}</ul>` : ''}${
+      due.length > TOP ? `<details class="more"><summary>${t('fr_more', { n: due.length - TOP })}</summary><ul class="ins-list">${due.slice(TOP).map(freshRow).join('')}</ul></details>` : ''}`;
+    const eth = `<h4>${icon('i-gas', 'g-eth')}${t('eth_title')} <span class="count">${PAIRS.length}</span></h4>${
+      PAIRS.length ? `<ul class="eth-list">${ethGroupsHtml()}</ul><p class="eth-tip">${t('eth_tip')}</p>` : `<p class="muted small">${t('eth_none')}</p>`}
+      <p class="muted small">${t('eth_calm')}${mild} ${t('eth_src')}</p>`;
+    return `<section class="ins-card c-layout" id="ins-layout-card" aria-labelledby="ins-layout"><h3 id="ins-layout">${icon('i-gas')}${t('lay_title')}</h3><p class="muted">${t('lay_x')}</p>
+      <div class="lay-part">${eth}</div><div class="lay-part">${fresh}</div></section>`;
+  }
   function renderInsights() {
     const el = $('#view-insights');
-    if (!INS.adherence && !(INS.sales || []).length) { el.innerHTML = `<div class="view-head"><h2>${t('ins_title')}</h2></div><p class="muted">${t('ins_none')}</p>`; return; }
+    if (!INS.adherence && !(INS.sales || []).length) { el.innerHTML = `<div class="view-head"><h2>${t('ins_title')}</h2></div><p class="muted">${t('ins_none')}</p>${layoutHtml()}`; return; }
     const stamps = new Set(); areas.forEach((a) => (a.tl || []).forEach((p) => stamps.add(p[0])));
     const lo = Math.min(...stamps); const hi = Math.max(...stamps);
     const sub = stamps.size ? t('ins_sub', { n: stamps.size, a: fmtTime(lo), b: fmtTime(hi) }) : '';
     const hints = insHints();
     el.innerHTML = `<div class="view-head"><h2>${t('ins_title')}</h2></div><p class="muted ins-sub">${sub}</p>
       ${hints.length ? `<section class="ins-card hints" aria-labelledby="ins-hints"><h3 id="ins-hints">${t('ins_hints')}</h3><ul>${hints.map((h) => `<li>${h}</li>`).join('')}</ul></section>` : ''}
-      <div class="ins-grid">${soonHtml()}${salesHtml()}${adherenceHtml()}</div>`;
+      <div class="ins-grid">${soonHtml()}${salesHtml()}${adherenceHtml()}</div>${layoutHtml()}`;
   }
 
   /* ------------------------------------------------------------------ print sheet */
   function buildPrintSheet() {
-    const tasks = areas.filter((a) => a.status !== 'ok' && !done[taskKey(a)]).sort(sortRoute);
+    const tasks = areas.filter((a) => isTask(a) && !done[taskKey(a)]).sort(sortRoute);
     let cur = null; let rows = '';
     tasks.forEach((a) => {
       if (a.cam !== cur) { cur = a.cam; rows += `<tr class="cam"><td colspan="4">${t('camera')} ${esc(a.cam)} · ${fmtTime(camTs(a))}</td></tr>`; }
       rows += `<tr><td><span class="box"></span></td><td>${t('area')} ${esc(a.num)}</td><td><b>${esc(nm(a).main)}</b><small>${esc(nm(a).sub)}</small></td>
-        <td><b>${a.status === 'low' ? t('act_top') : a.status === 'empty' ? t('act_restock') : (seenName(a) ? t('act_move') : t('act_check'))}</b>${
+        <td><b>${a.status === 'ok' ? t('fr_badge') : a.status === 'low' ? t('act_top') : a.status === 'empty' ? t('act_restock') : (seenName(a) ? t('act_move') : t('act_check'))}</b>${
+  freshDue(a) ? `<small>${a.status === 'ok' ? '' : t('fr_short') + ': '}${t('fr_task', { h: freshH(a), l: a.fresh.lim })} (${t('cnt_est')})</small>` : ''}${
   a.status === 'wrong' && seenName(a) ? `<small>${t('expected')} ${esc(nm(a).main)}, ${t('seen')} ${esc(seenName(a))}</small>` : ''}${
-  fcShow(a) ? `<small>${t('empty_in', { t: dur(a.fc) })}</small>` : ''}</td></tr>`;
+  fcShow(a) ? `<small>${fcText(a)}</small>` : ''}</td></tr>`;
     });
-    $('#print-sheet').innerHTML = `<h1>${t('title')}: ${t('tasks_title')}</h1><p>${esc(D.section || '')} · ${snapText()} · ${t('n_tasks', { n: tasks.length })}</p>
+    $('#print-sheet').innerHTML = `<h1>${t('title')}: ${t('tasks_title')}</h1><p>${esc(D.section || '')} · ${snapText()} · ${tn('n_tasks', tasks.length)}</p>
       <table><thead><tr><th></th><th>${cap(t('area'))}</th><th>${t('col_product')}</th><th>${t('col_do')}</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   /* ------------------------------------------------------------------ chrome */
   function counts() {
     const c = { empty: 0, low: 0, wrong: 0, ok: 0 };
-    areas.filter(inCam).forEach((a) => { c[a.status]++; });
+    const keep = st.status; st.status = null;                     /* a status filter must not zero the other counters */
+    areas.filter((a) => matches(a)).forEach((a) => { c[a.status]++; });
+    st.status = keep;
     return c;
   }
   function renderChrome() {
@@ -715,7 +884,7 @@
     const c = counts();
     $('#counters').hidden = st.view === 'insights';
     $('#filters').hidden = st.view === 'insights';
-    $('#counters').classList.toggle('compact', st.view !== 'tasks');
+    $('#counters').classList.add('compact');
     $('#counters').innerHTML = STATUS.map((s) => `<button type="button" class="counter s-${s}${c[s] ? '' : ' zero'}" data-act="status" data-v="${s}" aria-pressed="${st.status === s}">
       ${icon(S_ICON[s])}<span class="n">${c[s]}</span><span class="lbl">${t('s_' + s)}</span></button>`).join('');
     const sel = $('#cam-select'); const want = st.cam;
@@ -728,7 +897,7 @@
     $$('.tab').forEach((a) => { if (a.dataset.tab === st.view) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     const any = st.status || st.cam !== 'all' || st.q;
     const cl = $('#clear-filters'); cl.hidden = !any; cl.textContent = t('clear');
-    $('#foot').textContent = t('foot', { b: D.backend || 'model' }) + (hasCounts ? ' ' + t('foot_cnt') : '');
+    $('#foot').textContent = t('foot') + (hasCounts ? ' ' + t('foot_cnt') : '');
   }
   function isDark() {
     if (st.theme === 'dark') return true;
@@ -751,9 +920,11 @@
   }
 
   /* ------------------------------------------------------------------ routing and events */
+  let jumpTo = null;     // section id to scroll to after the next render (#/insights/layout)
   function readHash() {
     const p = location.hash.replace(/^#\/?/, '').split('/').map(decodeURIComponent);
     st.view = VIEWS.includes(p[0]) ? p[0] : 'tasks';
+    jumpTo = st.view === 'insights' && p[1] === 'layout' ? 'ins-layout-card' : null;
     if (st.view === 'gondola') {
       if (p[1] && camById[p[1]]) st.gcam = p[1];
       if (p[2] && areaById[p[2]]) { st.sel = p[2]; st.gcam = areaById[p[2]].cam; }
@@ -770,7 +941,14 @@
     const old = st.view; scrollMem[old] = window.scrollY;
     readHash(); render();
     window.scrollTo(0, st.view === old ? 0 : (st.view === 'tasks' ? scrollMem.tasks || 0 : 0));
+    jumpToSection();
   });
+  function jumpToSection() {
+    const el = jumpTo && document.getElementById(jumpTo);
+    if (!el) return;
+    el.scrollIntoView({ block: 'start' });
+    const h = el.querySelector('h3'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+  }
 
   /* Re-rendering replaces the clicked element: give keyboard focus back to its twin. */
   function restoreFocus(b) {
@@ -833,4 +1011,5 @@
   applyTheme();
   readHash();
   render();
+  jumpToSection();
 })();

@@ -38,3 +38,7 @@ pitch/slides_standalone.html
 gemini_key.txt
 *.key
 .env
+
+# Team working notes (not for the public repo)
+docs/ines_todo.md
+docs/TODO_FOR_TEAM.md

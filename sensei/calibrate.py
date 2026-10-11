@@ -8,6 +8,8 @@ Three parts, all usable without the rest of the pipeline:
   handcrafted, patch-cluster band histograms, per-band fills (stock only)] (multinomial
   logistic regression for the stock level, logistic regression for compliance).
   ``Heads.save`` / ``Heads.load`` use json + npz (no pickle).
+  With ``HeadParams.memory`` (default) a second stock head also sees a per-area memory: the labelled crops
+  of the same area from earlier frames (``memory_features``), stored with the heads as npz.
 * ``cross_validate`` : leave-one-camera-out and time-blocked scores computed with ``scoring.score``.
 
 Labels are always in annotations format: ``{camera: {image_name: {area_id: {...}}}}``.
@@ -416,6 +418,22 @@ class HeadParams:
     #                             drops late in the day; the hidden val frames are later than all labels)
     carry_tau: float = 0.6      # carry a non-compliant label forward when DINO cos(crop, labelled crop) >= this
     carry_p: float = 0.05       # p_compliant given to a carried non-compliant area
+    # per-area memory (the cameras are fixed, so later frames show the same areas): the labelled crops are
+    # kept with their labels; a second stock head adds, for every crop, the similarity-weighted label mix of
+    # the most similar labelled crops of the SAME area from EARLIER frames (one block per embedding) and the
+    # best similarity. Rows whose area has no earlier labelled crop (unknown area, new camera, first frame)
+    # use the plain stock head. Labels v2, last-2-frames / last-frame folds: 1.322 -> 1.411 / 1.401 -> 1.480.
+    memory: bool = True
+    mem_embeddings: tuple = ("codes", "hand")   # "codes" = centred patch-cluster histogram, "hand" = centred
+    #                                             handcrafted colour features (each L2-normalised)
+    mem_tau: float = 0.01       # softmax temperature over cosine similarities (0.01 ~ nearest neighbour)
+    mem_alpha: float = 0.3      # pseudo-count weight of the label prior in the neighbour label mix
+    mem_w: float = 1.0          # penalty weight of the memory columns (> 1 = lighter L2)
+    mem_min_rows: int = 30      # fewer labelled rows with an earlier labelled frame: no memory head
+    mem_skips: tuple = (0, 1)   # training copies whose memory drops the latest k earlier frames, so the head
+    #                             also learns gaps of 2 frames (memory alone, (0,), over-trusted 3-4 h old labels)
+    mem_last: bool = False      # add the area's last labelled level (one-hot) and the hours since it (tested:
+    #                             +0.003 / +0.000 on the last-2 / last-frame folds, below the +0.01 bar)
 
 
 def _pca_fit(x: np.ndarray, k: int) -> tuple[np.ndarray, np.ndarray]:
@@ -500,16 +518,125 @@ def _apply_lr(m: dict, x: np.ndarray) -> np.ndarray:
     return e / e.sum(axis=1, keepdims=True)
 
 
+def _lr_proba3(m: dict, x: np.ndarray) -> np.ndarray:
+    """(N,3) posterior of a stock LR whose ``classes`` may miss a level (missing level = EPS)."""
+    q = _apply_lr(m, x)
+    p = np.full((len(x), 3), EPS)
+    for col, c in enumerate(m["classes"]):
+        p[:, c] = q[:, col]
+    return p
+
+
+# =========================================================================== per-area memory
+
+MEM_CODE_BANDS = 2
+
+
+def _l2(x: np.ndarray) -> np.ndarray:
+    x = np.asarray(x, np.float32)
+    return x / np.maximum(np.linalg.norm(x, axis=1, keepdims=True), 1e-8)
+
+
+def _raw_memory_embedding(feats: CropFeatures, name: str, n_codes: int) -> np.ndarray | None:
+    """Uncentred embedding ``name`` of every row, or None when the features lack it."""
+    if name == "codes":
+        if feats.patch_codes is None or n_codes <= 0:
+            return None
+        return code_histograms(feats.patch_codes, n_codes, MEM_CODE_BANDS)
+    if name == "hand":
+        return None if feats.hand is None or not np.size(feats.hand) else np.asarray(feats.hand, np.float32)
+    if name == "dino":
+        return None if feats.dino_cls is None else np.asarray(feats.dino_cls, np.float32)
+    if name == "clip":
+        return None if feats.clip is None else np.asarray(feats.clip, np.float32)
+    raise ValueError(f"unknown memory embedding {name!r}")
+
+
+def build_memory(feats: CropFeatures, ys: np.ndarray, yc: np.ndarray, names: Sequence[str],
+                 n_codes: int) -> dict | None:
+    """Memory table of labelled crops: per row area, time, level, compliance and one centred, L2-normalised
+    embedding per name (the centre is stored to embed new crops the same way). None if no embedding exists."""
+    emb, center = {}, {}
+    for name in names:
+        raw = _raw_memory_embedding(feats, name, n_codes)
+        if raw is None:
+            continue
+        center[name] = raw.mean(axis=0).astype(np.float32)
+        emb[name] = _l2(raw - center[name])
+    if not emb or not len(feats):
+        return None
+    return {"names": list(emb), "n_codes": int(n_codes), "areas": list(feats.area_ids),
+            "ts": np.asarray(feats.timestamps, np.int64), "ys": np.asarray(ys, np.int64),
+            "yc": np.asarray(yc, bool), "emb": emb, "center": center}
+
+
+def memory_features(memory: dict, feats: CropFeatures, prior: Sequence[float], tau: float = 0.01,
+                    alpha: float = 0.3, skip: int = 0, last: bool = False) -> tuple[np.ndarray, np.ndarray]:
+    """(F, has): per row of ``feats``, features from the labelled crops of the same area taken strictly
+    EARLIER (any time when the row's timestamp is unknown, < 0). Per embedding: the two log-ratios of the
+    similarity-weighted level mix (softmax of cosine / ``tau``, smoothed with ``alpha`` x ``prior``) and the
+    best cosine; with ``last`` also the level of the latest labelled frame (one-hot) and the hours since. ``has`` is
+    False (and the row all zeros) where no such crop exists or the input lacks an embedding. ``skip`` > 0
+    also drops the area's ``skip`` latest earlier labelled frames (training rows that mimic a longer gap)."""
+    names = list(memory["names"])
+    width = 3 * len(names) + (4 if last else 0)
+    n = len(feats)
+    F = np.zeros((n, width), np.float64)
+    has = np.zeros(n, bool)
+    if not n:
+        return F, has
+    q_emb = {}
+    for name in names:
+        raw = _raw_memory_embedding(feats, name, int(memory["n_codes"]))
+        if raw is None or raw.shape[1] != memory["emb"][name].shape[1]:
+            log.warning("memory: the input has no %r embedding: plain stock head for these crops", name)
+            return F, has
+        q_emb[name] = _l2(raw - memory["center"][name])
+    prior = np.asarray(prior, np.float64)
+    m_ts, m_ys = np.asarray(memory["ts"], np.int64), np.asarray(memory["ys"], np.int64)
+    rows_by_area: dict[str, list[int]] = {}
+    for j, a in enumerate(memory["areas"]):
+        rows_by_area.setdefault(a, []).append(j)
+    q_ts = np.asarray(feats.timestamps, np.int64)
+    onehot = np.eye(3)
+    for i, a in enumerate(feats.area_ids):
+        mem = rows_by_area.get(a)
+        if not mem:
+            continue
+        mem = np.asarray(mem)
+        if q_ts[i] >= 0:
+            mem = mem[m_ts[mem] < q_ts[i]]
+        if skip > 0 and len(mem):
+            frames = np.unique(m_ts[mem])                       # ascending
+            mem = mem[m_ts[mem] < frames[-skip]] if len(frames) > skip else mem[:0]
+        if not len(mem):
+            continue
+        has[i] = True
+        oh = onehot[m_ys[mem]]
+        for k, name in enumerate(names):
+            s = memory["emb"][name][mem] @ q_emb[name][i]
+            w = np.exp((s - s.max()) / tau)
+            mix = np.clip((w @ oh / w.sum() + alpha * prior) / (1.0 + alpha), 1e-6, None)
+            F[i, 3 * k:3 * k + 3] = np.log(mix[1] / mix[0]), np.log(mix[2] / mix[1]), float(s.max())
+        if last:
+            j = mem[np.argmax(m_ts[mem])]
+            F[i, 3 * len(names):3 * len(names) + 3] = onehot[m_ys[j]]
+            F[i, -1] = (q_ts[i] - m_ts[j]) / 3600.0 if q_ts[i] >= 0 else 1.0
+    return F, has
+
+
 class Heads:
     """Fitted stock and compliance heads (see module docstring). Build with ``fit_heads``."""
 
-    VERSION = 1
+    VERSION = 2   # 2: optional per-area memory (memory table + mem_stock head); version-1 heads load unchanged
 
     def __init__(self, params: HeadParams, layout: dict, pca: dict, stock: dict, comp: dict,
-                 carry: dict | None = None):
+                 carry: dict | None = None, memory: dict | None = None, mem_stock: dict | None = None):
         self.params, self.layout, self.pca, self.stock, self.comp = params, layout, pca, stock, comp
         # areas whose latest labelled frame is non-compliant: {"areas", "ts", "dino" (n,D) or None}
         self.carry = carry or {"areas": [], "ts": [], "dino": None}
+        self.memory = memory          # build_memory() table of the labelled crops, or None
+        self.mem_stock = mem_stock    # stock LR on [design, memory_features], or None
 
     # ---- features
     def _design(self, feats, fill, zs_stock, zs_comp, which: str) -> tuple[np.ndarray, np.ndarray]:
@@ -551,26 +678,51 @@ class Heads:
     # ---- predictions
     def late_mask(self, feats: CropFeatures) -> np.ndarray:
         """(N,) True for rows later than their camera's last labelled frame (unknown camera: the
-        latest labelled frame overall)."""
+        latest labelled frame overall). A row without a timestamp (< 0, a file name that is not a Unix
+        time) counts as late: the hidden set is known to be later in the day than every labelled frame."""
         last = self.stock.get("last_ts") or {}
         if not last:
             return np.zeros(len(feats), bool)
         default = max(last.values())
-        return np.array([int(t) > int(last.get(c, default)) for c, t in zip(feats.camera_ids, feats.timestamps)],
-                        dtype=bool)
+        return np.array([int(t) < 0 or int(t) > int(last.get(c, default))
+                         for c, t in zip(feats.camera_ids, feats.timestamps)], dtype=bool)
+
+    def memory_block(self, feats: CropFeatures) -> tuple[np.ndarray, np.ndarray]:
+        """(F, has) per-area memory features of ``feats`` (see ``memory_features``); has is all False
+        without a memory table."""
+        if self.memory is None or not len(feats):
+            return np.zeros((len(feats), 0)), np.zeros(len(feats), bool)
+        P = self.params
+        return memory_features(self.memory, feats, self.stock.get("prior", [1 / 3] * 3), P.mem_tau, P.mem_alpha,
+                               last=P.mem_last)
+
+    def memory_mask(self, feats: CropFeatures) -> np.ndarray:
+        """(N,) True for rows the memory stock head answers (their area has an earlier labelled crop)."""
+        if self.mem_stock is None:
+            return np.zeros(len(feats), bool)
+        return self.memory_block(feats)[1]
 
     def stock_proba(self, feats: CropFeatures, fill: np.ndarray, zs_stock: np.ndarray | None = None,
-                    late_shift: bool | None = None) -> np.ndarray:
-        """(N,3) posterior over (empty, half, full); rows sum to 1. Rows after the last labelled
+                    late_shift: bool | None = None, memory: bool = True) -> np.ndarray:
+        """(N,3) posterior over (empty, half, full); rows sum to 1. Rows whose area has an earlier labelled
+        crop use the memory head (``memory=False`` forces the plain head). Rows after the last labelled
         frame get the prior shift p * late_prior / train_prior (``params.late_shift``)."""
         m = self.stock
+        fill = np.asarray(fill, np.float64)
         if m["kind"] == "constant":
             p = np.tile(np.asarray(m["prior"], np.float64), (len(feats), 1))
         else:
-            q = _apply_lr(m, self._design(feats, fill, zs_stock, None, "stock")[0])
-            p = np.full((len(feats), 3), EPS)
-            for col, c in enumerate(m["classes"]):
-                p[:, c] = q[:, col]
+            p = _lr_proba3(m, self._design(feats, fill, zs_stock, None, "stock")[0])
+            if memory and self.mem_stock is not None and len(feats):
+                try:
+                    F, has = self.memory_block(feats)
+                    if has.any():
+                        rows = np.flatnonzero(has)
+                        x = self._design(feats.subset(rows), fill[rows],
+                                         None if zs_stock is None else np.asarray(zs_stock)[rows], None, "stock")[0]
+                        p[rows] = _lr_proba3(self.mem_stock, np.concatenate([x, F[rows]], axis=1))
+                except (ValueError, KeyError, IndexError) as exc:   # never lose the plain head over the memory
+                    log.warning("memory stock head not usable (%s): plain stock head", exc)
         p = np.clip(p, EPS, None)
         p = p / p.sum(axis=1, keepdims=True)
         shift = self.params.late_shift if late_shift is None else late_shift
@@ -595,7 +747,7 @@ class Heads:
             dino = dino / np.maximum(np.linalg.norm(dino, axis=1, keepdims=True), 1e-8)
         for i, (a, t) in enumerate(zip(feats.area_ids, feats.timestamps)):
             j = pos.get(a)
-            if j is None or int(t) <= int(c["ts"][j]):
+            if j is None or 0 <= int(t) <= int(c["ts"][j]):     # no timestamp (< 0): later than the label
                 continue
             out[i] = dino is None or float(dino[i] @ c["dino"][j]) >= self.params.carry_tau
         return out
@@ -630,7 +782,21 @@ class Heads:
             arrays["carry_dino"] = np.asarray(self.carry["dino"], np.float32)
         for name, (mean, comps) in self.pca.items():
             arrays[f"pca_{name}_mean"], arrays[f"pca_{name}_comps"] = mean, comps
-        for tag, m in (("stock", self.stock), ("comp", self.comp)):
+        models = [("stock", self.stock), ("comp", self.comp)]
+        if self.mem_stock is not None and self.memory is not None:
+            models.append(("memstock", self.mem_stock))
+            mem = self.memory
+            areas = sorted(set(mem["areas"]))
+            pos = {a: k for k, a in enumerate(areas)}
+            meta["memory"] = {"names": list(mem["names"]), "n_codes": int(mem["n_codes"]), "areas": areas}
+            arrays["mem_area"] = np.array([pos[a] for a in mem["areas"]], np.int32)
+            arrays["mem_ts"] = np.asarray(mem["ts"], np.int64)
+            arrays["mem_ys"] = np.asarray(mem["ys"], np.int8)
+            arrays["mem_yc"] = np.asarray(mem["yc"], bool)
+            for name in mem["names"]:
+                arrays[f"mem_emb_{name}"] = np.asarray(mem["emb"][name], np.float32)
+                arrays[f"mem_center_{name}"] = np.asarray(mem["center"][name], np.float32)
+        for tag, m in models:
             meta[tag] = {k: v for k, v in m.items() if not isinstance(v, np.ndarray)}
             for k, v in m.items():
                 if isinstance(v, np.ndarray):
@@ -644,12 +810,15 @@ class Heads:
         meta = json.loads((d / "heads.json").read_text(encoding="utf-8"))
         fields = {f for f in HeadParams.__dataclass_fields__}
         params = HeadParams(**{k: v for k, v in meta["params"].items() if k in fields})
+        params.mem_embeddings, params.mem_skips = tuple(params.mem_embeddings), tuple(params.mem_skips)
         with np.load(d / "heads.npz", allow_pickle=False) as z:
             arrays = {k: z[k] for k in z.files}
         pca = {n: (arrays[f"pca_{n}_mean"], arrays[f"pca_{n}_comps"]) for n in ("clip", "dino")
                if f"pca_{n}_mean" in arrays}
         models = {}
-        for tag in ("stock", "comp"):
+        for tag in ("stock", "comp", "memstock"):
+            if tag not in meta:
+                continue
             m = dict(meta[tag])
             for k in ("mean", "scale", "coef", "intercept"):
                 if f"{tag}_{k}" in arrays:
@@ -657,7 +826,18 @@ class Heads:
             models[tag] = m
         carry = dict(meta.get("carry") or {"areas": [], "ts": []})
         carry["dino"] = arrays.get("carry_dino")
-        return cls(params, meta["layout"], pca, models["stock"], models["comp"], carry)
+        memory = None
+        if "memory" in meta and "memstock" in models:   # version-1 heads have neither
+            mm = meta["memory"]
+            names = list(mm["names"])
+            memory = {"names": names, "n_codes": int(mm["n_codes"]),
+                      "areas": [mm["areas"][int(k)] for k in arrays["mem_area"]],
+                      "ts": arrays["mem_ts"].astype(np.int64), "ys": arrays["mem_ys"].astype(np.int64),
+                      "yc": arrays["mem_yc"].astype(bool),
+                      "emb": {n: arrays[f"mem_emb_{n}"] for n in names},
+                      "center": {n: arrays[f"mem_center_{n}"] for n in names}}
+        return cls(params, meta["layout"], pca, models["stock"], models["comp"], carry, memory,
+                   models.get("memstock") if memory is not None else None)
 
 
 def fit_heads(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Config,
@@ -711,6 +891,8 @@ def fit_heads(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Config,
     m["late_prior"] = [float(v) for v in (np.bincount(ys[is_last], minlength=3) + 1.0) / (is_last.sum() + 3.0)]
     heads.stock = m
     heads.carry = _carry_table(sub, yc)
+    if params.memory and m["kind"] == "lr":
+        _fit_memory_head(heads, sub, fill[idx], zs_s, ys, yc, cfg)
 
     n_pos, n_neg = int(yc.sum()), int((~yc).sum())
     if zs_comp is not None and not params.comp_head:
@@ -727,6 +909,41 @@ def fit_heads(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Config,
     c["n_pos"], c["n_neg"] = n_pos, n_neg
     heads.comp = c
     return heads
+
+
+def _fit_memory_head(heads: Heads, sub: CropFeatures, fill: np.ndarray, zs_stock: np.ndarray | None,
+                     ys: np.ndarray, yc: np.ndarray, cfg: Config) -> None:
+    """Store the labelled rows as the memory table and fit the memory stock head on the rows that have an
+    earlier labelled crop of their area (causal, like later frames at predict time). Leaves
+    ``heads.memory`` / ``heads.mem_stock`` None when there is too little to learn from."""
+    P = heads.params
+    n_codes = int(heads.layout.get("n_codes") or 0)
+    if not n_codes and sub.patch_codes is not None and np.size(sub.patch_codes):
+        n_codes = int(np.asarray(sub.patch_codes).max()) + 1
+    memory = build_memory(sub, ys, yc, P.mem_embeddings, n_codes)
+    if memory is None:
+        return
+    heads.memory = memory
+    F, has = heads.memory_block(sub)
+    if has.sum() < P.mem_min_rows or len(set(ys[has].tolist())) < 2:
+        log.info("memory head: %d rows with an earlier labelled crop: not fitted", int(has.sum()))
+        heads.memory = None
+        return
+    xs, yy = [], []
+    for skip in sorted(set(int(k) for k in P.mem_skips) | {0}):
+        if skip:
+            F, has = memory_features(heads.memory, sub, heads.stock.get("prior", [1 / 3] * 3), P.mem_tau,
+                                     P.mem_alpha, skip, P.mem_last)
+        rows = np.flatnonzero(has)
+        if not len(rows):
+            continue
+        x, w = heads._design(sub.subset(rows), fill[rows], None if zs_stock is None else zs_stock[rows], None, "stock")
+        xs.append(np.concatenate([x, F[rows]], axis=1))
+        yy.append(ys[rows])
+    mm = _fit_lr(np.concatenate(xs), np.concatenate([w, np.full(F.shape[1], P.mem_w)]),
+                 np.concatenate(yy), P.c_stock, P.stock_class_weight, cfg.seed)
+    mm["kind"], mm["n_rows"] = "lr", int(sum(len(v) for v in yy))
+    heads.mem_stock = mm
 
 
 def _carry_table(sub: CropFeatures, yc: np.ndarray) -> dict:
@@ -781,7 +998,10 @@ def cross_validate(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Con
     """Held-out challenge scores (``scoring.score``) for the heads and simple references.
 
     Schemes: ``"camera"`` = leave one camera out; ``"time"`` = the last ``holdout_frames`` labelled
-    frames of every camera are the test set (mimics the later-in-the-day hidden validation set).
+    frames of every camera are the test set (mimics the later-in-the-day hidden validation set);
+    ``"time1"``, ``"time3"``... the same with that many frames. With a per-area memory, ``heads`` uses it
+    where the held-out area has earlier labelled frames in the training part (never in camera folds) and
+    ``heads_nomem`` is the same heads without it; ``memory_rows`` counts the held-out rows it answered.
     ``baseline`` = ``{"p_stock": (N,3), "p_comp": (N,)}`` (either key optional) are the supplied
     unsupervised outputs; if omitted and ``zs_*`` are given they serve as the baseline. The
     constants are: all full/half/empty + compliant, and ``train_prior`` (best_stock of the training
@@ -802,18 +1022,21 @@ def cross_validate(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Con
         truth: dict = {}
         methods: dict[str, dict] = {}
         rows_by_cam: dict[str, list[int]] = {}
-        n_comp = n_stock = 0
-        for name, train, test in _folds(feats, idx, "camera" if scheme == "camera" else "time", holdout_frames):
+        n_mem = 0
+        ho = int(scheme[4:]) if scheme.startswith("time") and scheme[4:].isdigit() else holdout_frames
+        for name, train, test in _folds(feats, idx, "camera" if scheme == "camera" else "time", ho):
             if len(train) == 0 or len(test) == 0:
                 continue
             tr_feats, te_feats = feats.subset(train), feats.subset(test)
             heads = fit_heads(tr_feats, fill[train], labels, cfg, params,
                               None if zs_stock is None else np.asarray(zs_stock)[train],
                               None if zs_comp is None else np.asarray(zs_comp)[train], productness)
-            preds = {
-                "heads": (heads.stock_proba(te_feats, fill[test], None if zs_stock is None else np.asarray(zs_stock)[test]),
-                          heads.compliance_proba(te_feats, fill[test], None if zs_comp is None else np.asarray(zs_comp)[test])),
-            }
+            zs_te = None if zs_stock is None else np.asarray(zs_stock)[test]
+            p_comp_te = heads.compliance_proba(te_feats, fill[test], None if zs_comp is None else np.asarray(zs_comp)[test])
+            preds = {"heads": (heads.stock_proba(te_feats, fill[test], zs_te), p_comp_te)}
+            if heads.mem_stock is not None:   # the same heads without the per-area memory
+                preds["heads_nomem"] = (heads.stock_proba(te_feats, fill[test], zs_te, memory=False), p_comp_te)
+                n_mem += int(heads.memory_mask(te_feats).sum())
             if "p_stock" in base or "p_comp" in base:
                 preds["baseline"] = (
                     np.asarray(base["p_stock"])[test] if "p_stock" in base else np.tile([0.15, 0.35, 0.5], (len(test), 1)),
@@ -839,13 +1062,14 @@ def cross_validate(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Con
         if not truth:
             report["schemes"][scheme] = {"areas": 0, "methods": {}, "per_camera": {}}
             continue
-        out = {"areas": sum(len(a) for i in truth.values() for a in i.values()), "methods": {}, "per_camera": {}}
+        out = {"areas": sum(len(a) for i in truth.values() for a in i.values()), "memory_rows": n_mem,
+               "methods": {}, "per_camera": {}}
         for method, p in methods.items():
             out["methods"][method] = _summ(scoring.score(truth, p))
         for cam in sorted(truth):
             cam_truth = {cam: truth[cam]}
             row = {"areas": sum(len(a) for a in truth[cam].values())}
-            for method in ("heads", "baseline", "all_full", "train_prior"):
+            for method in ("heads", "heads_nomem", "baseline", "all_full", "train_prior"):
                 if method in methods:
                     row[method] = _summ(scoring.score(cam_truth, {cam: methods[method].get(cam, {})}))["per_area"]
             out["per_camera"][cam] = row

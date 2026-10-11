@@ -194,6 +194,36 @@ def load_image(path: str | Path) -> np.ndarray:
     raise ValueError(f"unsupported channel count {channels} in {path}")
 
 
+def image_size(path: str | Path) -> tuple[int, int] | None:
+    """(width, height) from the file header (cheap, no decode); None if unreadable."""
+    try:
+        from PIL import Image  # noqa: PLC0415
+        with Image.open(path) as im:
+            return int(im.size[0]), int(im.size[1])
+    except Exception:  # noqa: BLE001 - corrupt / missing: the caller decides
+        return None
+
+
+def common_frame_size(paths: Iterable[str | Path], limit: int = 50) -> tuple[int, int] | None:
+    """Most common (width, height) among (up to ``limit``) images: the frame size the planogram
+    quads are drawn in. None if none is readable."""
+    sizes = Counter(s for s in (image_size(p) for p in list(paths)[:limit]) if s is not None)
+    return sizes.most_common(1)[0][0] if sizes else None
+
+
+def to_frame_size(image: np.ndarray, frame_size: Iterable[int] | None) -> np.ndarray:
+    """``image`` resized to ``frame_size`` (w, h) when it differs (planogram quads are absolute pixels
+    of the fit-time frame); unchanged otherwise."""
+    if not frame_size:
+        return image
+    w0, h0 = (int(v) for v in frame_size)
+    h, w = image.shape[:2]
+    if (w, h) == (w0, h0) or w0 <= 0 or h0 <= 0:
+        return image
+    interp = cv2.INTER_AREA if w > w0 else cv2.INTER_LINEAR
+    return cv2.resize(image, (w0, h0), interpolation=interp)
+
+
 def _load_with_pillow(path: Path) -> np.ndarray:
     """Fallback decoder (formats OpenCV lacks); returns BGR like cv2 or raises ValueError."""
     try:

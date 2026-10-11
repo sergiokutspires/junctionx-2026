@@ -1,0 +1,362 @@
+{
+ "key1240/camera": {
+  "heads": {
+   "per_area": 1.2032,
+   "areas": 1240,
+   "ident_acc": 0.9621,
+   "stock_acc": 0.8056,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     102,
+     25,
+     2
+    ],
+    [
+     20,
+     123,
+     97
+    ],
+    [
+     2,
+     95,
+     774
+    ]
+   ],
+   "wrong_product": {
+    "tp": 26,
+    "fp": 1,
+    "fn": 46,
+    "tn": 1167
+   }
+  },
+  "unsup": {
+   "per_area": 1.1871,
+   "areas": 1240,
+   "ident_acc": 0.9621,
+   "stock_acc": 0.8032,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     108,
+     16,
+     5
+    ],
+    [
+     21,
+     105,
+     114
+    ],
+    [
+     3,
+     85,
+     783
+    ]
+   ],
+   "wrong_product": {
+    "tp": 26,
+    "fp": 1,
+    "fn": 46,
+    "tn": 1167
+   }
+  }
+ },
+ "key1240/time2": {
+  "heads": {
+   "per_area": 1.2993,
+   "areas": 304,
+   "ident_acc": 0.9934,
+   "stock_acc": 0.8191,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     30,
+     9,
+     1
+    ],
+    [
+     4,
+     41,
+     32
+    ],
+    [
+     0,
+     9,
+     178
+    ]
+   ],
+   "wrong_product": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 2,
+    "tn": 294
+   }
+  },
+  "unsup": {
+   "per_area": 0.9671,
+   "areas": 304,
+   "ident_acc": 0.9803,
+   "stock_acc": 0.7303,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     31,
+     5,
+     4
+    ],
+    [
+     7,
+     29,
+     41
+    ],
+    [
+     1,
+     24,
+     162
+    ]
+   ],
+   "wrong_product": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 6,
+    "tn": 294
+   }
+  }
+ },
+ "key1240/time1": {
+  "heads": {
+   "per_area": 1.3947,
+   "areas": 152,
+   "ident_acc": 1.0,
+   "stock_acc": 0.8355,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     21,
+     3,
+     0
+    ],
+    [
+     2,
+     30,
+     14
+    ],
+    [
+     0,
+     6,
+     76
+    ]
+   ],
+   "wrong_product": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "tn": 147
+   }
+  },
+  "unsup": {
+   "per_area": 0.9276,
+   "areas": 152,
+   "ident_acc": 0.9803,
+   "stock_acc": 0.7237,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     20,
+     2,
+     2
+    ],
+    [
+     4,
+     18,
+     24
+    ],
+    [
+     0,
+     10,
+     72
+    ]
+   ],
+   "wrong_product": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 3,
+    "tn": 147
+   }
+  }
+ },
+ "key756/camera": {
+  "heads": {
+   "per_area": 1.1905,
+   "areas": 756,
+   "ident_acc": 0.9762,
+   "stock_acc": 0.795,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     53,
+     13,
+     3
+    ],
+    [
+     13,
+     56,
+     77
+    ],
+    [
+     2,
+     47,
+     492
+    ]
+   ],
+   "wrong_product": {
+    "tp": 24,
+    "fp": 0,
+    "fn": 18,
+    "tn": 714
+   }
+  },
+  "unsup": {
+   "per_area": 1.1892,
+   "areas": 756,
+   "ident_acc": 0.9762,
+   "stock_acc": 0.791,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     57,
+     8,
+     4
+    ],
+    [
+     10,
+     63,
+     73
+    ],
+    [
+     2,
+     61,
+     478
+    ]
+   ],
+   "wrong_product": {
+    "tp": 24,
+    "fp": 0,
+    "fn": 18,
+    "tn": 714
+   }
+  }
+ },
+ "key756/time2": {
+  "heads": {
+   "per_area": 1.2105,
+   "areas": 304,
+   "ident_acc": 0.9934,
+   "stock_acc": 0.8026,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     29,
+     4,
+     7
+    ],
+    [
+     4,
+     30,
+     43
+    ],
+    [
+     0,
+     2,
+     185
+    ]
+   ],
+   "wrong_product": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 2,
+    "tn": 294
+   }
+  },
+  "unsup": {
+   "per_area": 0.9671,
+   "areas": 304,
+   "ident_acc": 0.9803,
+   "stock_acc": 0.7303,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     31,
+     5,
+     4
+    ],
+    [
+     7,
+     29,
+     41
+    ],
+    [
+     1,
+     24,
+     162
+    ]
+   ],
+   "wrong_product": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 6,
+    "tn": 294
+   }
+  }
+ },
+ "key756/time1": {
+  "heads": {
+   "per_area": 1.4079,
+   "areas": 152,
+   "ident_acc": 1.0,
+   "stock_acc": 0.8421,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     21,
+     2,
+     1
+    ],
+    [
+     1,
+     30,
+     15
+    ],
+    [
+     0,
+     5,
+     77
+    ]
+   ],
+   "wrong_product": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "tn": 147
+   }
+  },
+  "unsup": {
+   "per_area": 0.9276,
+   "areas": 152,
+   "ident_acc": 0.9803,
+   "stock_acc": 0.7237,
+   "cm_truth_rows_e_h_f_pred_cols": [
+    [
+     20,
+     2,
+     2
+    ],
+    [
+     4,
+     18,
+     24
+    ],
+    [
+     0,
+     10,
+     72
+    ]
+   ],
+   "wrong_product": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 3,
+    "tn": 147
+   }
+  }
+ }
+}

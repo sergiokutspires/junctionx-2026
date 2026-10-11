@@ -128,7 +128,7 @@ def cmd_run(args) -> None:
 def cmd_submit(args) -> None:
     from .submit import run
     code = run(args.images, args.model, args.out, detect=not args.no_detect, detections=args.detections,
-               device=args.device)
+               device=args.device, password=args.password)
     if code:
         sys.exit(code)
 
@@ -211,11 +211,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("submit", help="validation day: images (folder/zip) -> checked predictions.json + staff app")
     p.add_argument("--images", required=True, nargs="+", help="folder, .zip, or image files (flags go after the paths)")
-    p.add_argument("--model", default="models/real_v1_cal")
+    p.add_argument("--model", default="models/real_v3_cal",
+                   help="model directory (default: models/real_v3_cal; models/real_v1 = label-free fallback)")
     p.add_argument("--out", default="submission")
     p.add_argument("--no-detect", action="store_true", help="skip the local OWLv2 product boxes in the staff app")
     p.add_argument("--detections", default=None, help="cached OWLv2 boxes (.zip/.json) to reuse (optional)")
     p.add_argument("--device", help="auto | cpu | cuda")
+    p.add_argument("--password", default=None, help="password of an encrypted .zip (ZipCrypto; unzip AES zips by hand)")
     p.set_defaults(func=cmd_submit)
 
     p = sub.add_parser("run", help="fit + predict + dashboard")
