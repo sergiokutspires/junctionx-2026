@@ -196,7 +196,7 @@ class _SubParsers(argparse._SubParsersAction):   # noqa: SLF001
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
         prog="python -m sensei",
-        description="Fresh shelf monitor: stock level (empty / half / full) and planogram compliance "
+        description="fresh. - shelf monitor: stock level (empty / half / full) and planogram compliance "
                     "for every planogram area of ceiling-camera images.",
         epilog="Validation day: python -m sensei submit --images <folder|.zip>  (or double-click SUBMIT.bat). "
                "Run python -m sensei <command> --help for the options of one command.")

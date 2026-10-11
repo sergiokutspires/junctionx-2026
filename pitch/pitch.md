@@ -1,4 +1,4 @@
-# Fresh.: 3-minute pitch
+# fresh.: 3-minute pitch
 
 Deck: `pitch/slides.html` (arrow keys, F for fullscreen, 1-9 jump, 0 = the close). Ten main slides, then five
 appendix slides (A1-A5) for Q&A only. Single-file copy for another laptop: `pitch/slides_standalone.html`
@@ -28,10 +28,10 @@ models (automated, no human labelling).
 **Inês:** Six fourteen in the morning. Leiria, camera 6215, the first picture of the day. Four banana trays are
 empty. Two banana crates hold oranges. The plan says where things go. The camera sees what is there.
 
-## 2. Fresh. (Inês, 0:15 - 0:30)
+## 2. fresh. (Inês, 0:15 - 0:30)
 
 **Inês:** Your brief calls produce the most demanding section of a store for computer vision. We are NovaLotus,
-and this is Fresh. It reads the produce shelf from the cameras Sensei already has, on one CPU core.
+and this is fresh. It reads the produce shelf from the cameras Sensei already has, on one CPU core.
 
 ## 3. For staff (Inês, 0:30 - 0:55)
 
@@ -42,7 +42,7 @@ are right. Wrong products and empty shelves come first. When it is unsure, it sa
 ## 4. For the manager (Inês, 0:55 - 1:10)
 
 **Inês:** The same pictures warn the manager before a shelf runs empty, and turn time on display into freshness
-checks. *(optional: In a one-day backtest, flagged areas emptied eight times as often as the rest.)*
+checks. In a one-day backtest, flagged areas emptied eight times as often as the rest. *(Say it: slide 4's big number is the 8x.)*
 
 ## 5. How it works (Sérgio, 1:10 - 1:30)
 
@@ -100,7 +100,7 @@ on measured inputs (shown in the row).
 
 | Claim | Number | Status | Where it comes from |
 |---|---|---|---|
-| Whole day, one camera held out, calibrated (`models/real_v3_cal`) | **1.23** points per area (max 2), 1,962 areas (1.2329) | OK | `evidence/final_numbers_real_v3_cal.json` `camera.heads`; same value in `experiments/final_integration/heldout_v1cal_v3cal_v1mem_v3nomem.json` (entry v3cal on key v2). The previous model `real_v1_cal` scored 1.18 on the same protocol |
+| Whole day, one camera held out, calibrated (`models/real_v3_cal`) | **1.23** points per area (max 2), 1,962 areas (1.2329) | OK | `results/final_numbers_real_v3_cal.json` `camera.heads`; same value in `results/heldout_v1cal_v3cal_v1mem_v3nomem.json` (entry v3cal on key v2). The previous model `real_v1_cal` scored 1.18 on the same protocol |
 | Label-free core (day 0), whole day | **1.18** (1.1825) | OK | `final_numbers_real_v3_cal.json` `camera.unsup` = method `baseline` in `models/real_v3_cal/calibration_cv.json` (the label-free core of the submitted model, the `real_v2` fit). Fitted without labels on the unlabelled pictures of all 14 cameras, so never say "on cameras it never saw". Its default thresholds were tuned once on this store's key: a second store is the real test. The documented fallback `models/real_v1` scores 1.21 / 1.01 / 0.98 on the same folds (audit re-run, 11 Oct) |
 | Last two pictures of each camera (304 areas): calibrated / label-free / baseline | **1.41** (1.4112) / **0.99** (0.9901) / 0.46 | OK | `final_numbers_real_v3_cal.json` `time2` |
 | Last picture of each camera (152 areas): calibrated / label-free / baseline | **1.48** (1.4803) / **0.88** (0.8816) / 0.18 | OK | `final_numbers_real_v3_cal.json` `time1` |
@@ -129,7 +129,7 @@ on measured inputs (shown in the row).
 | "Running out soon" backtest (Q&A 17) | of 25 flags, 8 (32%) emptied within about 2 h, against 4% (58 of 1,550) for a not-yet-empty area; it catches 8 of the 58 that emptied | OK | `evidence/forecast_backtest_real_v3_cal.py` run on the final key (hourly pictures) |
 | Optional boxes | +15.7 CPU-seconds per image (~$0.0002), peak RAM 1.76 GB | OK | `outputs/benchmark/cost_1t_real_v3_cal_detect.json` |
 | Speed | about 25 s to predict the 14 frames (152 areas) on the laptop CPU (16 threads), including model load; about 90 s with the staff app and OWLv2 boxes. Not on the slides | OK (file times only, no saved log) | integration run, `outputs/dryrun_final_zip` (`SUBMIT.bat` on a zip of `data/val_sim`; format check PASSED) |
-| Skipping unchanged areas (tested) | at 1-hour spacing, skipping **3.8%** of areas misses 1 of 281 label changes; skipping **11.9%** misses 5 of 281 (1.8%); net saving **3.6% to 11.7%** of the compute; the gate costs 0.29 ms per area (0.6 with JPEG decode), under 0.2% of the model. **No 5-minute figure: not measured.** Not wired into the pipeline | OK | `tools/change_gate.py`, `outputs/benchmark/change_gate.json` (threshold picked on the other 13 cameras). Slide 10 footer and Q&A 6 |
+| Skipping unchanged areas (tested) | at 1-hour spacing, skipping **3.8%** of areas misses 1 of 281 label changes; skipping **11.9%** misses 5 of 281 (1.8%); net saving **3.6% to 11.7%** of the compute; the gate costs 0.29 ms per area (0.6 with JPEG decode), under 0.2% of the model. **No 5-minute figure: not measured.** Not wired into the pipeline | OK | `tools/change_gate.py`, `results/benchmark/change_gate.json` (threshold picked on the other 13 cameras). Slide 10 footer and Q&A 6 |
 
 Pilot pass criteria on slide 9 (at least 95% of empty shelves caught, at most 1 wasted restock walk in 10) are targets we
 propose, not results. Say "we propose". The calibrated store already measures about 1 in 10 on our AI key (9 of 91), so the

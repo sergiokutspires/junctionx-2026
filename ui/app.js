@@ -1,4 +1,4 @@
-/* Fresh.: staff app logic. Reads window.SHELF_DATA (data.js). No network, no libraries. */
+/* fresh.: staff app logic. Reads window.SHELF_DATA (data.js). No network, no libraries. */
 (() => {
   'use strict';
   const D = window.SHELF_DATA;
@@ -23,7 +23,7 @@
   /* ------------------------------------------------------------------ text */
   const T = {
     en: {
-      skip: 'Skip to content', title: 'Fresh.', tab_tasks: 'Do now', tab_gondola: 'Gondolas', tab_products: 'Products',
+      skip: 'Skip to content', title: 'fresh.', tab_tasks: 'Do now', tab_gondola: 'Gondolas', tab_products: 'Products',
       f_camera: 'Camera', f_search: 'Search', search_ph: 'Search product or area', all_cams: 'All cameras',
       snapshot: 'Snapshot', pics_range: 'Pictures from {a} to {b}', old: '{t} old', unreadable: 'Picture unreadable: not checked',
       clear: 'Clear filters', theme: 'Switch light / dark theme', print: 'Print task list', lang: 'Language',
@@ -98,6 +98,12 @@
       eth_src: 'Sources: ethylene classes after Kader (Pesis 2004) and USDA Agriculture Handbook 66 (2016). Neighbours are areas that touch or almost touch in the same camera picture.',
       eth_panel: 'Layout suggestion', eth_p_dst: 'Next to {p} ({a}), which gives off a lot of ethylene: this product can {fx} sooner.',
       eth_p_src: 'Gives off a lot of ethylene, and sensitive products are right next to it: {list}.', eth_more: 'See Insights: Layout & waste',
+      risk_b: 'Risk {s}/9 · {b}', rb_avoid: 'Avoid', rb_caution: 'Caution', rb_compatible: 'Compatible',
+      ra_avoid: 'Keep apart: another gondola, or at least one neutral product between them.',
+      ra_caution: 'Separate shelves are fine; take out damaged pieces quickly.', ra_compatible: 'Can share space.',
+      risk_credit: 'Score: Inês Matias Medeiros (biology)',
+      risk_how: 'Risk = the larger of A’s ethylene output × B’s sensitivity and the reverse (low 1, medium 2, high 3): 1-3 compatible, 4-6 caution, 7-9 avoid.',
+      watch_sum: '{n} more product pairs side by side to watch (caution)', watch_sum1: '1 more product pair side by side to watch (caution)',
       fr_ins_title: 'On display longest', fr_ins_x: 'Areas past their product\'s check interval since the last restock seen. An estimate from time and shelf-life class: look for spoilage and move older stock to the front.',
       fr_ins_none: 'No area is past its check interval.', fr_more: 'Show {n} more', fr_val: 'every {l} h',
       fx_avocado: 'ripen and go soft', fx_banana: 'ripen and get brown spots', fx_broccoli: 'turn yellow', fx_cabbage: 'turn yellow',
@@ -116,7 +122,7 @@
       close_on: 'Close to closing ({c}): top-ups of perishable produce wait until tomorrow.',
     },
     pt: {
-      skip: 'Saltar para o conteúdo', title: 'Fresh.', tab_tasks: 'Fazer agora', tab_gondola: 'Gôndolas', tab_products: 'Produtos',
+      skip: 'Saltar para o conteúdo', title: 'fresh.', tab_tasks: 'Fazer agora', tab_gondola: 'Gôndolas', tab_products: 'Produtos',
       f_camera: 'Câmara', f_search: 'Pesquisar', search_ph: 'Pesquisar produto ou zona', all_cams: 'Todas as câmaras',
       snapshot: 'Estado às', pics_range: 'Imagens das {a} às {b}', old: 'há {t}', unreadable: 'Imagem ilegível: não verificado',
       clear: 'Limpar filtros', theme: 'Mudar tema claro / escuro', print: 'Imprimir lista de tarefas', lang: 'Idioma',
@@ -191,6 +197,12 @@
       eth_src: 'Fontes: classes de etileno segundo Kader (Pesis 2004) e USDA Agriculture Handbook 66 (2016). Vizinhos são zonas que se tocam, ou quase, na mesma imagem de câmara.',
       eth_panel: 'Sugestão de disposição', eth_p_dst: 'Ao lado de {p} ({a}), que liberta muito etileno: este produto pode {fx} mais cedo.',
       eth_p_src: 'Liberta muito etileno e tem produtos sensíveis mesmo ao lado: {list}.', eth_more: 'Ver Análise: Disposição e desperdício',
+      risk_b: 'Risco {s}/9 · {b}', rb_avoid: 'Evitar', rb_caution: 'Cuidado', rb_compatible: 'Compatível',
+      ra_avoid: 'Manter afastados: outra gôndola, ou pelo menos um produto neutro entre eles.',
+      ra_caution: 'Prateleiras separadas chegam; retirar depressa as peças danificadas.', ra_compatible: 'Podem partilhar o espaço.',
+      risk_credit: 'Pontuação: Inês Matias Medeiros (biologia)',
+      risk_how: 'Risco = o maior entre o etileno libertado por A × a sensibilidade de B e o inverso (baixo 1, médio 2, alto 3): 1-3 compatível, 4-6 cuidado, 7-9 evitar.',
+      watch_sum: 'Mais {n} pares de produtos lado a lado a vigiar (cuidado)', watch_sum1: 'Mais 1 par de produtos lado a lado a vigiar (cuidado)',
       fr_ins_title: 'Há mais tempo em exposição', fr_ins_x: 'Zonas que já passaram o intervalo de verificação do produto desde a última reposição vista. Estimativa a partir do tempo e da classe de conservação: procurar sinais de estrago e passar o stock mais antigo para a frente.',
       fr_ins_none: 'Nenhuma zona passou o intervalo de verificação.', fr_more: 'Mostrar mais {n}', fr_val: 'a cada {l} h',
       fx_avocado: 'amadurecer e amolecer', fx_banana: 'amadurecer e ganhar pintas castanhas', fx_broccoli: 'amarelecer', fx_cabbage: 'amarelecer',
@@ -375,6 +387,14 @@
   const fxText = (type) => t(T.en['fx_' + type] ? 'fx_' + type : 'fx_other');
   const areaRef = (a) => `${t('area')} ${esc(a.num)}`;
   const pairsOf = (a) => PAIRS.filter((p) => p.src === a.id || p.dst === a.id);
+  /* Ines' ethylene compatibility score (sensei/freshness.py ethylene_score): 1-9 with a band; absent = no badge */
+  const WATCH = (INS.layout && INS.layout.watch) || [];
+  const RB_ICON = { avoid: 'i-wrong', caution: 'i-low', compatible: 'i-ok' };
+  const hasRisk = (p) => p && p.score != null && RB_ICON[p.band];
+  const riskBadge = (p) => hasRisk(p) ? `<span class="risk-b rb-${p.band}">${icon(RB_ICON[p.band])}${t('risk_b', { s: p.score, b: t('rb_' + p.band) })}</span>` : '';
+  const riskAdvice = (p) => hasRisk(p) ? `<span class="risk-adv">${t('ra_' + p.band)}</span>` : '';
+  const riskCredit = () => `<p class="risk-credit">${icon('i-leaf')}${t('risk_credit')}</p>`;
+  const maxScore = (ps) => ps.reduce((m, p) => Math.max(m, p.score || 0), 0);
   const sortRoute = (x, y) => (x.cam === y.cam ? (parseInt(x.num, 10) || 0) - (parseInt(y.num, 10) || 0) : (x.cam < y.cam ? -1 : 1));
 
   function matches(a, ignoreCam) {
@@ -590,15 +610,19 @@
     return `<div class="fresh-box s-fresh">${freshBadge(false)}<p>${freshEst(a)}</p><p class="small muted">${t('fr_why')} ${freshSrc(a)}</p>${look}</div>`;
   }
   function ethHtml(a) {
-    const ps = pairsOf(a);
+    const ps = pairsOf(a).slice().sort((x, y) => (y.score || 0) - (x.score || 0));
     if (!ps.length) return '';
     const lines = [];
-    const asSrc = ps.filter((p) => p.src === a.id).map((p) => areaById[p.dst]).filter(Boolean);
-    if (asSrc.length) lines.push(t('eth_p_src', { list: asSrc.map((x) => `${esc(shelfName(x))} (${areaRef(x)})`).join(', ') }));
+    const srcPs = ps.filter((p) => p.src === a.id && areaById[p.dst]);
+    if (srcPs.length && srcPs.some(hasRisk)) {          // scored: one line per neighbour with its badge
+      lines.push(`${t('eth_gas')}</p><ul class="risk-ul">${srcPs.map((p) => { const x = areaById[p.dst]; return `<li>${esc(shelfName(x))} (${areaRef(x)}) ${riskBadge(p)}</li>`; }).join('')}</ul><p hidden>`);
+    } else if (srcPs.length) lines.push(t('eth_p_src', { list: srcPs.map((p) => { const x = areaById[p.dst]; return `${esc(shelfName(x))} (${areaRef(x)})`; }).join(', ') }));
     ps.filter((p) => p.dst === a.id).forEach((p) => {
-      const s = areaById[p.src]; if (s) lines.push(t('eth_p_dst', { p: esc(shelfName(s)), a: areaRef(s), fx: fxText(p.dst_type) }));
+      const s = areaById[p.src]; if (s) lines.push(t('eth_p_dst', { p: esc(shelfName(s)), a: areaRef(s), fx: fxText(p.dst_type) }) + (hasRisk(p) ? ' ' + riskBadge(p) : ''));
     });
-    return `<div class="eth-box">${icon('i-gas')}<div><b>${t('eth_panel')}</b>${lines.map((l) => `<p>${l}</p>`).join('')}<a href="#/insights/layout">${t('eth_more')}</a></div></div>`;
+    const top = ps.find(hasRisk);
+    const adv = top ? `<p class="risk-line">${riskAdvice(top)}</p>${riskCredit()}` : '';
+    return `<div class="eth-box">${icon('i-gas')}<div><b>${t('eth_panel')}</b>${lines.map((l) => `<p>${l}</p>`).join('')}${adv}<a href="#/insights/layout">${t('eth_more')}</a></div></div>`;
   }
   function panelHtml(a) {
     if (!a) return `<p class="panel-hint">${t('pick_area')}</p>`;
@@ -706,7 +730,7 @@
     }
     const legend = `<div class="legend" aria-label="${t('legend')}">${['wrong', 'empty', 'low', 'ok'].map((s) => `<span class="s-${s}">${icon(S_ICON[s])}${t('s_' + s)}</span>`).join('')}</div>`;
     const list = camAreas.slice().sort(sortRoute).map((a) => `<li><button type="button" class="area-btn s-${a.status}${matches(a, true) ? '' : ' dim'}" data-act="area" data-id="${esc(a.id)}" aria-pressed="${a.id === st.sel}">${icon(S_ICON[a.status])}<b>${esc(a.num)} · ${esc(nm(a).main)}</b><small>${t('s_' + a.status)}${SAME_LV[a.status] === a.level ? '' : ' · ' + t('stock') + ': ' + t('lv_' + a.level)}${
-  freshDue(a) ? ` · <span class="tag-fresh">${icon('i-leaf')}${t('fr_short')}</span>` : ''}${pairsOf(a).length ? ` <span class="tag-eth" title="${esc(t('eth_panel'))}">${icon('i-gas')}<span class="sr">${t('eth_panel')}</span></span>` : ''}</small></button></li>`).join('');
+  freshDue(a) ? ` · <span class="tag-fresh">${icon('i-leaf')}${t('fr_short')}</span>` : ''}${pairsOf(a).length ? (() => { const ms = maxScore(pairsOf(a)); const lab = t('eth_panel') + (ms ? ' · ' + t('risk_b', { s: ms, b: t('rb_avoid') }) : ''); return ` <span class="tag-eth${ms >= 7 ? ' rb-avoid' : ''}" title="${esc(lab)}">${icon('i-gas')}<span class="sr">${esc(lab)}</span></span>`; })() : ''}</small></button></li>`).join('');
     el.innerHTML = `<div class="view-head"><h2>${t('tab_gondola')}</h2></div><div class="cam-chips" role="group" aria-label="${t('f_camera')}">${chips}</div>
       <div class="gv"><div class="frame-col">${frame}${legend}</div>
       <aside class="panel" id="panel" aria-live="polite">${panelHtml(sel)}</aside>
@@ -847,14 +871,17 @@
       if (!g) { g = { src: p.src, dst: [] }; groups.push(g); }
       g.dst.push(p);
     });
+    groups.forEach((g) => g.dst.sort((x, y) => (y.score || 0) - (x.score || 0)));
+    groups.sort((x, y) => maxScore(y.dst) - maxScore(x.dst));          // highest risk first (stable otherwise)
     return groups.map((g) => {
       const s = areaById[g.src]; if (!s) return '';
       const items = g.dst.map((p) => {
         const d = areaById[p.dst]; if (!d) return '';
-        return `<li><a href="${hrefOf(d)}"><b>${esc(shelfName(d))}</b> (${areaRef(d)})</a> ${t('eth_fx', { fx: fxText(p.dst_type) })}</li>`;
+        return `<li><a href="${hrefOf(d)}"><b>${esc(shelfName(d))}</b> (${areaRef(d)})</a> ${t('eth_fx', { fx: fxText(p.dst_type) })}${hasRisk(p) ? `<span class="risk-row">${riskBadge(p)}</span>` : ''}</li>`;
       }).join('');
+      const top = g.dst.find(hasRisk);
       return `<li class="eth-row"><div class="eth-head">${icon('i-gas')}<a href="${hrefOf(s)}"><b>${esc(shelfName(s))}</b></a><small>${t('camera')} ${esc(s.cam)} · ${areaRef(s)}</small></div>
-        <p>${t('eth_gas')}</p><ul class="eth-dst">${items}</ul></li>`;
+        <p>${t('eth_gas')}</p><ul class="eth-dst">${items}</ul>${top ? `<p class="risk-line">${riskAdvice(top)}</p>` : ''}</li>`;
     }).join('');
   }
   function freshRow(a) {
@@ -866,12 +893,26 @@
     const hasBio = Object.keys(BIO).length > 0;
     if (!hasBio && !PAIRS.length) return '';
     const TOP = 6;
-    const mild = INS.layout && INS.layout.mild ? ' ' + t('eth_mild', { n: INS.layout.mild }) : '';
+    const mild = INS.layout && INS.layout.mild && !WATCH.length ? ' ' + t('eth_mild', { n: INS.layout.mild }) : '';
+    const wGroups = [];                       // one row per product pair and camera (several areas of the same product)
+    WATCH.forEach((p) => {
+      const x = areaById[p.a], y = areaById[p.b]; if (!x || !y) return;
+      const [u, v] = [x, y].sort((m, n) => shelfName(m).localeCompare(shelfName(n)));
+      const key = p.cam + '|' + shelfName(u) + '|' + shelfName(v);
+      let g = wGroups.find((q) => q.key === key);
+      if (!g) { g = { key, p, u, v, n: 0 }; wGroups.push(g); }
+      g.n += 1;
+    });
+    const wRow = (g) => `<li class="watch-row"><span><a href="${hrefOf(g.u)}">${esc(shelfName(g.u))}</a> + <a href="${hrefOf(g.v)}">${esc(shelfName(g.v))}</a> <small>${t('camera')} ${esc(g.p.cam)}${g.n > 1 ? ' · ×' + g.n : ''}</small></span><span class="risk-row">${riskBadge(g.p)}</span></li>`;
+    const wAdv = wGroups.length ? `<p class="risk-line">${riskAdvice(wGroups[0].p)}</p>` : '';
+    const watch = wGroups.length ? `<details class="more watch"><summary>${tn('watch_sum', wGroups.length)}</summary>${wAdv}<ul class="watch-list">${wGroups.map(wRow).join('')}</ul></details>` : '';
+    const scored = PAIRS.some(hasRisk) || wGroups.length;
+    const credit = scored ? `<p class="muted small risk-how">${t('risk_how')}</p>${riskCredit()}` : '';
     const fresh = `<h4>${icon('i-leaf', 'g-fresh')}${t('fr_ins_title')} <span class="count">${due.length}</span></h4><p class="muted small">${t(due.length ? 'fr_ins_x' : 'fr_ins_none')}</p>${
       due.length ? `<ul class="ins-list">${due.slice(0, TOP).map(freshRow).join('')}</ul>` : ''}${
       due.length > TOP ? `<details class="more"><summary>${t('fr_more', { n: due.length - TOP })}</summary><ul class="ins-list">${due.slice(TOP).map(freshRow).join('')}</ul></details>` : ''}`;
     const eth = `<h4>${icon('i-gas', 'g-eth')}${t('eth_title')} <span class="count">${PAIRS.length}</span></h4>${
-      PAIRS.length ? `<ul class="eth-list">${ethGroupsHtml()}</ul><p class="eth-tip">${t('eth_tip')}</p>` : `<p class="muted small">${t('eth_none')}</p>`}
+      PAIRS.length ? `<ul class="eth-list">${ethGroupsHtml()}</ul><p class="eth-tip">${t('eth_tip')}</p>` : `<p class="muted small">${t('eth_none')}</p>`}${watch}${credit}
       <p class="muted small">${t('eth_calm')}${mild} ${t('eth_src')}</p>`;
     return `<section class="ins-card c-layout" id="ins-layout-card" aria-labelledby="ins-layout"><h3 id="ins-layout">${icon('i-gas')}${t('lay_title')}</h3><p class="muted">${t('lay_x')}</p>
       <div class="lay-part">${eth}</div><div class="lay-part">${fresh}</div></section>`;
@@ -1046,7 +1087,7 @@
   a.status === 'wrong' && seenName(a) ? `<small>${t('expected')} ${esc(nm(a).main)}, ${t('seen')} ${esc(seenName(a))}</small>` : ''}${
   fcShow(a) ? `<small>${fcText(a)}</small>` : ''}</td></tr>`;
     });
-    $('#print-sheet').innerHTML = `<h1>${t('title')}: ${t('tasks_title')}</h1><p>${esc(D.section || '')} · ${snapText()} · ${tn('n_tasks', tasks.length)}</p>
+    $('#print-sheet').innerHTML = `<h1>${t('title')} · ${t('tasks_title')}</h1><p>${esc(D.section || '')} · ${snapText()} · ${tn('n_tasks', tasks.length)}</p>
       <table><thead><tr><th></th><th>${cap(t('area'))}</th><th>${t('col_product')}</th><th>${t('col_do')}</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
@@ -1060,9 +1101,9 @@
   }
   function renderChrome() {
     document.documentElement.lang = st.lang;
-    document.title = `${t('title')}: ${D.section || ''}`.replace(/: $/, '');
+    document.title = `${t('title')} · ${D.section || ''}`.replace(/ · $/, '');
     $$('[data-i18n]').forEach((n) => { n.textContent = t(n.dataset.i18n); });
-    $('#app-title').textContent = t('title');
+    $('#app-title').innerHTML = esc(t('title')).replace(/\.$/, '<span class="brand-dot">.</span>');
     const camTxt = st.cam === 'all' ? '' : ` · ${t('camera')} ${st.cam}`;
     $('#subtitle').textContent = `${D.section || ''} · ${snapText()}${camTxt}`;
     $('#search').placeholder = t('search_ph');

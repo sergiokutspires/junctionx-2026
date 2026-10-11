@@ -9,6 +9,7 @@ network (same /16, or private addresses), and the server stops by itself after -
 Or double-click SHARE_APP.bat. Stop with Ctrl+C (or close the window).
 """
 import argparse
+import base64
 import http.server
 import ipaddress
 import secrets
@@ -24,6 +25,17 @@ ROOT = Path(__file__).resolve().parents[1]
 # Stable app first; the full-day replay is shared on request: SHARE_APP.bat --dir outputs/day_replay/dashboard
 CANDIDATES = ("outputs/rehearsal_final/dashboard", "outputs/rehearsal_0850/dashboard", "outputs/day_replay/dashboard")
 COOKIE = "fresh_eyes_key"
+LOGO = ROOT / "brand" / "fresh_logo_180.png"  # the team's logo (magenta circle, white "fresh.")
+
+
+def logo_html(px: int) -> str:
+    """The fresh logo as an inline <img> (no external request); the plain wordmark if the file is missing."""
+    try:
+        data = base64.b64encode(LOGO.read_bytes()).decode("ascii")
+    except OSError:
+        return "fresh."
+    return (f"<img src='data:image/png;base64,{data}' alt='fresh.' width={px} height={px} "
+            "style='display:inline-block;vertical-align:middle;border-radius:50%'>")
 
 
 def lan_ip() -> str:
@@ -65,7 +77,8 @@ def make_handler(directory: Path, key: str, host_ip: str, stats: dict):
                 return
             if not has_cookie:
                 body = ("<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width'>"
-                        "<body style='font:20px system-ui;padding:2em'><h1>Fresh.</h1>"
+                        "<title>fresh.</title>"
+                        f"<body style='font:20px system-ui;padding:2em'><h1>{logo_html(96)}</h1>"
                         "<p>Scan the QR code on the screen to open the staff app.</p></body>").encode()
                 self.send_response(403)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -92,12 +105,12 @@ def write_qr_page(url: str, out: Path, folder: Path) -> Path:
     qr.save(out / "qr.png", scale=14, border=2)
     svg = qr.svg_inline(scale=14, border=2)
     page = out / "qr.html"
-    page.write_text(f"""<!doctype html><html lang=en><meta charset=utf-8><title>Fresh. - scan me</title>
+    page.write_text(f"""<!doctype html><html lang=en><meta charset=utf-8><title>fresh. - scan me</title>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <style>body{{margin:0;min-height:100vh;display:grid;place-items:center;background:#fff;color:#14171c;
 font:22px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}}h1{{font-size:56px;margin:.2em 0}}
 .qr svg{{width:min(70vh,80vw);height:auto}}p{{margin:.3em}}small{{color:#5b6370}}</style>
-<div><h1>Fresh.</h1><p>Scan to open the staff app on your phone</p><div class=qr>{svg}</div>
+<div><h1>{logo_html(140)}</h1><p>Scan to open the staff app on your phone</p><div class=qr>{svg}</div>
 <p><b>Same Wi-Fi as this laptop.</b> Nothing is uploaded: the app runs from this laptop.</p>
 <small>{url.split('?')[0]} · serving {folder.relative_to(ROOT) if folder.is_relative_to(ROOT) else folder}</small></div>
 </html>""", encoding="utf-8")

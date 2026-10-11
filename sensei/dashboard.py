@@ -748,6 +748,7 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
     """
     cfg = cfg or Config()
     bio = _load_bio(biology)
+    profiles = freshness.load_ethylene_profiles() if bio else {}     # Ines' compatibility score (absent: no badge)
     bio_out: dict[str, dict] = {}
     eth_items: list[dict] = []
     dets = load_detections(detections)
@@ -878,8 +879,12 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
                 fs = freshness.freshness_status(a["tl"], ts, a["level"], b.get("lim"), RESTOCK_JUMP)
                 if fs is not None:
                     a["fresh"] = fs
-                eth_items.append({"id": area_id, "cam": cam, "quad": quad, "type": b.get("type"),
-                                  "prod": b.get("prod"), "sens": b.get("sens")})
+                it = {"id": area_id, "cam": cam, "quad": quad, "type": b.get("type"),
+                      "prod": b.get("prod"), "sens": b.get("sens")}
+                lv = freshness.profile_levels(profiles, b.get("en"), b.get("type"))
+                if lv:
+                    it["pl"], it["sl"] = lv
+                eth_items.append(it)
             areas.append(a)
 
     for cam in sorted(unreadable, key=lambda c: (len(c), c)):
@@ -890,6 +895,9 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
     insights["totals"] = product_totals(areas)
     pairs, mild = freshness.ethylene_pairs(eth_items)
     insights["layout"] = {"pairs": pairs, "mild": mild}
+    watch = freshness.caution_pairs(eth_items)
+    if watch:
+        insights["layout"]["watch"] = watch             # Ines' caution band (4-6), listed folded on the page
     payload = {
         "version": 1,
         "section": d.get("section", ""),

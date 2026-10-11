@@ -175,3 +175,71 @@ def test_real_planogram_pairs_match_the_research_tool():
         ("6371_7", "6371_4"), ("6371_7", "6371_6"), ("6371_7", "6371_8"),            # cantaloupe -> three watermelons
         ("6376_2", "6376_10")}                                                        # Galia melon -> Zespri kiwi
     assert mild == 49
+
+
+# --------------------------------------------------------------------------- Ines' ethylene compatibility score
+
+def test_ethylene_score_formula_and_bands():
+    """risk = max(producer(A) x sensitivity(B), producer(B) x sensitivity(A)); 1-3 compatible, 4-6 caution, 7-9 avoid."""
+    assert F.ethylene_score("high", "high", "low", "high") == 9          # avocado next to lettuce
+    assert F.ethylene_score("low", "high", "high", "high") == 9          # symmetric
+    assert F.ethylene_score("high", "medium", "medium", "medium") == 6    # 3x2 beats 2x2
+    assert F.ethylene_score("medium", "medium", "medium", "medium") == 4
+    assert F.ethylene_score("low", "low", "low", "low") == 1
+    assert F.ethylene_score("low", "medium", "medium", "low") == 4        # max(1x1 A->B, 2x2 B->A)
+    assert F.ethylene_score(3, 1, 1, 3) == 9 and F.ethylene_score("HIGH", " low", "Low", "Medium") == 6
+    assert F.ethylene_score("high", None, "low", "high") is None and F.ethylene_score("big", "low", "low", "low") is None
+    assert F.ethylene_score(4, 1, 1, 1) is None and F.ethylene_score(True, 1, 1, 1) is None
+    for a in ("low", "medium", "high"):
+        for b in ("low", "medium", "high"):
+            for c in ("low", "medium", "high"):
+                for d in ("low", "medium", "high"):
+                    sc = F.ethylene_score(a, b, c, d)
+                    assert 1 <= sc <= 9 and sc == F.ethylene_score(c, d, a, b)
+    assert [F.score_band(s) for s in range(1, 10)] == ["compatible"] * 3 + ["caution"] * 3 + ["avoid"] * 3
+    assert F.score_band(0) is None and F.score_band(10) is None and F.score_band(None) is None and F.score_band("x") is None
+
+
+def test_ethylene_profiles_and_scored_pairs(tmp_path):
+    csv_path = tmp_path / "profiles.csv"
+    csv_path.write_text("﻿Category;Type;Product;Ethylene producer;Ethylene sensitive;Role\n"
+                        "Fruit;Avocado;Ready-To-Eat Hass Avocado;high;high;x\n"
+                        "Vegetable;Lettuce;Frisee Lettuce;low;high;x\n"
+                        "Fruit;Mango;Mango;medium;medium;x\n"
+                        "Fruit;Melon;Galia Melon;high;medium;x\n"
+                        "Fruit;Melon;Green Melon;low;medium;x\n"
+                        "Fruit;Odd;Odd;huge;low;x\n", encoding="utf-8")
+    pr = F.load_ethylene_profiles(csv_path)
+    assert F.profile_levels(pr, "Frisee Lettuce", "lettuce") == ("low", "high")
+    assert F.profile_levels(pr, "unknown avocado", "Avocado") == ("high", "high")    # falls back to the type
+    assert F.profile_levels(pr, "unknown melon", "melon") is None                    # melons disagree: no type fallback
+    assert F.profile_levels(pr, "odd", "odd") is None                                # bad level ignored
+    assert F.load_ethylene_profiles(tmp_path / "missing.csv") == {"names": {}, "types": {}}
+    assert F.profile_levels({}, "Mango", "mango") is None
+
+    def it(aid, quad, type_, prod, sens, levels):
+        d = item(aid, "1", quad, type_, prod, sens)
+        if levels:
+            d["pl"], d["sl"] = levels
+        return d
+    items = [it("1_1", SQ, "avocado", "high", "high", ("high", "high")),
+             it("1_2", shift(SQ, 105), "lettuce", "low", "high", ("low", "high")),
+             it("1_3", shift(SQ, -105), "mango", "medium", "medium", ("medium", "medium")),
+             it("1_4", shift(SQ, 210), "kiwi", "high", "high", None)]                 # not in the profiles
+    pairs, _ = F.ethylene_pairs(items)
+    by = {(p["src"], p["dst"]): p for p in pairs}
+    assert by[("1_1", "1_2")]["score"] == 9 and by[("1_1", "1_2")]["band"] == "avoid"
+    assert "score" not in by[("1_4", "1_2")] and "band" not in by[("1_4", "1_2")]   # missing profile: as before
+    assert [p.get("score", 0) for p in pairs] == sorted((p.get("score", 0) for p in pairs), reverse=True)
+    watch = F.caution_pairs(items)
+    assert [(w["a"], w["b"], w["score"], w["band"]) for w in watch] == [("1_1", "1_3", 6, "caution")]
+
+
+@pytest.mark.skipif(not F.PROFILES.is_file(), reason="Ines' profiles not present")
+def test_real_profiles_strong_pairs_are_score_9():
+    """The app's strong pairs (high producer next to high sensitivity) are exactly her score 9."""
+    pr = F.load_ethylene_profiles()
+    assert len(pr["names"]) >= 80
+    for name, (p, s) in pr["names"].items():
+        assert p in F.LEVEL_NUM and s in F.LEVEL_NUM, name
+    assert F.ethylene_score(*F.profile_levels(pr, "Ready-To-Eat Hass Avocado", ""), *F.profile_levels(pr, "Frisee Lettuce", "")) == 9

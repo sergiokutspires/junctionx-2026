@@ -1,16 +1,21 @@
-# Fresh.
+<p align="center"><img src="brand/fresh_logo_180.png" width="120" alt="fresh. logo"></p>
+
+# fresh.
 
 **See every shelf. Fix what matters first.**
 
 *Shelf intelligence for fresh produce, from the cameras your store already has.*
 
 
-**Ceiling cameras + a planogram in, a staff to-do list out: for every shelf area of every picture, Fresh
+**Ceiling cameras + a planogram in, a staff to-do list out: for every shelf area of every picture, fresh
 says whether the right product is there and whether it is empty, half or full. It runs on one CPU core for about
 $0.00005 per image and needs no labels to run.**
 
 JunctionX Lisbon 2026, Sensei challenge "Fresh eyes on fresh produce" ([brief](docs/brief.txt)). Team
 **NovaLotus**.
+
+**Live demo:** [sergiokutspires.github.io/junctionx-2026](https://sergiokutspires.github.io/junctionx-2026/): the
+staff app, a replay of the store's day and a 60-second guided tour (camera pictures pixelated for privacy).
 
 | | |
 |---|---|
@@ -46,7 +51,7 @@ prioritised to-do list.
 | Learn to see the shelf "without being told what is right" | Label-free core: unsupervised fit + zero-shot; labels optional | label-free 1.18 / 0.99 / 0.88; fallback `models/real_v1` 1.21 / 1.01 / 0.98 ([`results/labelfree_*.json`](results/README.md)) |
 | Scoring: +1 / -2 identification, +1 / -2 / -3 stock | The answer with the best expected score under exactly these rules | [`scoring.py`](scoring.py) (`best_stock`) |
 | UI/UX for staff (tie-breaker) | Static staff app: Do now list, gondola view, products, insights; Portuguese with English toggle; works offline and on a phone | [`ui/`](ui/), [`sensei/dashboard.py`](sensei/dashboard.py) |
-| Future potential: restocking, waste, planogram adherence, sales by hour | Insights tab from the day's fill timeline: running out soon, sales speed, adherence per camera view, freshness watch | prototype on one day of data, not scored ([HOW_IT_WORKS](docs/HOW_IT_WORKS.md#1-the-pipeline), step 7) |
+| Future potential: restocking, waste, planogram adherence, sales by hour | Insights tab from the day's fill timeline: running out soon, sales speed, adherence per camera view, freshness watch, ethylene neighbour risk | prototype on one day of data, not scored ([HOW_IT_WORKS](docs/HOW_IT_WORKS.md#1-the-pipeline), step 7) |
 | Fleet scale: "no extra hardware and no labelling effort" | Inputs are only the existing frames + `planogram.json`; one CPU core | [Cost](#cost) |
 | Processing cost (judging criterion added at the event, not in the brief text) | Small models in bf16 on one core; about 300 times cheaper than asking Claude Sonnet 5.5 about each image | [`results/benchmark/`](results/README.md#cost-benchmark) |
 
@@ -102,8 +107,9 @@ script [`results/heldout.py`](results/heldout.py).
   (`1751052241.jpg`, 20:24 Lisbon time) is later than all 181 frames we were given (latest 20:16). That is why
   we read the late-frame columns as the closest rehearsal, and the model lowers its stock prior for frames after
   the last labelled one. If the hidden frames span the whole day, the unseen-camera 1.23 is the better guide.
-- Times the 289 hidden areas, 1.41 to 1.48 would be about 410 to 430 of 578 points (the brief's worked example
-  scores 320). This is a multiplication, not a measurement.
+- Times the 289 hidden areas, this gives our estimate of about 355 to 430 of 578 points: about 410 to 430
+  (1.41 to 1.48 x 289) if the hidden pictures are late in the day, and about 355 (1.23 x 289) if they span the
+  whole day (the brief's worked example scores 320). This is a multiplication, not a measurement.
 - Identification is right on 96 to 100% of held-out areas, but "always compliant" already gets 94 to 97%; the
   real signal is wrong-product recall, which is weak on unseen cameras (31 of 117 found, 2 false alarms).
 
@@ -129,7 +135,7 @@ Full discussion: [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md#2-how-we-measured).
 
 | | Per image |
 |---|---:|
-| Fresh, one CPU core (median of 3 runs: 3.66 / 3.77 / 3.84 CPU-s) | **3.77 CPU-s, ~$0.000047** |
+| fresh, one CPU core (median of 3 runs: 3.66 / 3.77 / 3.84 CPU-s) | **3.77 CPU-s, ~$0.000047** |
 | Claude Sonnet 5.5, one call per image with the same two pictures our labellers saw | ~$0.014 (~300x) |
 | Claude Opus 5.5 / Haiku 5.5 | ~$0.028 (~600x) / ~$0.0007 (~15x, accuracy untested) |
 
@@ -139,7 +145,7 @@ us-east-1). Other runs measured 3.59 and 4.53, i.e. $0.00004 to $0.00006. To rep
 the machine otherwise idle (a clean-room test on a busy machine measured about 5.8 CPU-s per image):
 `$env:SENSEI_THREADS="1"; .venv\Scripts\python tools\benchmark_cost.py` in PowerShell, or
 `SENSEI_THREADS=1 .venv/bin/python tools/benchmark_cost.py` in bash. A 14-camera section photographed
-every 5 minutes for 14 hours a day is 70,560 images a month, about **$3.3 a month**. The optional product
+every 5 minutes for 14 hours a day is 70,560 images a month, about **$3 a month** ($3.29). The optional product
 boxes add 15.7 CPU-s per frame. Files: [`results/benchmark/`](results/README.md#cost-benchmark); full table
 and caveats in [HOW_IT_WORKS](docs/HOW_IT_WORKS.md#3-cost).
 
@@ -165,6 +171,12 @@ Pictures in a flat folder (no camera folder in the path or name) are fine: the c
   the newest app from this laptop and opens a QR code. Phones on the same Wi-Fi scan it; a secret key inside the
   QR code is required, only clients on the laptop's own network are served, the server stops by itself after
   4 hours, and nothing is uploaded. Close the window to stop.
+- **Live demo on the validation pictures:** run `SUBMIT.bat` on the validation images first, then double-click
+  `LIVE_DEMO.bat`: it shares that staff app (`submission\dashboard`) to phones by QR code, the same way.
+- **Public demo site:** `.venv\Scripts\python tools\build_site.py` builds the landing page, the staff app and the
+  day replay into `outputs\site` with every camera picture pixelated (`tools/make_public_demo.py`); it is
+  published on the `gh-pages` branch as https://sergiokutspires.github.io/junctionx-2026/.
+  `tools/build_vault.py` adds a password-protected `team/` area for Sensei with the sharp pictures, stored only as AES-GCM ciphertext and decrypted in the browser.
 
 <details>
 <summary>From a fresh clone (install, dataset, fit)</summary>
@@ -185,9 +197,9 @@ Pictures in a flat folder (no camera folder in the path or name) are fine: the c
    ```powershell
    .venv\Scripts\python -m pytest tests -q -m "not slow"
    ```
-   With `data/raw` in place and nothing else (no fitted models or caches) this gives `193 passed, 4 skipped,
-   3 deselected` (the 4 skipped need the Colab bundle or local caches; the 3 deselected are the slow deep-backend
-   tests; the full suite, without `-m "not slow"`, gives `196 passed, 4 skipped`).
+   On the team laptop on 2026-10-11 (with its local caches) this gives `207 passed, 3 deselected` (the 3
+   deselected are the slow deep-backend tests; the full suite has 210 tests). On a fresh clone with only
+   `data/raw`, the tests that need the Colab bundle or local caches are skipped.
 3. Fit the submission model (about 12 CPU-minutes of feature extraction for 181 images, about 5 minutes
    wall-clock on an 8-core laptop):
    ```powershell
@@ -280,6 +292,9 @@ English toggle. A shift starts on **Do now**: wrong products and empty shelves f
 the time the picture was taken. **Gondolas** shows each camera view with coloured area outlines and the day's fill line; product boxes and "about N visible units" estimates appear on demand.
 **Products** groups the areas of each product. **Insights** shows what is running out soon, how fast each
 product sells, how well each camera view follows the planogram, and freshness reminders from produce biology.
+Neighbour-risk badges flag products shelved side by side that speed up each other's ripening, using Inês Matias
+Medeiros' ethylene compatibility score (max(producer A x sensitivity B, producer B x sensitivity A), 1 to 9:
+1-3 compatible, 4-6 caution, 7-9 avoid); it is a layout suggestion, not an alarm.
 **Dia** (only when there are several pictures per camera) replays the day; **Hora de fecho** holds back
 perishable top-ups near closing (see [What's new](#whats-new-11-october)). Counts are always labelled as
 estimates.
@@ -291,16 +306,21 @@ README.md                  start here
 SUBMIT.bat                 validation day: double-click or drop a folder / zip on it
 SUBMIT_LABEL_FREE.bat      the same with the label-free fallback models/real_v1 (writes submission_label_free\)
 SHARE_APP.bat              staff app on phones: local server + QR code with a secret key (nothing is uploaded)
+LIVE_DEMO.bat              after SUBMIT.bat on the validation pictures: shares that staff app to phones by QR code
 scoring.py                 the challenge scoring rules and the cost-aware decision (test_scoring.py: brief example)
 sensei/                    the package: data, features, stock, compliance, calibrate, pipeline, submit, dashboard, ...
-ui/                        staff app (index.html, app.js, style.css)
+ui/                        staff app (index.html, app.js, style.css, theme.css)
+site/                      public demo landing page, guided tour and Sensei team login (built by tools/build_site.py
+                           and tools/build_vault.py; hosted on the gh-pages branch)
+brand/                     the fresh. logo (PNG; the only images in the repository)
 results/                   evidence: score and cost files behind every number, and the scripts that make them
 docs/HOW_IT_WORKS.md       technical detail: pipeline, measurement, cost, command line
 docs/LABELLING_GUIDE.md    how the AI answer key was made, and what it is not
 docs/brief.txt             the challenge brief (text)
 docs/produce_biology_*     sources for the freshness watch
 data/labels/               the AI answer key and every vote (no images)
-tools/                     cost benchmark, LLM cost comparison, change gate, vote aggregation, labelling helpers
+tools/                     cost benchmark, LLM cost comparison, change gate, vote aggregation, labelling helpers,
+                           phone sharing, public demo site (build_site, make_public_demo, build_vault, make_demo_video)
 tests/                     pytest suite (lite backend; deep tests marked slow)
 colab/                     free Colab notebooks
 pitch/                     the 3-minute pitch (slides, script, Q&A)

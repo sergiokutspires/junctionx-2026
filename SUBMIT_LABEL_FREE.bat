@@ -1,13 +1,13 @@
 @echo off
 rem LABEL-FREE FALLBACK (use only if AI-made annotations are not allowed). Validation day: double-click, or drag the validation FOLDER / .zip (or the image files) onto this file.
 rem Result: submission_label_free\predictions.json (hand this in) and submission_label_free\dashboard\index.html (staff app).
-rem Extra options can follow the paths, e.g.  SUBMIT.bat "D:\val.zip" --no-detect
+rem Extra options can follow the paths, e.g.  SUBMIT_LABEL_FREE.bat "D:\val.zip" --no-detect
 rem Exit code, as for python -m sensei submit: 0 check passed, 1 check failed, 2 input error.
 rem Set SENSEI_NOPAUSE=1 to skip the final pause when calling this file from a script.
 setlocal
 set "CODE=2"
 cd /d "%~dp0"
-title Sensei - validation run (LABEL-FREE fallback model)
+title fresh. - validation run (LABEL-FREE fallback model)
 if not exist ".venv\Scripts\python.exe" (
   echo ERROR: .venv\Scripts\python.exe not found next to this file.
   goto done

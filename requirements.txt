@@ -8,3 +8,5 @@ pytest>=7.0
 torch>=2.0
 transformers>=4.38
 safetensors>=0.4
+# tools/build_vault.py (Sensei team area: AES-GCM)
+cryptography>=42

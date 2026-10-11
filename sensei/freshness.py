@@ -13,6 +13,10 @@ Biology per product comes from ``docs/produce_biology_reference.csv`` (researche
 * **Ethylene neighbours** (``ethylene_pairs``): areas of the same camera whose quads touch or nearly touch
   (gap <= ``GAP_FRAC`` x sqrt(area of the smaller quad), the rule of ``tools/ethylene_neighbours.py``) where one
   product is a high ethylene producer and the other is highly ethylene sensitive. A layout suggestion only.
+* **Compatibility score** (``ethylene_score``, design of the team biologist Ines Matias Medeiros, see
+  ``docs/produce_biology_notes.md`` "Team biologist review"): with Low = 1, Medium = 2, High = 3 from
+  ``docs/ines/ethylene_profiles.csv``, ``risk = max(producer(A) x sensitivity(B), producer(B) x sensitivity(A))``,
+  1 to 9; bands 1-3 compatible, 4-6 caution, 7-9 avoid. Products missing from her profiles simply get no score.
 """
 from __future__ import annotations
 
@@ -30,6 +34,7 @@ log = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parent.parent
 REFERENCE = ROOT / "docs" / "produce_biology_reference.csv"
 TEMPLATE = ROOT / "docs" / "produce_biology_template.csv"
+PROFILES = ROOT / "docs" / "ines" / "ethylene_profiles.csv"
 
 RESTOCK_JUMP = 0.30      # same rule as sensei.dashboard.RESTOCK_JUMP (Insights restocks)
 GAP_FRAC = 0.25          # neighbours: gap <= 0.25 x sqrt(smaller quad area), checked by eye on the store photos
@@ -249,7 +254,8 @@ def are_neighbours(p: Any, q: Any, gap_frac: float = GAP_FRAC) -> tuple[bool, fl
 def ethylene_pairs(items: list[dict], gap_frac: float = GAP_FRAC) -> tuple[list[dict], int]:
     """Producer -> sensitive neighbour pairs. ``items``: ``{"id", "cam", "quad", "type", "prod", "sens"}`` (the
     product actually on the shelf). Returns ``(pairs, n_mild)``: ``pairs`` = high producer next to high
-    sensitivity, ``{"cam", "src", "dst", "src_type", "dst_type", "gap"}`` sorted by camera and areas; ``n_mild`` =
+    sensitivity, ``{"cam", "src", "dst", "src_type", "dst_type", "gap"}`` (+ ``score``/``band`` of Ines' compatibility
+    score when both items carry her levels ``pl``/``sl``) sorted by score (highest first), camera and areas; ``n_mild`` =
     directional pairs one step milder (high next to medium, medium next to high), counted, not listed. Two areas of
     the same product type are skipped (they ripen together anyway)."""
     by_cam: dict[str, list[dict]] = {}
@@ -269,12 +275,111 @@ def ethylene_pairs(items: list[dict], gap_frac: float = GAP_FRAC) -> tuple[list[
                 for src, dst in ((a, b), (b, a)):
                     ps, sd = src.get("prod"), dst.get("sens")
                     if ps == "high" and sd == "high":
-                        pairs.append({"cam": cam, "src": str(src["id"]), "dst": str(dst["id"]),
-                                      "src_type": src["type"], "dst_type": dst["type"], "gap": round(gap, 1)})
+                        pairs.append(scored({"cam": cam, "src": str(src["id"]), "dst": str(dst["id"]),
+                                             "src_type": src["type"], "dst_type": dst["type"], "gap": round(gap, 1)},
+                                            src, dst))
                     elif (ps, sd) in (("high", "medium"), ("medium", "high")):
                         mild += 1
-    pairs.sort(key=lambda p: (len(p["cam"]), p["cam"], _nat(p["src"]), _nat(p["dst"])))
+    pairs.sort(key=lambda p: (-p.get("score", 0), len(p["cam"]), p["cam"], _nat(p["src"]), _nat(p["dst"])))
     return pairs, mild
+
+
+# --------------------------------------------------------------------------- compatibility score (Ines)
+
+LEVEL_NUM = {"low": 1, "medium": 2, "high": 3}
+BANDS = ((3, "compatible"), (6, "caution"), (9, "avoid"))
+
+
+def ethylene_score(prod_a: Any, sens_a: Any, prod_b: Any, sens_b: Any) -> int | None:
+    """Ines' pair risk ``max(producer(A) x sensitivity(B), producer(B) x sensitivity(A))``, 1 to 9, from the levels
+    high/medium/low (or 3/2/1). Any missing or unknown level gives None (no score)."""
+    def num(v: Any) -> int | None:
+        if isinstance(v, int) and not isinstance(v, bool):
+            return v if v in (1, 2, 3) else None
+        return LEVEL_NUM.get(str(v or "").strip().lower())
+    pa, sa, pb, sb = num(prod_a), num(sens_a), num(prod_b), num(sens_b)
+    if None in (pa, sa, pb, sb):
+        return None
+    return max(pa * sb, pb * sa)
+
+
+def score_band(score: Any) -> str | None:
+    """1-3 compatible, 4-6 caution, 7-9 avoid; None outside 1..9."""
+    try:
+        s = int(score)
+    except (TypeError, ValueError):
+        return None
+    if not 1 <= s <= 9:
+        return None
+    return next(b for top, b in BANDS if s <= top)
+
+
+def load_ethylene_profiles(path: str | Path | None = PROFILES) -> dict[str, dict[str, Any]]:
+    """Ines' per-product ethylene levels: ``{"names": {lower English product: (prod, sens)}, "types": {lower type:
+    (prod, sens)}}``; a type is kept only when all its products agree. Missing or unreadable file -> empty maps."""
+    out: dict[str, dict[str, Any]] = {"names": {}, "types": {}}
+    p = Path(path) if path else None
+    if p is None or not p.is_file():
+        return out
+    try:
+        text = _read_text(p)
+        first = text.splitlines()[0] if text else ""
+        delim = ";" if first.count(";") >= first.count(",") else ","
+        rows = list(csv.DictReader(io.StringIO(text), delimiter=delim))
+    except (OSError, csv.Error) as exc:
+        log.warning("freshness: ethylene profiles unreadable (%s); no compatibility scores", exc)
+        return out
+    types: dict[str, set] = {}
+    for r in rows:
+        r = {str(k or "").strip().lower(): str(v or "").strip() for k, v in r.items() if k is not None}
+        lv = (r.get("ethylene producer", "").lower(), r.get("ethylene sensitive", "").lower())
+        if lv[0] not in LEVEL_NUM or lv[1] not in LEVEL_NUM:
+            continue
+        if r.get("product"):
+            out["names"][r["product"].lower()] = lv
+        if r.get("type"):
+            types.setdefault(r["type"].lower(), set()).add(lv)
+    out["types"] = {k: next(iter(v)) for k, v in types.items() if len(v) == 1}
+    return out
+
+
+def profile_levels(profiles: dict, english: Any, type_: Any) -> tuple[str, str] | None:
+    """(prod, sens) of a product in Ines' profiles: by English name, else by type; None when missing."""
+    if not profiles:
+        return None
+    hit = (profiles.get("names") or {}).get(str(english or "").strip().lower())
+    return hit or (profiles.get("types") or {}).get(str(type_ or "").strip().lower())
+
+
+def scored(pair: dict, a: dict, b: dict) -> dict:
+    """``pair`` plus ``score``/``band`` when both items carry Ines' levels (``pl``/``sl``); unchanged otherwise."""
+    sc = ethylene_score(a.get("pl"), a.get("sl"), b.get("pl"), b.get("sl"))
+    if sc is not None:
+        pair["score"], pair["band"] = sc, score_band(sc)
+    return pair
+
+
+def caution_pairs(items: list[dict], gap_frac: float = GAP_FRAC) -> list[dict]:
+    """Neighbour pairs (either order counted once) whose score is in the caution band (4-6), highest score first:
+    ``{"cam", "a", "b", "a_type", "b_type", "score", "band"}``. Items without Ines' levels are skipped."""
+    by_cam: dict[str, list[dict]] = {}
+    for it in items:
+        if it.get("quad") is not None and it.get("type") and it.get("pl") and it.get("sl"):
+            by_cam.setdefault(str(it["cam"]), []).append(it)
+    out: list[dict] = []
+    for cam, its in by_cam.items():
+        for i, a in enumerate(its):
+            for b in its[i + 1:]:
+                if a["type"] == b["type"]:
+                    continue
+                sc = ethylene_score(a["pl"], a["sl"], b["pl"], b["sl"])
+                if sc is None or score_band(sc) != "caution" or not are_neighbours(a["quad"], b["quad"], gap_frac)[0]:
+                    continue
+                x, y = sorted((a, b), key=lambda it: _nat(str(it["id"])))
+                out.append({"cam": cam, "a": str(x["id"]), "b": str(y["id"]), "a_type": x["type"], "b_type": y["type"],
+                            "score": sc, "band": "caution"})
+    out.sort(key=lambda p: (-p["score"], len(p["cam"]), p["cam"], _nat(p["a"]), _nat(p["b"])))
+    return out
 
 
 def _nat(area_id: str) -> tuple:

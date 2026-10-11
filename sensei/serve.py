@@ -114,7 +114,7 @@ class Analyzer:
 
 def make_handler(analyzer: Analyzer):
     class Handler(BaseHTTPRequestHandler):
-        server_version = "FreshEyes/1"
+        server_version = "fresh/1"
 
         def _send(self, code: int, obj: dict) -> None:
             body = json.dumps(obj, ensure_ascii=False).encode("utf-8")
@@ -159,7 +159,7 @@ def make_handler(analyzer: Analyzer):
 def serve(model_dir: str | Path, port: int = 8765, device: str | None = None) -> None:
     analyzer = Analyzer(model_dir, device=device)
     httpd = HTTPServer(("127.0.0.1", port), make_handler(analyzer))
-    print(f"Fresh endpoint on http://127.0.0.1:{port}  (POST /analyze, GET /health; Ctrl+C stops)", flush=True)
+    print(f"Serving the fresh endpoint on http://127.0.0.1:{port}  (POST /analyze, GET /health; Ctrl+C stops)", flush=True)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

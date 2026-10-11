@@ -12,7 +12,7 @@ import numpy as np
 import pytest
 from PIL import Image
 
-from sensei import dashboard
+from sensei import dashboard, freshness
 
 PREFIX = "window.SHELF_DATA = "
 UI = Path(__file__).resolve().parents[1] / "ui"
@@ -520,7 +520,6 @@ def test_real_counts_are_plausible():
 
 # --------------------------------------------------------------------------- freshness watch + ethylene neighbours
 
-from sensei import freshness  # noqa: E402
 
 BIO_HEADER = ("type;product_english;planogram_name_pt;loose_or_packed;areas;shelf_life_class;hours_on_display_before_checking;"
               "ethylene_producer;ethylene_sensitive;visible_spoilage_signs;source;confidence")
@@ -578,6 +577,8 @@ def test_build_flags_ethylene_neighbours_with_likely_product(tmp_path):
     lay = read_data_js(out)["insights"]["layout"]
     assert [(p["src"], p["dst"], p["dst_type"]) for p in lay["pairs"]] == [("7_1", "7_2", "lettuce"), ("7_3", "7_2", "lettuce")]
     assert lay["mild"] == 0
+    if freshness.PROFILES.is_file():                                      # Ines' score: avocado -> lettuce is 9/9 "avoid"
+        assert {(p["score"], p["band"]) for p in lay["pairs"]} == {(9, "avoid")}
 
 
 def test_build_degrades_without_biology(fake, tmp_path):

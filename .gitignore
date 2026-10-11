@@ -47,3 +47,19 @@ docs/morning_summary.md
 # PDFs exported from the deck contain store photos (local only)
 pitch/*.pdf
 docs/lovable_prompt.md
+
+# Team logo (our own artwork, not store data)
+!brand/*.png
+
+# Sensei team password for the encrypted demo (never publish)
+docs/team_password.txt
+
+# Generated outputs and media (never published)
+submission/
+*.pdf
+*.mp4
+*.webm
+*.mov
+*.pptx
+# Junction form paste helper (local)
+docs/junction_form.*

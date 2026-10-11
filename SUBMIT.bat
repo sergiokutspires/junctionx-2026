@@ -7,7 +7,7 @@ rem Set SENSEI_NOPAUSE=1 to skip the final pause when calling this file from a s
 setlocal
 set "CODE=2"
 cd /d "%~dp0"
-title Sensei - validation run
+title fresh. - validation run
 if not exist ".venv\Scripts\python.exe" (
   echo ERROR: .venv\Scripts\python.exe not found next to this file.
   goto done

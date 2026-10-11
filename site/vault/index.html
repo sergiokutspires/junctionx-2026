@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#F5F0E6">
+<title>Sensei team access · fresh.</title>
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="stylesheet" href="vault.css">
+</head>
+<body>
+<main id="vault-app" class="wrap">
+  <img class="logo" src="../assets/logo.png" alt="fresh." width="132" height="132">
+  <section class="card" aria-labelledby="title">
+    <h1 id="title">Sensei team access</h1>
+    <p class="lead">The staff app with the store's real, sharp camera pictures. For the Sensei team only.</p>
+
+    <form id="login" autocomplete="on">
+      <input type="text" name="username" value="sensei-team" autocomplete="username" hidden>
+      <label for="pw">Password</label>
+      <input id="pw" name="password" type="password" autocomplete="current-password" autocapitalize="off"
+             autocorrect="off" spellcheck="false" required>
+      <button id="go" class="btn primary" type="submit">Open</button>
+    </form>
+    <p id="msg" class="msg" role="status" aria-live="polite"></p>
+
+    <div id="open" class="open" hidden>
+      <a class="btn primary big" href="app/">Open the staff app (sharp pictures)</a>
+      <a class="btn big" href="day/">Replay the store's day</a>
+      <button id="logout" class="linkbtn" type="button">Log out</button>
+    </div>
+
+    <p id="unsupported" class="msg err" hidden>This browser can't open the team area: it needs service workers and
+      the Web Crypto API (any recent Chrome, Edge, Firefox or Safari, over https). Please try another browser.</p>
+    <p id="inapp" class="msg" hidden>It looks like this page opened inside another app (LinkedIn, Instagram, Facebook...).
+      Use that app's menu (often <b>&middot;&middot;&middot;</b>) and choose <b>Open in browser</b> / <b>Open in Safari</b>.</p>
+
+    <p class="hint">No password? Ask the fresh. team; it was sent to Sensei privately.</p>
+    <p class="note">Pictures are decrypted in your browser; the server only stores encrypted files.</p>
+  </section>
+  <p class="back"><a href="../">Back to the public demo</a></p>
+</main>
+<script src="vault.js"></script>
+</body>
+</html>

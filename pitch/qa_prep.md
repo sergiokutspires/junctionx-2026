@@ -289,11 +289,14 @@ melon next to kiwi). It is a layout suggestion, not a measurement from the pictu
 - **Camera moved?** Cameras are fixed; areas are drawn per camera. If one moves, its areas need redrawing.
 - **Is the app tied to the internet?** No. It is a static page and opens from a file, a USB stick or a phone. In
   production the tasks would go into the alerts your staff already get; the page is the reference UI.
+- **Can I see it on my phone, on your pictures?** Yes: after `SUBMIT.bat` on the validation images, double-click
+  `LIVE_DEMO.bat` and let them scan the QR (same Wi-Fi; it is served from this laptop, nothing is uploaded, and it
+  stops when the window is closed).
 - **Languages?** Portuguese by default, English one tap away; product names come from your catalogue.
 - **Privacy?** The scores use only the planogram areas; the optional box detector sees the whole picture and keeps
   only boxes inside the areas, dropping those it labels as hands or baskets. We never identify people. The staff app
   shows the frame, downscaled.
-- **Why the name "Fresh."?** Fresh produce, fresh eyes on the shelf (your challenge title), and a full stop: the shelf, sorted. Tagline: *See every shelf. Fix what matters first.*
+- **Why the name "fresh."?** Fresh produce, fresh eyes on the shelf (your challenge title), and a full stop: the shelf, sorted. Lowercase, like a label on a crate. Tagline: *See every shelf. Fix what matters first.*
 - **What would you do with another week?** Calibrate confidence (check that "Alta" is right more often than
   "Média"), hand-count 20 to 30 areas to check the unit counts, close tasks from the area events, and run on
   a second store.

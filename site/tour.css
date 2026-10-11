@@ -1,0 +1,85 @@
+/* fresh. guided tour (public demo copies only). Uses the staff app's theme tokens (ui/theme.css section 1). */
+:root { --ft-brand: #C32172; --ft-brand-ink: #FFFFFF; --ft-bottom: 16px; }
+
+.ft-pill {
+  position: fixed; z-index: 60; bottom: calc(var(--ft-bottom) + env(safe-area-inset-bottom, 0px));
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 18px;
+  border: 0; border-radius: 999px; cursor: pointer; text-decoration: none;
+  font: 700 .9375rem/1 var(--font-display, -apple-system, "Segoe UI", system-ui, sans-serif);
+  box-shadow: var(--shadow-lg, 0 10px 24px rgba(0,0,0,.15));
+}
+.ft-start { right: 16px; background: var(--ft-brand); color: var(--ft-brand-ink); }
+.ft-start:hover { filter: brightness(1.08); }
+.ft-start { gap: 8px; }
+.ft-start > span:first-child { font-size: .75em; }
+.ft-pill:focus-visible, .ft-btn:focus-visible, .ft-x:focus-visible, .ft-links a:focus-visible { outline: 3px solid var(--focus, #0071E3); outline-offset: 2px; }
+.ft-pill[hidden], .ft-card[hidden], .ft-spot[hidden], .ft-shade[hidden] { display: none !important; }
+html.ft-on .ft-start { display: none; }
+
+.ft-spot {
+  position: fixed; z-index: 70; pointer-events: none; border-radius: 16px;
+  box-shadow: 0 0 0 3px var(--ft-brand), 0 0 0 200vmax rgba(20, 16, 10, .55);
+  transition: left .25s ease, top .25s ease, width .25s ease, height .25s ease;
+}
+.ft-shade { position: fixed; inset: 0; z-index: 70; background: rgba(20, 16, 10, .55); }
+
+.ft-card {
+  position: fixed; z-index: 80; box-sizing: border-box; max-width: calc(100vw - 32px);
+  padding: 18px 20px 16px; border-radius: 20px; background: var(--surface, #fff); color: var(--text, #1D1D1F);
+  box-shadow: var(--shadow-lg, 0 20px 48px rgba(0,0,0,.2));
+  font: 400 1rem/1.45 var(--font, -apple-system, "Segoe UI", system-ui, sans-serif);
+  transition: left .25s ease, top .25s ease;
+}
+.ft-card:focus { outline: none; }
+.ft-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.ft-count { font-size: .8125rem; font-weight: 700; color: var(--ft-brand); letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+.ft-x { width: 36px; height: 36px; margin: -8px -10px 0 0; border: 0; border-radius: 50%; background: transparent; color: var(--muted, #636366); font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.ft-x:hover { background: var(--fill, rgba(0,0,0,.06)); }
+.ft-title { margin: 0 0 6px; font: 800 1.25rem/1.2 var(--font-display, -apple-system, "Segoe UI", system-ui, sans-serif); letter-spacing: -.01em; color: var(--text, #1D1D1F); }
+.ft-text { margin: 0; color: var(--text, #1D1D1F); }
+.ft-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.ft-links[hidden] { display: none; }
+.ft-links a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 999px; background: var(--fill, rgba(0,0,0,.06)); color: var(--text, #1D1D1F); font-weight: 700; text-decoration: none; }
+.ft-links a:hover { background: var(--surface-2, #F6F2EA); }
+.ft-nav { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+.ft-btn { min-height: 44px; min-width: 88px; padding: 0 18px; border: 0; border-radius: 12px; cursor: pointer; font: 700 .9375rem/1 var(--font, -apple-system, "Segoe UI", system-ui, sans-serif); }
+.ft-main { background: var(--ft-brand); color: var(--ft-brand-ink); }
+.ft-main:hover { filter: brightness(1.08); }
+.ft-ghost { background: var(--fill, rgba(0,0,0,.06)); color: var(--text, #1D1D1F); }
+.ft-btn:disabled { opacity: .4; cursor: default; }
+
+/* landing-page screenshots: no tour chrome, no banner */
+html.ft-shot .ft-pill, html.ft-shot .public-note { display: none !important; }
+
+html.ft-instant .ft-spot, html.ft-instant .ft-card { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .ft-spot, .ft-card { transition: none; }
+}
+/* public-demo banner: one quiet line, with the way home on the left */
+.public-note {
+  position: sticky; top: 0; z-index: 50; margin: 0; display: flex; align-items: center; gap: 16px;
+  min-height: 36px; padding: 6px 16px; box-sizing: border-box;
+  background: #1C1A17; color: rgba(245, 240, 230, .78);
+  font: 500 13px/1.3 var(--font, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif);
+}
+.public-note .pn-home {
+  flex: none; display: inline-flex; align-items: baseline; gap: 6px; min-height: 24px; padding: 2px 10px 2px 8px;
+  border-radius: 999px; color: #F5F0E6; text-decoration: none;
+  font: 700 15px/1.2 var(--font-display, -apple-system, "Segoe UI", system-ui, sans-serif); letter-spacing: -.02em;
+}
+.public-note .pn-home:hover { background: rgba(255, 255, 255, .1); }
+.public-note .pn-home:focus-visible { outline: 2px solid #66B2FF; outline-offset: 2px; }
+.public-note .pn-dot { color: #E04A93; }
+.public-note .pn-long, .public-note .pn-short { flex: 1; text-align: center; padding-right: 72px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.public-note .pn-short { display: none; }
+@media (max-width: 759px) {
+  .public-note { gap: 8px; padding: 4px 12px 4px 6px; font-size: 12px; }
+  .public-note .pn-long { display: none; }
+  .public-note .pn-short { display: block; text-align: right; padding-right: 0; }
+  /* the tour becomes a small round play button, so it never covers a task card */
+  .ft-start { width: 48px; height: 48px; min-height: 0; padding: 0; justify-content: center; right: 12px; }
+  .ft-start > span:first-child { font-size: 1rem; margin-left: 2px; }
+  .ft-start .ft-lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  body { padding-bottom: 64px; }
+}
+@media print { .ft-pill, .ft-spot, .ft-shade, .ft-card { display: none !important; } }

@@ -1,4 +1,4 @@
-# Junction submission text: Fresh.
+# Junction submission text: fresh.
 
 Ready to paste into the Junction project form. Every number below comes from a file in the repository
 (`results/`, `data/labels/`, `pitch/pitch.md`, "Numbers you may say"). If a form field has a length limit, use the
@@ -10,23 +10,98 @@ picture: they are Sensei's data, and `pitch/slides_standalone.html` and the staf
 
 ---
 
+## Junction project form (copy-paste, field by field)
+
+| Field | What to put |
+|---|---|
+| Project Name (max 30) | `fresh.` (the project, not the team: the team is NovaLotus) |
+| Punchline (max 200) | see below (184 characters) |
+| Description (max 5000, markdown) | see below (3516 characters) |
+| Challenge Picker | Fresh eyes on fresh produce! |
+| Project Demo | https://sergiokutspires.github.io/junctionx-2026/ (live site: landing page, staff app, day replay, guided tour) |
+| Source Code | https://github.com/sergiokutspires/junctionx-2026 |
+| Video | your unlisted YouTube link of `outputs/pop/fresh_demo_public.mp4` (pictures pixelated) |
+| Other Link | https://github.com/sergiokutspires/junctionx-2026/tree/main/results (the evidence behind every number) |
+| Presentation (max 20 MB) | `pitch/slides_backup.pdf` (15 pages, about 1.5 MB) |
+
+### Punchline
+
+```text
+With fresh, the ceiling cameras Sensei already has become a to-do list for the produce shelf: what to restock, what to swap back, what to leave alone. One CPU core, $0.00005 per image.
+```
+
+### Description
+
+```markdown
+**See every shelf. Fix what matters first.**
+
+## The problem
+Produce is the hardest shelf in a store to watch: loose fruit, look-alike products, and crates that look the same empty or full. At 06:14 on camera 6215 in Leiria, four banana trays were already empty and two banana crates held oranges. *The plan says where things go. The camera sees what is there.*
+
+## What fresh. does
+For every planogram area in every camera picture, fresh answers Sensei's two questions (is the right product there? is it empty, half or full?) and writes them in the challenge's `annotations.json` format.
+
+A staff app (Portuguese by default, works on a phone, fully offline) turns the answers into one to-do list:
+- **Repor**: restock this empty area
+- **Trocar**: a wrong product is here, swap it back
+- **Deixar**: this area is fine
+
+Wrong products and empty shelves come first. When it is unsure, it says so: *confirmar à vista*.
+
+For the manager, the same pictures give early warnings before a shelf runs empty (in a one-day backtest, flagged areas emptied within about 2 hours 8x as often as the rest), sales speed by hour, freshness checks from time on display, and ethylene-neighbour risk scores (a compatibility score designed by Inês).
+
+## How it works
+1. **Cut out every area:** each planogram quad is warped into a crop.
+2. **Stock, with no labels:** DINOv2-small learns what an empty crate or tray looks like from the store's own pictures; the produce share of the area gives empty, half or full.
+3. **Product, with no labels:** CLIP B/16 compares the crop with the store's catalogue (zero-shot).
+4. **Calibration:** small heads and a per-area memory, trained on an answer key of 1,962 areas made by AI labellers (3 votes per area, no human labelling, never on validation pictures).
+5. **Decide:** the answer with the best expected score under the challenge's own rules. "Too full" costs most, so when unsure it answers lower.
+
+## Results
+Held-out points per area (maximum 2), measured on our AI-made answer key, not on Sensei's annotations:
+
+| | Unseen cameras | Last two frames | Last frame |
+|---|---:|---:|---:|
+| **fresh, calibrated** | **1.23** | **1.41** | **1.48** |
+| fresh, no labels at all | 1.18 | 0.99 | 0.88 |
+| Always "compliant + full" | 0.76 | 0.46 | 0.18 |
+
+- 99% of empty shelves caught (181 of 182); 2 false wrong-product alarms in 1,845 correct areas.
+- Estimate for the hidden set: about 355 to 430 of 578 points. An estimate, not a promise.
+- **Honest limit:** on a brand-new camera it finds only 1 wrong product in 4 until it is calibrated.
+
+## Cost
+About **3.8 CPU-seconds per image on one core, no GPU: about $0.00005 per image** (5 cents per 1,000 images), or about $3 a month for a 14-camera produce section. That is about 300x cheaper than asking an LLM (Claude Sonnet) about each image (a cost comparison, not an accuracy one).
+
+## Run it
+`SUBMIT.bat validation.zip` gives a checked `predictions.json` plus the staff app in about a minute on a laptop. The models are fingerprinted, predictions are byte-identical across rebuilds, and over 200 automated tests pass. Free, open models only (CLIP, DINOv2, OWLv2), with PyTorch, scikit-learn and a plain HTML/JS app.
+
+## Next: a four-week shadow pilot
+One silent week at Leiria against Sensei's restock logs, then a second store. We need a frame feed and one contact; Sensei gets a weekly accuracy report.
+
+## Team NovaLotus
+Sérgio Kuts Pires and Inês Matias Medeiros, a duo from NOVA (FCT, IMS & SBE). Built with AI coding assistance (Claude Code).
+```
+
+---
+
 ## Fields
 
 | Field | Text |
 |---|---|
-| Project name | **Fresh.** |
+| Project name | **fresh.** |
 | Team | **NovaLotus**: Sérgio Kuts Pires, Inês Matias Medeiros (NOVA FCT, IMS & SBE) |
 | Challenge | Sensei: "Fresh eyes on fresh produce" |
-| Tagline (short) | Your ceiling cameras, turned into a produce restock list. |
+| Tagline (short) | See every shelf. Fix what matters first. |
 | GitHub | https://github.com/sergiokutspires/junctionx-2026 |
 
 ## One-liner
 
-Fresh turns ceiling-camera pictures into a staff to-do list for the produce shelf: restock, swap back, or leave alone.
+With fresh, ceiling-camera pictures become a staff to-do list for the produce shelf: restock, swap back, or leave alone.
 
 ## Description (about 150 words)
 
-Fresh reads the fruit and vegetable shelf from the ceiling cameras Sensei already has. For every planogram
+Our project, fresh, reads the fruit and vegetable shelf from the ceiling cameras Sensei already has. For every planogram
 area in every picture it answers the brief's questions: is the right product there, and is the area empty, half or
 full? A static staff app turns the answers into a Portuguese phone to-do list: Repor (restock), Trocar (swap a wrong
 product), Deixar (leave alone), each with the time of the picture and how sure the system is. It runs on one CPU
@@ -58,8 +133,8 @@ without the held-out cameras or frames.
 
 | | Unseen cameras (1,962 areas) | Last two frames (304) | Last frame (152) |
 |---|---:|---:|---:|
-| **Fresh, calibrated** (the submission model) | **1.23** | **1.41** | **1.48** |
-| Fresh, no labels at all | 1.18 | 0.99 | 0.88 |
+| **fresh, calibrated** (the submission model) | **1.23** | **1.41** | **1.48** |
+| fresh, no labels at all | 1.18 | 0.99 | 0.88 |
 | Baseline: always "compliant" and "full" | 0.76 | 0.46 | 0.18 |
 
 Plain-text version: calibrated 1.23 / 1.41 / 1.48; no labels 1.18 / 0.99 / 0.88; always-full baseline
@@ -98,7 +173,7 @@ Plain-text version: calibrated 1.23 / 1.41 / 1.48; no labels 1.18 / 0.99 / 0.88;
 - **Python:** PyTorch (CPU, bf16), Hugging Face Transformers, scikit-learn, NumPy, OpenCV, Pillow.
 - **Staff app:** one static page in plain HTML, CSS and JavaScript (no framework, no server, no internet), in
   Portuguese with an English toggle, works on a phone.
-- **Quality:** pytest (187 tests), ruff, a format check on every `predictions.json`, SHA-256 fingerprints of the
+- **Quality:** pytest (210 tests), ruff, a format check on every `predictions.json`, SHA-256 fingerprints of the
   shipped models (`results/model_manifest.json`).
 - **Answer key and tooling:** AI labellers (Claude Opus 5.5 and Claude Sonnet 5.5, three votes per area,
   disagreements settled by Opus 5.5; Gemini Flash as an independent check). Windows launcher `SUBMIT.bat`,

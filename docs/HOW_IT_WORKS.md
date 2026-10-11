@@ -1,4 +1,4 @@
-# How Fresh works
+# How fresh. works
 
 The technical companion to the [README](../README.md). Every number links to a tracked file in
 [`results/`](../results/README.md) or to the code that produces it.
@@ -208,6 +208,8 @@ elsewhere):
 | `calibrate --model models/m1 --labels labels.json` | fit heads from labels and report the cross-validated score |
 | `label --model models/m1 --data <root> --out labeling/` | optional human labelling page (not used for the shipped key) |
 | `run --data <root> --planogram ... --images <dir> --out outputs/` | fit, predict and build the app in one go |
+| `watch --images <dir> [--out events.jsonl] [--confirm K]` | one JSON line per area status change between a camera's frames: became_empty, became_low, restocked, back_to_ok, wrong_product, wrong_product_fixed |
+| `serve [--port 8765]` | load the model once on 127.0.0.1: `POST /analyze` with a JPEG (headers `X-Camera-Id`, `X-Timestamp`) returns every area's status; `GET /health` |
 | `synth --out data_synth` | write a synthetic dataset for tests and demos |
 
 `-q` (warnings only) works before or after the sub-command. Tunables live in `sensei/config.py`.
@@ -232,9 +234,9 @@ data/labels/teacher_labels_v2.json` (the submission recipe) and zip `outputs/` b
 tier. `colab/sensei_bigfeatures.ipynb` precomputes OWLv2 boxes for every frame; pass its zip as `--detections`.
 
 **Tests.** `python -m pytest tests -q -m "not slow"` runs the lite-backend suite. On 2026-10-11, with
-`data/raw` in place and no fitted models or caches (a fresh clone plus the dataset): 193 passed, 4 skipped (they
-need the Colab bundle or local caches), 3 deselected, in about 75 s. The full suite (`python -m pytest tests -q`, adds the deep-backend tests; downloads about 600 MB of weights
-on first use) gave 196 passed, 4 skipped there, and 200 passed on the team laptop with its caches. Tests that need
+the team laptop (local caches present): 207 passed, 3 deselected, in about 70 s; the full suite
+(`python -m pytest tests -q`, adds the 3 deep-backend tests; downloads about 600 MB of weights on first use) has
+210 tests. On a fresh clone plus the dataset, the tests that need the Colab bundle or local caches are skipped. Tests that need
 `data/raw` skip when it is missing.
 `python test_scoring.py` reproduces the brief's worked example (320 of 578).
 

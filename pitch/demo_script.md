@@ -1,4 +1,4 @@
-# 90-second live demo: the staff app (Fresh.)
+# 90-second live demo: the staff app (fresh.)
 
 Goal: show that a member of staff gets the brief's three answers in seconds, in Portuguese (what to restock first,
 what to move back, what to leave alone), that the app says when it is unsure, and that the same pictures give the
@@ -9,6 +9,29 @@ Two versions:
 
 - **Full demo (about 90 seconds)**, table below. Use it in Q&A or after the 3-minute pitch.
 - **Short demo (about 40 seconds)**, only if the jury asks during the pitch: beats 0:00, 0:08, 0:22, 0:54 and 1:06.
+
+## Live moment (after 13:00, on Sensei's validation pictures)
+
+The strongest 20 seconds we have: the judges see the staff app built on **their** pictures minutes earlier, and open
+it on their own phones.
+
+1. When the validation zip arrives, drag it onto **`SUBMIT.bat`**. In the box it prints, note the number after
+   **"predicted in"** (seconds); that is N. Hand in the file it names after "HAND IN THIS FILE" first.
+2. Double-click **`LIVE_DEMO.bat`**. It shares `submission\dashboard` and opens a big QR code. Check the line
+   "Staff app built at ..." shows the time of the validation run, not an earlier rehearsal. (If it says "Run
+   SUBMIT.bat on the validation images first", step 1 has not finished.)
+3. Show the QR page and say: *"These are the validation pictures you gave us at 13:00. fresh read them on this
+   laptop in N seconds."* Then run the script below on those pictures (the cards will differ from the ones in this
+   script: read what is on screen).
+4. Wi-Fi tip: if the phones cannot open it (venue Wi-Fi often stops devices from seeing each other), do not
+   troubleshoot on stage. Show the app on the laptop screen: open `submission\dashboard\index.html`.
+
+**Backup video (no laptop app needed):** `outputs/pop/fresh_walkthrough.mp4`, 38 seconds, silent, with an English
+caption on each view, built from the 08:50 rehearsal app (dataset-day pictures, not the validation set; the title card
+says so). The `.mp4` plays in Windows Media Player; `fresh_walkthrough.webm` is the same video for a browser (drag it
+into Edge); `fresh_walkthrough_phone.mp4` / `.webm` is a phone-shaped version. It is on this laptop only and contains store
+pictures: **never upload it publicly** (not GitHub, not social media); show it from the laptop or hand it in only
+where Junction asks for a video.
 
 ## Before you go on stage (2 minutes, do it once)
 
@@ -28,7 +51,7 @@ Two versions:
    press **PT** once at the top right; the choice is remembered.
 2. Open `outputs/rehearsal_0850/dashboard/index.html` (double-click, or `start outputs\rehearsal_0850\dashboard\index.html`).
    Full-screen it (F11) and zoom with Ctrl and + until the cards read from the back of the room.
-3. Check: the title reads **Fresh.**; the tab bar has **Fazer agora, Gôndolas, Produtos, Análise**; the
+3. Check: the title reads **fresh.** (magenta logo); the tab bar has **Fazer agora, Gôndolas, Produtos, Análise**; the
    gondola view has a **Mostrar deteções** button; the **Produtos** tab shows "≈ N unidades visíveis" (task cards
    show no counts); on **Fazer agora**, **Hora de fecho** (top right of the list) reads **21:00** and the grey note
    "Perto do fecho (21:00): os reforços de produtos perecíveis ficam para amanhã." is shown. The setting is
@@ -41,6 +64,8 @@ Two versions:
    `pt_card_move.jpg`, `pt_insights.jpg` (all four retaken from the current app on 11 October). The older
    `pt_card_low.jpg`, `pt_leave.jpg`, `pt_gondola.jpg` and `pt_products.jpg` show the previous wording; use them only
    as a last resort.
+
+Handout for the judges (one A4 page: problem, staff and manager views, four numbers with their qualifiers, the ask, team, QR to the repo): `pitch/one_pager.html`; the printable copy is `pitch/one_pager.pdf` (local only).
 
 Read every number off the screen; do not memorise it. In the build we checked (11 October, 10:15, `real_v3_cal`, closing
 time 21:00), all cameras showed 24 Vazio, 41 Baixo, 1 Produto errado and 86 OK (152 areas, pictures from 18:07 to 20:16),
