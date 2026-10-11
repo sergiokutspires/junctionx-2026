@@ -1,0 +1,9 @@
+{
+ "v": 1,
+ "kdf": "PBKDF2-HMAC-SHA256",
+ "cipher": "AES-256-GCM",
+ "iterations": 600000,
+ "salt": "SNIPjk1rH0THzTWZ9xwMCw==",
+ "check": "m0KLYW+J7WjmRwMxOGNkWXySTKiHgzy7pj/3Q5okZHNlL5LL/lfziXmsAUY3n0S0",
+ "files": 513
+}
