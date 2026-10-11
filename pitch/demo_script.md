@@ -1,4 +1,4 @@
-# 90-second live demo: the staff app (Controlo de prateleiras)
+# 90-second live demo: the staff app (Fresh.)
 
 Goal: show that a member of staff gets the brief's three answers in seconds, in Portuguese (what to restock first,
 what to move back, what to leave alone), that the app says when it is unsure, and that the same pictures give the
@@ -28,7 +28,7 @@ Two versions:
    press **PT** once at the top right; the choice is remembered.
 2. Open `outputs/rehearsal_0850/dashboard/index.html` (double-click, or `start outputs\rehearsal_0850\dashboard\index.html`).
    Full-screen it (F11) and zoom with Ctrl and + until the cards read from the back of the room.
-3. Check: the title reads **Controlo de prateleiras**; the tab bar has **Fazer agora, Gôndolas, Produtos, Análise**; the
+3. Check: the title reads **Fresh.**; the tab bar has **Fazer agora, Gôndolas, Produtos, Análise**; the
    gondola view has a **Mostrar deteções** button; the **Produtos** tab shows "≈ N unidades visíveis" (task cards
    show no counts); on **Fazer agora**, **Hora de fecho** (top right of the list) reads **21:00** and the grey note
    "Perto do fecho (21:00): os reforços de produtos perecíveis ficam para amanhã." is shown. The setting is

@@ -1,4 +1,4 @@
-# Junction submission text: Fresh Eyes
+# Junction submission text: Fresh.
 
 Ready to paste into the Junction project form. Every number below comes from a file in the repository
 (`results/`, `data/labels/`, `pitch/pitch.md`, "Numbers you may say"). If a form field has a length limit, use the
@@ -14,7 +14,7 @@ picture: they are Sensei's data, and `pitch/slides_standalone.html` and the staf
 
 | Field | Text |
 |---|---|
-| Project name | **Fresh Eyes** |
+| Project name | **Fresh.** |
 | Team | **QuantumLotus**: Sérgio Kuts Pires, Inês Matias Medeiros |
 | Challenge | Sensei: "Fresh eyes on fresh produce" |
 | Tagline (short) | Your ceiling cameras, turned into a produce restock list. |
@@ -22,11 +22,11 @@ picture: they are Sensei's data, and `pitch/slides_standalone.html` and the staf
 
 ## One-liner
 
-Fresh Eyes turns ceiling-camera pictures into a staff to-do list for the produce shelf: restock, swap back, or leave alone.
+Fresh turns ceiling-camera pictures into a staff to-do list for the produce shelf: restock, swap back, or leave alone.
 
 ## Description (about 150 words)
 
-Fresh Eyes reads the fruit and vegetable shelf from the ceiling cameras Sensei already has. For every planogram
+Fresh reads the fruit and vegetable shelf from the ceiling cameras Sensei already has. For every planogram
 area in every picture it answers the brief's questions: is the right product there, and is the area empty, half or
 full? A static staff app turns the answers into a Portuguese phone to-do list: Repor (restock), Trocar (swap a wrong
 product), Deixar (leave alone), each with the time of the picture and how sure the system is. It runs on one CPU
@@ -58,8 +58,8 @@ without the held-out cameras or frames.
 
 | | Unseen cameras (1,962 areas) | Last two frames (304) | Last frame (152) |
 |---|---:|---:|---:|
-| **Fresh Eyes, calibrated** (the submission model) | **1.23** | **1.41** | **1.48** |
-| Fresh Eyes, no labels at all | 1.18 | 0.99 | 0.88 |
+| **Fresh, calibrated** (the submission model) | **1.23** | **1.41** | **1.48** |
+| Fresh, no labels at all | 1.18 | 0.99 | 0.88 |
 | Baseline: always "compliant" and "full" | 0.76 | 0.46 | 0.18 |
 
 Plain-text version: calibrated 1.23 / 1.41 / 1.48; no labels 1.18 / 0.99 / 0.88; always-full baseline

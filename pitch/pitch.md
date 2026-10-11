@@ -1,4 +1,4 @@
-# Fresh Eyes: 3-minute pitch
+# Fresh.: 3-minute pitch
 
 Deck: `pitch/slides.html` (arrow keys, F for fullscreen, 1-9 jump, 0 = the close). Ten main slides, then five
 appendix slides (A1-A5) for Q&A only. Single-file copy for another laptop: `pitch/slides_standalone.html`
@@ -28,10 +28,10 @@ models (automated, no human labelling).
 **Inês:** Six fourteen in the morning. Leiria, camera 6215, the first picture of the day. Four banana trays are
 empty. Two banana crates hold oranges. The plan says where things go. The camera sees what is there.
 
-## 2. Fresh Eyes (Inês, 0:15 - 0:30)
+## 2. Fresh. (Inês, 0:15 - 0:30)
 
-**Inês:** Your brief calls produce the most demanding section of a store for computer vision. We are QuantumLotus.
-Fresh Eyes reads the produce shelf from the cameras Sensei already has, on one CPU core.
+**Inês:** Your brief calls produce the most demanding section of a store for computer vision. We are QuantumLotus,
+and this is Fresh. It reads the produce shelf from the cameras Sensei already has, on one CPU core.
 
 ## 3. For staff (Inês, 0:30 - 0:55)
 

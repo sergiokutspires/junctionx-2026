@@ -1,4 +1,4 @@
-/* Shelf check: staff dashboard. System fonts only, no external requests. */
+/* Fresh.: staff app. System fonts only, no external requests. */
 :root {
   color-scheme: light dark;
   --bg: #f3f5f8; --surface: #ffffff; --surface-2: #eaeef3; --text: #121c27; --muted: #52606f;

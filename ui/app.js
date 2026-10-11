@@ -1,4 +1,4 @@
-/* Shelf check: staff dashboard logic. Reads window.SHELF_DATA (data.js). No network, no libraries. */
+/* Fresh.: staff app logic. Reads window.SHELF_DATA (data.js). No network, no libraries. */
 (() => {
   'use strict';
   const D = window.SHELF_DATA;
@@ -23,7 +23,7 @@
   /* ------------------------------------------------------------------ text */
   const T = {
     en: {
-      skip: 'Skip to content', title: 'Shelf check', tab_tasks: 'Do now', tab_gondola: 'Gondolas', tab_products: 'Products',
+      skip: 'Skip to content', title: 'Fresh.', tab_tasks: 'Do now', tab_gondola: 'Gondolas', tab_products: 'Products',
       f_camera: 'Camera', f_search: 'Search', search_ph: 'Search product or area', all_cams: 'All cameras',
       snapshot: 'Snapshot', pics_range: 'Pictures from {a} to {b}', old: '{t} old', unreadable: 'Picture unreadable: not checked',
       clear: 'Clear filters', theme: 'Switch light / dark theme', print: 'Print task list', lang: 'Language',
@@ -116,7 +116,7 @@
       close_on: 'Close to closing ({c}): top-ups of perishable produce wait until tomorrow.',
     },
     pt: {
-      skip: 'Saltar para o conteúdo', title: 'Controlo de prateleiras', tab_tasks: 'Fazer agora', tab_gondola: 'Gôndolas', tab_products: 'Produtos',
+      skip: 'Saltar para o conteúdo', title: 'Fresh.', tab_tasks: 'Fazer agora', tab_gondola: 'Gôndolas', tab_products: 'Produtos',
       f_camera: 'Câmara', f_search: 'Pesquisar', search_ph: 'Pesquisar produto ou zona', all_cams: 'Todas as câmaras',
       snapshot: 'Estado às', pics_range: 'Imagens das {a} às {b}', old: 'há {t}', unreadable: 'Imagem ilegível: não verificado',
       clear: 'Limpar filtros', theme: 'Mudar tema claro / escuro', print: 'Imprimir lista de tarefas', lang: 'Idioma',

@@ -1,7 +1,7 @@
 # Sensei brief: make Sensei the hero, solve their real problem
 
 > **Update 2026-10-11, 09:00: the deck was restructured.** `slides.html` now has 10 main slides (cold open 06:14 on
-> camera 6215, Fresh Eyes, staff app, manager and freshness, how it works, results, trust, cost, the ask, the close) and
+> camera 6215, Fresh, staff app, manager and freshness, how it works, results, trust, cost, the ask, the close) and
 > 5 appendix slides (A1 Sensei context, A2 trust table, A3 cost table, A4 method and answer key, A5 projection). The
 > script (`pitch.md`) is about 390 spoken words with two speakers. The slide-by-slide plan in section 4 below is the
 > earlier 12-slide plan, kept for the record. The current script, slide list and every number with its source are in
@@ -46,7 +46,7 @@ numbers, or flattery without substance.
 
 ## 2. Positioning (one sentence)
 
-> **Fresh Eyes is a produce-shelf layer for the Sensei platform: it reads the crates Sensei's ceiling cameras already
+> **Fresh is a produce-shelf layer for the Sensei platform: it reads the crates Sensei's ceiling cameras already
 > see, needs no extra hardware and no labelling effort, costs about $0.00005 an image on one CPU core, and tells store
 > staff, in Portuguese, what to restock first, what to move back and what to leave alone.**
 
@@ -57,7 +57,7 @@ numbers, or flattery without substance.
 - **Their moat, not ours.** Leiria sells loose produce by weight from scales on the gondola (visible in camera 6215's
   frame). The pilot design uses those weighed sales as free supervision: calibration per store, a check on sales speed,
   and a waste signal. This makes the module better on Sensei's platform than anywhere else. Labelled "pilot design".
-- **Name.** **Fresh Eyes**, taken from their own challenge title. The staff app keeps its own name, *Controlo de
+- **Name.** **Fresh.**, taken from their own challenge title. The staff app keeps its own name, *Controlo de
   prateleiras* (Shelf check).
 - **Who wins:** Sensei (new value per camera they already install, a sellable add-on, a fleet-wide view), their retail
   customer (Continente today, any store on the platform tomorrow), and store staff (the biggest problems first, in their
@@ -86,7 +86,7 @@ numbers, or flattery without substance.
 
 | # | Title on screen | On screen | Spoken core | Evidence |
 |---|---|---|---|---|
-| 1 | **Fresh Eyes** | Subtitle "A produce-shelf layer for the Sensei platform"; hook; pills Same cameras / No extra hardware / No labelling effort; camera 6215 frame credited to Continente Bom Dia S. Romão, Leiria; team | Team, product name | brief p1 and p5 wording |
+| 1 | **Fresh.** | Subtitle "A produce-shelf layer for the Sensei platform"; hook; pills Same cameras / No extra hardware / No labelling effort; camera 6215 frame credited to Continente Bom Dia S. Romão, Leiria; team | Team, product name | brief p1 and p5 wording |
 | 2 | **From a lab store to a 1,200 m² autonomous supermarket** | Four timeline nodes: 2021 Labs; 2022 Muffato Go; 2023-24 DAO/Conad Verona and Trento ("Verona: fruit, veg and bread sold by weight"); Jan 2025 Leiria (hero). One awards line (RTIH, EHI reta 2026). Card "Already on your platform (Sensei reports)": planogram compliance and replenishment alerts (Leiria); real-time shelf inventory visibility (sensei.tech). Card: "Leiria proved loose produce sells autonomously, by weight, from a scale on the gondola. The shelf is the next step." | Leiria credit, produce by weight, the brief's question | sensei_facts sections 3-6 |
 | 3 | **What decides a produce layer across a fleet** | Three constraint cards in the brief's words; card 3 answer "Biggest problems first, and it says when it is unsure"; three shelf failures; facts: MC's public goal to halve food waste by 2028 vs 2020; ~45% of Austrian large-retailer food waste was fruit and veg (Q4 2023) | The three constraints | brief p1, p4, p5; market_facts W8, P1 |
 | 4 | **"What to restock first, what to move back to its place, what to leave alone"** | Portuguese phone; *Repor*, *Devolver ao lugar*, *Deixar* cards; "Biggest problems first": *Primeiro · 25* (wrong and empty), *Depois · 45* (low), *Incerto: confirmar à vista*, *Imprimir* | The product in the first 40 seconds | assets/pt_*.jpg |
@@ -101,7 +101,7 @@ numbers, or flattery without substance.
 
 ## 5. The three sentences we want the jury to remember
 
-1. **Sensei has cameras over every gondola; Fresh Eyes reads the produce shelf from them, with no extra hardware and no
+1. **Sensei has cameras over every gondola; Fresh reads the produce shelf from them, with no extra hardware and no
    labelling effort, switched on the same day.**
 2. **About $0.00005 per image on one CPU core, and no labelling bill as the fleet grows: about a cent of CPU to switch
    on a store.**

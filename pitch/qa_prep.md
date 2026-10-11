@@ -293,7 +293,7 @@ melon next to kiwi). It is a layout suggestion, not a measurement from the pictu
 - **Privacy?** The scores use only the planogram areas; the optional box detector sees the whole picture and keeps
   only boxes inside the areas, dropping those it labels as hands or baskets. We never identify people. The staff app
   shows the frame, downscaled.
-- **Why the name Fresh Eyes?** It is your challenge title. The staff app itself is called *Controlo de prateleiras*.
+- **Why the name "Fresh."?** Fresh produce, fresh eyes on the shelf (your challenge title), and a full stop: the shelf, sorted. Tagline: *See every shelf. Fix what matters first.*
 - **What would you do with another week?** Calibrate confidence (check that "Alta" is right more often than
   "Média"), hand-count 20 to 30 areas to check the unit counts, close tasks from the area events, and run on
   a second store.

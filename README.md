@@ -1,6 +1,11 @@
-# Fresh Eyes: shelf monitoring for fresh produce
+# Fresh.
 
-**Ceiling cameras + a planogram in, a staff to-do list out: for every shelf area of every picture, Fresh Eyes
+**See every shelf. Fix what matters first.**
+
+*Shelf intelligence for fresh produce, from the cameras your store already has.*
+
+
+**Ceiling cameras + a planogram in, a staff to-do list out: for every shelf area of every picture, Fresh
 says whether the right product is there and whether it is empty, half or full. It runs on one CPU core for about
 $0.00005 per image and needs no labels to run.**
 
@@ -124,7 +129,7 @@ Full discussion: [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md#2-how-we-measured).
 
 | | Per image |
 |---|---:|
-| Fresh Eyes, one CPU core (median of 3 runs: 3.66 / 3.77 / 3.84 CPU-s) | **3.77 CPU-s, ~$0.000047** |
+| Fresh, one CPU core (median of 3 runs: 3.66 / 3.77 / 3.84 CPU-s) | **3.77 CPU-s, ~$0.000047** |
 | Claude Sonnet 5.5, one call per image with the same two pictures our labellers saw | ~$0.014 (~300x) |
 | Claude Opus 5.5 / Haiku 5.5 | ~$0.028 (~600x) / ~$0.0007 (~15x, accuracy untested) |
 

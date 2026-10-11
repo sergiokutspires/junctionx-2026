@@ -159,7 +159,7 @@ def make_handler(analyzer: Analyzer):
 def serve(model_dir: str | Path, port: int = 8765, device: str | None = None) -> None:
     analyzer = Analyzer(model_dir, device=device)
     httpd = HTTPServer(("127.0.0.1", port), make_handler(analyzer))
-    print(f"Fresh Eyes endpoint on http://127.0.0.1:{port}  (POST /analyze, GET /health; Ctrl+C stops)", flush=True)
+    print(f"Fresh endpoint on http://127.0.0.1:{port}  (POST /analyze, GET /health; Ctrl+C stops)", flush=True)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

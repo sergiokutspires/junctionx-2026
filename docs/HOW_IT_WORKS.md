@@ -1,4 +1,4 @@
-# How Fresh Eyes works
+# How Fresh works
 
 The technical companion to the [README](../README.md). Every number links to a tracked file in
 [`results/`](../results/README.md) or to the code that produces it.
