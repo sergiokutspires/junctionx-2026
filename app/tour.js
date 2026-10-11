@@ -23,7 +23,21 @@
   }
   var inDayCopy = /\/day\/(index\.html)?$/.test(location.pathname);
   /* "Replay the store's day" should open on the Dia view, not on a to-do list identical to app/ */
-  if (inDayCopy && !location.hash && hasDay()) location.replace('#/day');
+  /* ...and at the first pictures of the day (06:12-06:15), so the morning story plays forward, not the 20:16 end state */
+  if (inDayCopy && !location.hash && hasDay()) location.replace('#/day/0615');
+  /* on the Dia view the header should not claim the late-day picture range ("Imagens das 18:07 às 20:16") */
+  (function () {
+    var sub = document.getElementById('subtitle');
+    if (!inDayCopy || !sub || !window.MutationObserver) return;
+    function fix() {
+      if (!/^#\/day/.test(location.hash)) return;
+      var t = sub.textContent, n = t.replace(/Imagens das [0-9:]+ às [0-9:]+/, 'Dia inteiro').replace(/Pictures from [0-9:]+ to [0-9:]+/, 'Whole day');
+      if (n !== t) sub.textContent = n;
+    }
+    new MutationObserver(fix).observe(sub, { childList: true, characterData: true, subtree: true });
+    window.addEventListener('hashchange', function () { setTimeout(fix, 0); });
+    fix();
+  })();
 
   /* first wrong/empty task card's area link, remembered so step 4 opens a real problem area */
   var areaHref = null;
@@ -44,15 +58,15 @@
     s.push(
       { route: '#/tasks', sel: '#counters', title: 'Every area, right now',
         text: 'Each tile counts the planogram areas of every camera. Vazio = empty, Baixo = low, Produto errado = wrong product.' },
-      { route: '#/tasks', sel: '#view-tasks article.task', title: 'One to-do list',
-        text: 'Wrong products and empty shelves come first. Trocar = swap it back, Repor = restock, Deixar = leave alone.', before: rememberArea },
+      { route: '#/tasks', sel: '#view-tasks article.task', title: 'Fazer agora: one to-do list',
+        text: 'Wrong products and empty shelves come first. Trocar = swap it back, Repor = restock, Deixar = leave alone. "Por gôndola" groups the same list by shelf.', before: rememberArea },
       { route: '#/gondola', sel: '#view-gondola .frame-wrap', title: 'Gôndolas: the camera view',
         text: 'Each pin is a planogram area, coloured by its status; tap one. Pictures are pixelated here for privacy.' },
       { route: function () { return areaHref || '#/gondola/6215/6215_7'; }, sel: '#panel', need: '#panel .task-head',
         title: 'One area, explained',
         text: 'What is there, what should be, how full it is, and what to do. When unsure the app says "confirmar à vista" (check by eye).' },
       { route: '#/insights', sel: '#view-insights .c-soon', title: 'Análise: before it runs out',
-        text: '"A acabar em breve" means running out soon: it warns before a shelf goes empty, so staff can restock in time.' },
+        text: '"A acabar em breve" means running out soon: it warns before a shelf goes empty, so staff can restock in time. Rows marked "verificar agora" were due to run out already: check those first.' },
       { route: null, sel: '.top .seg', title: 'Português or English',
         text: 'Staff read Portuguese, so that is the default. Judges can switch to English here at any time.' }
     );
@@ -68,12 +82,10 @@
   /* ------------------------------------------------------------------ UI */
   var pill = document.createElement('button');
   pill.type = 'button'; pill.className = 'ft-pill ft-start';
-  pill.innerHTML = '<span aria-hidden="true">&#9654;</span> Take the tour';
-  var home = document.createElement('a');
-  home.className = 'ft-pill ft-home'; home.href = '../';
-  home.innerHTML = '<span aria-hidden="true">&larr;</span> <b>fresh.</b> home';
-  home.setAttribute('aria-label', 'fresh. home page');
-  document.body.appendChild(home); document.body.appendChild(pill);
+  pill.innerHTML = '<span aria-hidden="true">&#9654;</span><span class="ft-lbl">Take the tour</span>';
+  pill.setAttribute('aria-label', 'Take the tour');
+  /* the way home lives in the public-demo banner (built by tools/build_site.py), not in a second floating pill */
+  document.body.appendChild(pill);
 
   var spot = document.createElement('div'); spot.className = 'ft-spot'; spot.hidden = true;
   var shade = document.createElement('div'); shade.className = 'ft-shade'; shade.hidden = true;

@@ -10,11 +10,11 @@
 }
 .ft-start { right: 16px; background: var(--ft-brand); color: var(--ft-brand-ink); }
 .ft-start:hover { filter: brightness(1.08); }
-.ft-home { left: 16px; background: var(--surface, #fff); color: var(--text, #1D1D1F); }
-.ft-home b { font-weight: 800; }
+.ft-start { gap: 8px; }
+.ft-start > span:first-child { font-size: .75em; }
 .ft-pill:focus-visible, .ft-btn:focus-visible, .ft-x:focus-visible, .ft-links a:focus-visible { outline: 3px solid var(--focus, #0071E3); outline-offset: 2px; }
 .ft-pill[hidden], .ft-card[hidden], .ft-spot[hidden], .ft-shade[hidden] { display: none !important; }
-html.ft-on .ft-home { display: none; }
+html.ft-on .ft-start { display: none; }
 
 .ft-spot {
   position: fixed; z-index: 70; pointer-events: none; border-radius: 16px;
@@ -55,6 +55,31 @@ html.ft-instant .ft-spot, html.ft-instant .ft-card { transition: none; }
 @media (prefers-reduced-motion: reduce) {
   .ft-spot, .ft-card { transition: none; }
 }
-/* the public-demo banner is 4 lines on a phone: keep it to one or two */
-@media (max-width: 559px) { .public-note { padding: 6px 12px !important; font-size: 12px !important; line-height: 1.35 !important; } }
+/* public-demo banner: one quiet line, with the way home on the left */
+.public-note {
+  position: sticky; top: 0; z-index: 50; margin: 0; display: flex; align-items: center; gap: 16px;
+  min-height: 36px; padding: 6px 16px; box-sizing: border-box;
+  background: #1C1A17; color: rgba(245, 240, 230, .78);
+  font: 500 13px/1.3 var(--font, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif);
+}
+.public-note .pn-home {
+  flex: none; display: inline-flex; align-items: baseline; gap: 6px; min-height: 24px; padding: 2px 10px 2px 8px;
+  border-radius: 999px; color: #F5F0E6; text-decoration: none;
+  font: 700 15px/1.2 var(--font-display, -apple-system, "Segoe UI", system-ui, sans-serif); letter-spacing: -.02em;
+}
+.public-note .pn-home:hover { background: rgba(255, 255, 255, .1); }
+.public-note .pn-home:focus-visible { outline: 2px solid #66B2FF; outline-offset: 2px; }
+.public-note .pn-dot { color: #E04A93; }
+.public-note .pn-long, .public-note .pn-short { flex: 1; text-align: center; padding-right: 72px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.public-note .pn-short { display: none; }
+@media (max-width: 759px) {
+  .public-note { gap: 8px; padding: 4px 12px 4px 6px; font-size: 12px; }
+  .public-note .pn-long { display: none; }
+  .public-note .pn-short { display: block; text-align: right; padding-right: 0; }
+  /* the tour becomes a small round play button, so it never covers a task card */
+  .ft-start { width: 48px; height: 48px; min-height: 0; padding: 0; justify-content: center; right: 12px; }
+  .ft-start > span:first-child { font-size: 1rem; margin-left: 2px; }
+  .ft-start .ft-lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  body { padding-bottom: 64px; }
+}
 @media print { .ft-pill, .ft-spot, .ft-shade, .ft-card { display: none !important; } }
