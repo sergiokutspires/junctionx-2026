@@ -10,21 +10,31 @@ Two versions:
 - **Full demo (about 90 seconds)**, table below. Use it in Q&A or after the 3-minute pitch.
 - **Short demo (about 40 seconds)**, only if the jury asks during the pitch: beats 0:00, 0:08, 0:22, 0:54 and 1:06.
 
-## Live moment (after 13:00, on Sensei's validation pictures)
+## After 13:00: the validation run, in this order
 
-The strongest 20 seconds we have: the judges see the staff app built on **their** pictures minutes earlier, and open
-it on their own phones.
+The organisers' rule: "you must run the validation dataset ... you will need to show the results on the pitch."
+There is no answer key for those pictures, so the results are what fresh found: pictures, areas, seconds, the four
+status counts and the staff app on their pictures. Deck slide 7 ("Your validation pictures.") shows them.
 
-1. When the validation zip arrives, drag it onto **`SUBMIT.bat`**. In the box it prints, note the number after
-   **"predicted in"** (seconds); that is N. Hand in the file it names after "HAND IN THIS FILE" first.
-2. Double-click **`LIVE_DEMO.bat`**. It shares `submission\dashboard` and opens a big QR code. Check the line
-   "Staff app built at ..." shows the time of the validation run, not an earlier rehearsal. (If it says "Run
-   SUBMIT.bat on the validation images first", step 1 has not finished.)
-3. Show the QR page and say: *"These are the validation pictures you gave us at 13:00. fresh read them on this
-   laptop in N seconds."* Then run the script below on those pictures (the cards will differ from the ones in this
-   script: read what is on screen).
-4. Wi-Fi tip: if the phones cannot open it (venue Wi-Fi often stops devices from seeing each other), do not
-   troubleshoot on stage. Show the app on the laptop screen: open `submission\dashboard\index.html`.
+1. **Drag the validation zip (or folder) onto `SUBMIT.bat`.** Wait for the box. Check it says
+   **"SUBMISSION FORMAT CHECK: PASSED"** and 26 pictures / 289 areas (a warning with other numbers means a picture is
+   missing: tell Claude). It writes `submission\predictions.json`, `submission\details.json` and the staff app
+   `submission\dashboard\`. Hand in the file it names after "HAND IN THIS FILE" first (and copy it to the USB stick).
+2. **Double-click `UPDATE_SLIDES.bat`.** It puts the run's numbers on slide 7 and rebuilds
+   `pitch\slides_standalone.html` and `pitch\slides_backup.pdf`. Open the deck at slide 7 and check: the picture
+   count and seconds match `SUBMIT.bat`'s box, and the four colour counts (Vazio, Baixo, Produto errado, OK) add up
+   to the number of areas.
+3. **For the pitch, open `pitch\slides_standalone.html`** (F for fullscreen), or `pitch\slides_backup.pdf` if the
+   HTML will not open. Sérgio's slide 7 line: *"And your validation pictures, from this afternoon: fresh read all
+   [N] in [T] seconds. Here is what it found, in the same colours your staff will see."* N and T are the numbers on
+   slide 7. Never call them a score.
+4. **Optional, Q&A: double-click `LIVE_DEMO.bat`** so the judges scan the staff app on their pictures with their
+   phones. It shares `submission\dashboard` and opens a big QR code. Check the line "Staff app built at ..." shows
+   the time of the validation run, not an earlier rehearsal (if it says "Run SUBMIT.bat on the validation images
+   first", step 1 has not finished). Then run the script below on those pictures (the cards will differ from the
+   ones in this script: read what is on screen). Wi-Fi tip: if the phones cannot open it (venue Wi-Fi often stops
+   devices from seeing each other), do not troubleshoot on stage; show `submission\dashboard\index.html` on the
+   laptop. Close the LIVE_DEMO window to stop sharing.
 
 **Backup video (no laptop app needed):** `outputs/pop/fresh_walkthrough.mp4`, 38 seconds, silent, with an English
 caption on each view, built from the 08:50 rehearsal app (dataset-day pictures, not the validation set; the title card

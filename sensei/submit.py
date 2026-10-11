@@ -483,5 +483,9 @@ def run(images: Sequence[str | Path], model: str | Path = "models/real_v3_cal", 
         lines.append(f"NOT VALID - fix the errors above first: {pred_path}")
     lines.append(f"Open the staff app: {index}" if index else "Staff app: NOT built (see the warning above)")
     lines.append(f"Total time: {time.perf_counter() - t0:.0f}s")
+    try:  # the pitch's validation slide (tools/validation_slide.py) reads the run time from this file
+        Path(pred_path).parent.joinpath("submit_log.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    except OSError:
+        pass
     _banner(lines)
     return 0 if rep["ok"] else 1
