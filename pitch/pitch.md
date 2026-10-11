@@ -1,20 +1,18 @@
 # fresh.: 3-minute pitch
 
-Deck: `pitch/slides.html` (arrow keys, F for fullscreen, `#N` in the address jumps to slide N). Eleven main slides,
-then the appendix slides for Q&A only. Slide 7 shows the live numbers from the validation run (filled by
-`UPDATE_SLIDES.bat` after 13:00, see `pitch/demo_script.md`, "After 13:00"). Single-file copy for another laptop: `pitch/slides_standalone.html`
-(rebuild with `.venv/Scripts/python pitch/build_standalone.py`). Team: NovaLotus (Sérgio Kuts Pires, Inês Matias
-Medeiros), see `pitch/team.md`.
+Deck: `pitch/slides.html` (arrow keys, F for fullscreen, `#N` in the address jumps to slide N, `0` jumps to
+Obrigado). Eleven pitch slides, then slide 12 "Results." (the only validation slot: it shows just the word until
+`UPDATE_SLIDES.bat` fills it after 13:00 with the real counts from `SUBMIT.bat`'s run), then the appendix for Q&A only.
+Single-file copy for another laptop: `pitch/slides_standalone.html` (rebuild with
+`.venv/Scripts/python pitch/build_standalone.py`). Team: NovaLotus (Sérgio Kuts Pires, Inês Matias Medeiros), see
+`pitch/team.md`.
 
-**Timing.** The spoken text below is **380 words** (counting slide 7's two numbers as about four words). At a calm
-140 words a minute that is about **2:43**, leaving about 15 seconds for ten slide changes. Hard stop 3:00. There are
-no optional lines any more: to make room for slide 7 we cut the brief quote on slide 2, "on one CPU core" on slide 2
-(it is on the cost slide), "an estimate, not a promise" on slide 6 ("our estimate" already says it), and the
-switch-on cost on the cost slide (Q&A only now). Rehearse with a stopwatch, twice.
+**Timing.** The spoken text for slides 1-11 is about **375 words**. At a calm 140 words a minute that is about
+**2:41**, leaving about 15 seconds for ten slide changes. Hard stop 3:00. The Results slide after Obrigado is talked
+freely. Rehearse with a stopwatch, twice.
 
-**Speakers.** Inês: cold open, what it is, staff app, manager and freshness, the close. Sérgio: how it works,
-results, your validation pictures, trust, cost, the ask. The hand-over is at slide 5 ("How, without labels?") and
-back at slide 11.
+**Speakers.** Inês: cold open, what it is, staff app, what we built, manager and freshness, the close. Sérgio: how it
+works, our score, trust, cost, the ask. The hand-over is at slide 6 ("How, without labels?") and back at slide 11.
 
 **Memorable line** (said at 0:13 and again as the last sentence): *The plan says where things go. The camera sees
 what is there.*
@@ -41,60 +39,60 @@ empty. Two banana crates hold oranges. The plan says where things go. The camera
 answers in Portuguese. Repor: it is empty. Trocar: oranges should be here, but it holds bananas. Deixar: these areas
 are right. Wrong products and empty shelves come first. When it is unsure, it says so: confirmar à vista.
 
-## 4. For the manager (Inês, 0:47 - 1:02)
+## 4. What we built (Inês, 0:47 - 0:55)
+
+**Inês:** Everything you see is real and running: the staff app, a live website with a guided tour, and a
+one-command validation run.
+
+## 5. For the manager (Inês, 0:55 - 1:08)
 
 **Inês:** The same pictures warn the manager before a shelf runs empty, and turn time on display into freshness
-checks. In a one-day backtest, flagged areas emptied eight times as often as the rest. *(Say it: slide 4's big number is the 8x.)*
+checks. In a one-day backtest, flagged areas emptied eight times as often as the rest. *(Say it: slide 5's big number is the 8x.)*
 
-## 5. How it works (Sérgio, 1:02 - 1:22)
+## 6. How it works (Sérgio, 1:08 - 1:28)
 
 **Sérgio:** How, without labels? Empty trays look the same under every product. So it learns what empty looks like
 from the store's own pictures, and names the fruit from your catalogue. Then your scoring rule decides: too full costs
 most, so when unsure, it answers lower.
 
-## 6. Results (Sérgio, 1:22 - 1:44)
+## 7. Our score (Sérgio, 1:28 - 1:48)
 
 **Sérgio:** Day zero, with no labels, it beats the always-full guess. Day one, we add an answer key made by
 AI models, with no human labelling. On late pictures held out from calibration, it scores 1.4 points out of 2. Our
 estimate for the hidden set: 355 to 430 of 578.
 
-## 7. Your validation pictures (Sérgio, 1:44 - 1:57) *(new: live numbers from this afternoon's run)*
-
-**Sérgio:** And your validation pictures, from this afternoon: fresh read all [N] in [T] seconds. Here is what it
-found, in the same colours your staff will see.
-
-*([N] = the pictures count and [T] = the seconds, both read off slide 7, which `UPDATE_SLIDES.bat` fills from
-`SUBMIT.bat`'s run; say the numbers on the slide, nothing else. Point at the four colour counts, do not read them out.
-There is no answer key for these pictures: never call them a score or accuracy.)*
-
-## 8. Can staff trust it? (Sérgio, 1:57 - 2:13)
+## 8. Can staff trust it? (Sérgio, 1:48 - 2:04)
 
 **Sérgio:** It catches 99 percent of empty shelves, with two false wrong-product alarms in over eighteen hundred correct areas. Our
 honest limit: on a brand-new camera, it finds only one wrong product in four, until it is calibrated.
 
-## 9. Cost (Sérgio, 2:13 - 2:24)
+## 9. Cost (Sérgio, 2:04 - 2:15)
 
 **Sérgio:** Cost: about five cents per thousand images, on one CPU core, no GPU. A fourteen-camera produce section
 costs about three dollars a month.
 
-## 10. Our ask (Sérgio, 2:24 - 2:39)
+## 10. Our ask (Sérgio, 2:15 - 2:30)
 
 **Sérgio:** Our ask: a four-week shadow pilot. One silent week at Leiria against your restock logs, then a second
 store. We need a frame feed and one contact. You get a weekly accuracy report.
 
-## 11. Obrigado (Inês, 2:39 - 2:49)
+## 11. Obrigado (Inês, 2:30 - 2:40)
 
 **Inês:** At six fourteen, the plan and the shelf disagreed. The plan says where things go. The camera sees what is there. Obrigado.
+
+## 12. Results (both, after Obrigado)
+
+*Results slide: talk freely; after the validation run it shows the real numbers (pictures, areas, the four status
+counts). Say only what is on the slide. There is no answer key for these pictures: never call them a score or accuracy.*
 
 ---
 
 ## If something goes wrong on stage
 
-- Running long by slide 7: say only "And your validation pictures: fresh read all [N] in [T] seconds." and point.
 - Running long by slide 9: say only the first sentence.
 - Never cut the ask (slide 10) or the honest limit (slide 8).
-- If slide 7 still shows placeholders (validation run not done): skip it with one click, say nothing about it.
-- Asked to show the app: use the short demo in `demo_script.md` after slide 11, never in the middle, or the
+- If the Results slide still shows only the word (validation run not done): talk freely, claim no numbers.
+- Asked to show the app: use the short demo in `demo_script.md` after slide 12, never in the middle, or the
   live moment (`LIVE_DEMO.bat`) on the validation pictures.
 - Asked "how accurate was it on our validation pictures?": "We have no answer key for them, so we cannot score
   them. You can: these are the predictions we handed in."
@@ -123,8 +121,8 @@ on measured inputs (shown in the row).
 | Baseline, always "compliant" + "full", whole day | 0.76 (0.7569) | OK | `final_numbers_real_v3_cal.json` `camera.always_compliant_full` |
 | Older 756-area key (kept as a second test) | 1.17 / 1.35 / 1.43 for camera / last two / last picture (`real_v1_cal`: 1.25 / 1.30 / 1.39). Q&A only | OK | `heldout_...json` entries v3cal and v1cal on key 756. The camera row loses there because three cameras with 12-13 labelled frames dominate it |
 | Hidden set | 289 areas, max 578, brief example 320 | fixed | the brief |
-| Validation run (slide 7) | pictures, areas, seconds and the four status counts (Vazio, Baixo, Produto errado, OK) **as printed on slide 7**; expect 26 pictures / 289 areas | OK once filled | `SUBMIT.bat` output (`submission/predictions.json`, `submission/details.json`), put on the slide by `UPDATE_SLIDES.bat`. No answer key exists for these pictures: these are counts of what fresh found, never a score or accuracy |
-| Projection | say **"355 to 430 of 578, an estimate"** (slide 6). Late rows: about **410 to 430** (1.41 to 1.48 x 289 = 408 to 428) if the hidden pictures are late in the day; about **355** (1.23 x 289 = 356) if they span the day. On the older 756-area key the late rows give about 390 to 410 | DERIVED | assumes the hidden pictures are late (the brief's example file name, 1751052241 = 20:24 Lisbon, is later than any picture we have: the latest is 20:16 and the last pictures of the 14 cameras run from 18:07 to 20:16). An estimate on an AI-labelled key, not the store's truth. Day 0, no labels: 0.88 to 0.99 x 289 = about **255 to 285**. Per camera, late two-picture scores run 0.50 to 2.00 (`calibration_cv.json` `schemes.time.per_camera`). Never present 320 as a bar we beat: it is the brief's worked scoring example |
+| Validation run (slide 12, Results) | pictures, areas, seconds and the four status counts (Vazio, Baixo, Produto errado, OK) **as printed on slide 12**; expect 26 pictures / 289 areas | OK once filled | `SUBMIT.bat` output (`submission/predictions.json`, `submission/details.json`), put on the slide by `UPDATE_SLIDES.bat`. No answer key exists for these pictures: these are counts of what fresh found, never a score or accuracy |
+| Projection | say **"355 to 430 of 578, an estimate"** (slide 7). Late rows: about **410 to 430** (1.41 to 1.48 x 289 = 408 to 428) if the hidden pictures are late in the day; about **355** (1.23 x 289 = 356) if they span the day. On the older 756-area key the late rows give about 390 to 410 | DERIVED | assumes the hidden pictures are late (the brief's example file name, 1751052241 = 20:24 Lisbon, is later than any picture we have: the latest is 20:16 and the last pictures of the 14 cameras run from 18:07 to 20:16). An estimate on an AI-labelled key, not the store's truth. Day 0, no labels: 0.88 to 0.99 x 289 = about **255 to 285**. Per camera, late two-picture scores run 0.50 to 2.00 (`calibration_cv.json` `schemes.time.per_camera`). Never present 320 as a bar we beat: it is the brief's worked scoring example |
 | Answer key | AI labellers only, no human labelling; 1,962 areas, 181 frames, 14 cameras; 3 votes per area (2 on 36 areas of camera 6373, six of them split); on the 11 newly voted cameras (1,569 areas) 84% unanimous (84.45%), 34 disputes adjudicated; cameras 6215, 6371, 6373 (393 areas) come from the earlier round (stock level agreed on 93.6%, including the 36 two-vote areas); 117 areas show a wrong product | OK | `data/labels/votes_v2.json`, `disputes_v2.json`, `adjudications_v2.json`, `teacher_labels_v2.json`, `tools/aggregate_votes.py`; `data/labels/votes_round1.json` for the 393 (357 with three votes, 36 with two) |
 | Labeller agreement by stock level (Q&A 11) | three votes agreed on the stock level for **57%** of the areas the key calls half (154 of 268), against 88% for empty (130 of 147) and 92% for full (1,061 of 1,154); the 11 newly voted cameras, 1,569 areas | OK | computed from `data/labels/votes_v2.json` and `teacher_labels_v2.json` on 11 Oct |
 | Areas holding another product than planned | about **1 in 8** at 06h (18 of 152), **1 in 65** at 19h (2 of 129); 23 distinct areas ever wrong | OK | `evidence/wrong_product_persistence.py` (v2 line), re-run on the final key |

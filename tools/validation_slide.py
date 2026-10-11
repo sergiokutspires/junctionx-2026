@@ -1,8 +1,8 @@
-"""Put the validation run's results on the pitch slide "Your validation pictures." (#sval).
+"""Put the validation run's results on the final pitch slide "Results." (#sres).
 
 Usage (project root):
   .venv/Scripts/python tools/validation_slide.py [--submission submission] [--slides pitch/slides.html] [--no-pdf]
-  .venv/Scripts/python tools/validation_slide.py --placeholder      # reset the slide to the calm placeholder
+  .venv/Scripts/python tools/validation_slide.py --placeholder      # reset the slide to just the word "Results."
 
 Reads <submission>/predictions.json (+ details.json, + a run log if one is there), counts the four app
 statuses exactly like sensei/dashboard.py (_status: wrong product > empty > low (half) > ok), screenshots the
@@ -26,23 +26,21 @@ BEGIN, END = "<!-- VALIDATION:BEGIN -->", "<!-- VALIDATION:END -->"
 TILES = [("empty", "Vazio"), ("low", "Baixo"), ("wrong", "Produto errado"), ("ok", "OK")]
 
 CSS = """<style>
-  #sval { flex-direction: row; align-items: center; gap: 72px; padding: 100px 120px; }
-  #sval .vl { flex: 1 1 auto; min-width: 0; }
-  #sval h2 { font-size: 92px; }
-  #sval .vbig { font-size: 50px; font-weight: 800; letter-spacing: -.02em; margin-top: 34px; font-variant-numeric: tabular-nums; }
-  #sval .vbig span { color: #A9A39A; font-weight: 700; }
-  #sval .vtiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 40px; }
-  #sval .vt { border-radius: 26px; padding: 26px 22px 24px; color: #fff; box-shadow: 0 2px 4px rgba(60,45,20,.08), 0 10px 24px rgba(60,45,20,.10); }
-  #sval .vt b { display: block; font-size: 96px; line-height: .95; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
-  #sval .vt span { display: block; font-size: 27px; font-weight: 800; margin-top: 10px; letter-spacing: -.01em; line-height: 1.1; }
-  #sval .vt.empty { background: var(--empty); } #sval .vt.low { background: var(--low); color: #2B1D00; }
-  #sval .vt.wrong { background: var(--wrong); } #sval .vt.ok { background: var(--ok); }
-  #sval.wait .vt { opacity: .55; }
-  #sval .vchk { font-size: 30px; font-weight: 700; color: var(--muted); margin-top: 34px; }
-  #sval .vchk i { font-style: normal; color: var(--ok); }
-  #sval .vr { flex: none; width: 720px; }
-  #sval .vr img { width: 720px; height: auto; max-height: 820px; object-fit: cover; object-position: top center; }
-  #sval .vph { width: 720px; height: 540px; border-radius: 28px; border: 4px dashed #CFC6B4; display: flex; align-items: center; justify-content: center; text-align: center; padding: 40px; font-size: 34px; font-weight: 700; color: #A39A8A; line-height: 1.3; }
+  #sres.filled { flex-direction: row; align-items: center; gap: 72px; padding: 100px 120px; }
+  #sres .vl { flex: 1 1 auto; min-width: 0; }
+  #sres.filled h2 { font-size: 150px; }
+  #sres .vbig { font-size: 50px; font-weight: 800; letter-spacing: -.02em; margin-top: 34px; color: #fff; font-variant-numeric: tabular-nums; }
+  #sres .vbig span { color: #A9A39A; font-weight: 700; }
+  #sres .vtiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 40px; }
+  #sres .vt { border-radius: 26px; padding: 26px 22px 24px; color: #fff; }
+  #sres .vt b { display: block; font-size: 88px; line-height: .95; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+  #sres .vt span { display: block; font-size: 26px; font-weight: 800; margin-top: 10px; line-height: 1.1; }
+  #sres .vt.empty { background: var(--empty); } #sres .vt.low { background: var(--low); color: #2B1D00; }
+  #sres .vt.wrong { background: var(--wrong); } #sres .vt.ok { background: var(--ok); }
+  #sres .vchk { font-size: 30px; font-weight: 700; color: #A9A39A; margin-top: 34px; }
+  #sres .vchk i { font-style: normal; color: #5FD08A; }
+  #sres .vr { flex: none; width: 720px; }
+  #sres .vr img { width: 720px; height: auto; max-height: 820px; object-fit: cover; object-position: top center; border-radius: 20px; }
 </style>"""
 
 
@@ -128,27 +126,21 @@ def shoot_app(dash: Path, out_jpg: Path) -> bool:
 
 
 def block(res, seconds, ok, has_img: bool) -> str:
-    wait = res is None
-    if wait:
-        big = "&ndash; pictures &middot; &ndash; areas &middot; read in &ndash; s"
-        nums = {k: "&ndash;" for k, _ in TILES}
-        chk = 'Results appear here after the validation run'
-    else:
-        big = f'{res["pictures"]} pictures <span>&middot;</span> {res["areas"]} areas'
-        if seconds is not None:
-            big += f' <span>&middot;</span> read in {seconds:.0f}&nbsp;s'
-        nums = {k: f'{v:,}' for k, v in res["counts"].items()}
-        chk = {True: 'Format check: <i>passed</i>', False: 'Format check: not passed', None: ''}[ok]
-    tiles = "".join(f'<div class="vt {k}"><b>{nums[k]}</b><span>{lab}</span></div>' for k, lab in TILES)
-    right = ('<img class="shot" src="assets/val_app.jpg" alt="The staff app on the validation pictures">'
-             if has_img else '<div class="vph">The staff app on your pictures<br>appears here</div>')
-    return (f'{BEGIN}\n<!-- 7 · Validation (generated by tools/validation_slide.py; do not edit by hand) -->\n'
-            f'<section class="slide{" wait" if wait else ""}" id="sval" data-title="Your validation pictures">\n{CSS}\n'
-            f'  <div class="vl">\n    <div class="label">Validation set &middot; run after submissions closed</div>\n'
-            f'    <h2>Your validation pictures.</h2>\n    <p class="vbig">{big}</p>\n'
-            f'    <div class="vtiles">{tiles}</div>\n'
-            + (f'    <p class="vchk">{chk}</p>\n' if chk else '')
-            + f'  </div>\n  <div class="vr">{right}</div>\n</section>\n{END}')
+    """Placeholder: only the word "Results." Filled: only facts from the actual run, nothing else."""
+    nl = "\n"
+    head = BEGIN + nl + "<!-- Results slide (generated by tools/validation_slide.py; do not edit by hand) -->" + nl
+    if res is None:
+        return head + '<section class="slide" id="sres" data-title="Results">' + nl + "  <h2>Results.</h2>" + nl + "</section>" + nl + END
+    big = f'{res["pictures"]} pictures <span>&middot;</span> {res["areas"]} areas'
+    if seconds is not None:
+        big += f' <span>&middot;</span> read in {seconds:.0f}&nbsp;s'
+    tiles = "".join(f'<div class="vt {k}"><b>{res["counts"][k]:,}</b><span>{lab}</span></div>' for k, lab in TILES)
+    chk = ('    <p class="vchk">Format check: <i>passed</i></p>' + nl) if ok is True else ""
+    right = ('  <div class="vr"><img src="assets/val_app.jpg" alt="The staff app on the validation pictures"></div>' + nl) if has_img else ""
+    return (head + '<section class="slide filled" id="sres" data-title="Results">' + nl + CSS + nl
+            + '  <div class="vl">' + nl + "    <h2>Results.</h2>" + nl
+            + f'    <p class="vbig">{big}</p>' + nl + f'    <div class="vtiles">{tiles}</div>' + nl
+            + chk + "  </div>" + nl + right + "</section>" + nl + END)
 
 
 def pdf_pages(p: Path) -> int:
