@@ -47,7 +47,7 @@ one-command validation run.
 ## 5. For the manager (Inês, 0:55 - 1:08)
 
 **Inês:** The same pictures warn the manager before a shelf runs empty, and turn time on display into freshness
-checks. In a one-day backtest, flagged areas emptied eight times as often as the rest. *(Say it: slide 5's big number is the 8x.)*
+checks. In a one-day backtest, flagged areas emptied eight times as often as the average shelf. *(Say it: slide 5's big number is the 8x.)*
 
 ## 6. How it works (Sérgio, 1:08 - 1:28)
 
@@ -57,14 +57,13 @@ most, so when unsure, it answers lower.
 
 ## 7. Our score (Sérgio, 1:28 - 1:48)
 
-**Sérgio:** Day zero, with no labels, it beats the always-full guess. Day one, we add an answer key made by
-AI models, with no human labelling. On late pictures held out from calibration, it scores 1.4 points out of 2. Our
-estimate for the hidden set: 355 to 430 of 578.
+**Sérgio:** Day zero, with no labels, it scores about 1 point out of 2. Day one, we add an answer key made by
+AI models, with no human labelling. On late pictures held out from calibration, it scores 1.4 points out of 2.
 
 ## 8. Can staff trust it? (Sérgio, 1:48 - 2:04)
 
-**Sérgio:** It catches 99 percent of empty shelves, with two false wrong-product alarms in over eighteen hundred correct areas. Our
-honest limit: on a brand-new camera, it finds only one wrong product in four, until it is calibrated.
+**Sérgio:** On cameras it has never seen, checked against the AI-made key, it catches 99 percent of empty shelves, with two false wrong-product alarms in over eighteen hundred correct areas. Our
+honest limit: on a brand-new camera, it finds only one wrong product in four at first.
 
 ## 9. Cost (Sérgio, 2:04 - 2:15)
 
@@ -122,7 +121,7 @@ on measured inputs (shown in the row).
 | Older 756-area key (kept as a second test) | 1.17 / 1.35 / 1.43 for camera / last two / last picture (`real_v1_cal`: 1.25 / 1.30 / 1.39). Q&A only | OK | `heldout_...json` entries v3cal and v1cal on key 756. The camera row loses there because three cameras with 12-13 labelled frames dominate it |
 | Hidden set | 289 areas, max 578, brief example 320 | fixed | the brief |
 | Validation run (slide 12, Results) | pictures, areas, seconds and the four status counts (Vazio, Baixo, Produto errado, OK) **as printed on slide 12**; expect 26 pictures / 289 areas | OK once filled | `SUBMIT.bat` output (`submission/predictions.json`, `submission/details.json`), put on the slide by `UPDATE_SLIDES.bat`. No answer key exists for these pictures: these are counts of what fresh found, never a score or accuracy |
-| Projection | say **"355 to 430 of 578, an estimate"** (slide 7). Late rows: about **410 to 430** (1.41 to 1.48 x 289 = 408 to 428) if the hidden pictures are late in the day; about **355** (1.23 x 289 = 356) if they span the day. On the older 756-area key the late rows give about 390 to 410 | DERIVED | assumes the hidden pictures are late (the brief's example file name, 1751052241 = 20:24 Lisbon, is later than any picture we have: the latest is 20:16 and the last pictures of the 14 cameras run from 18:07 to 20:16). An estimate on an AI-labelled key, not the store's truth. Day 0, no labels: 0.88 to 0.99 x 289 = about **255 to 285**. Per camera, late two-picture scores run 0.50 to 2.00 (`calibration_cv.json` `schemes.time.per_camera`). Never present 320 as a bar we beat: it is the brief's worked scoring example |
+| Projection | Q&A only, if asked (appendix A4); never on the main slides: **"355 to 430 of 578, an estimate"**. Late rows: about **410 to 430** (1.41 to 1.48 x 289 = 408 to 428) if the hidden pictures are late in the day; about **355** (1.23 x 289 = 356) if they span the day. On the older 756-area key the late rows give about 390 to 410 | DERIVED | assumes the hidden pictures are late (the brief's example file name, 1751052241 = 20:24 Lisbon, is later than any picture we have: the latest is 20:16 and the last pictures of the 14 cameras run from 18:07 to 20:16). An estimate on an AI-labelled key, not the store's truth. Day 0, no labels: 0.88 to 0.99 x 289 = about **255 to 285**. Per camera, late two-picture scores run 0.50 to 2.00 (`calibration_cv.json` `schemes.time.per_camera`). Never present 320 as a bar we beat: it is the brief's worked scoring example |
 | Answer key | AI labellers only, no human labelling; 1,962 areas, 181 frames, 14 cameras; 3 votes per area (2 on 36 areas of camera 6373, six of them split); on the 11 newly voted cameras (1,569 areas) 84% unanimous (84.45%), 34 disputes adjudicated; cameras 6215, 6371, 6373 (393 areas) come from the earlier round (stock level agreed on 93.6%, including the 36 two-vote areas); 117 areas show a wrong product | OK | `data/labels/votes_v2.json`, `disputes_v2.json`, `adjudications_v2.json`, `teacher_labels_v2.json`, `tools/aggregate_votes.py`; `data/labels/votes_round1.json` for the 393 (357 with three votes, 36 with two) |
 | Labeller agreement by stock level (Q&A 11) | three votes agreed on the stock level for **57%** of the areas the key calls half (154 of 268), against 88% for empty (130 of 147) and 92% for full (1,061 of 1,154); the 11 newly voted cameras, 1,569 areas | OK | computed from `data/labels/votes_v2.json` and `teacher_labels_v2.json` on 11 Oct |
 | Areas holding another product than planned | about **1 in 8** at 06h (18 of 152), **1 in 65** at 19h (2 of 129); 23 distinct areas ever wrong | OK | `evidence/wrong_product_persistence.py` (v2 line), re-run on the final key |

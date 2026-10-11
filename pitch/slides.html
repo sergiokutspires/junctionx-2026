@@ -115,6 +115,8 @@
   #s6 .n small { font-size: 80px; color: var(--muted); letter-spacing: -.03em; margin-left: 40px; }
   #s6 .bar { width: 1300px; height: 28px; border-radius: 999px; background: rgba(120, 100, 70, .14); margin-top: 50px; overflow: hidden; }
   #s6 .bar i { display: block; height: 100%; width: 70.6%; background: var(--brand); border-radius: 999px; }
+  #s7 .label { margin-top: 28px; }
+  #s5 .small { font-size: 28px; color: var(--muted); margin-top: 36px; text-align: center; }
   #s6 .small { font-size: 32px; color: var(--muted); margin-top: 48px; }
   #s6 .bars { display: grid; gap: 22px; margin-top: 46px; }
   #s6 .br { display: grid; grid-template-columns: 360px 1100px auto; align-items: center; column-gap: 30px; font-size: 30px; font-weight: 700; color: var(--muted); }
@@ -260,7 +262,7 @@
   <h2>What we built.</h2>
   <div class="bt">
     <figure class="bph"><img src="assets/pt_mobile.jpg" alt="The staff app on a phone"><figcaption>Staff app</figcaption></figure>
-    <figure class="bw"><img src="assets/site_desktop.png" alt="The live website with a guided tour"><figcaption>Live website &middot; guided tour</figcaption></figure>
+    <figure class="bw"><img src="assets/site_desktop.png" alt="The live website, manager view"><figcaption>Live website</figcaption></figure>
     <figure class="bw"><img src="assets/site_day.png" alt="Replay of a full store day"><figcaption>Day replay</figcaption></figure>
   </div>
   <p class="chip">Validation day: <code>SUBMIT.bat</code> &middot; one command</p>
@@ -272,8 +274,8 @@
   <div class="row">
   <div class="txt">
     <div class="label">Flagged areas ran empty</div>
-    <div class="num n" title="one-day backtest on the AI-made key, hourly pictures: 8 of 25 flagged areas (32%) emptied within about 2 h, against 58 of 1,550 (4%) not flagged (pitch/research/evidence/forecast_backtest_real_v3_cal.py)">8&times;</div>
-    <p class="sub">as often as the rest, within ~2&nbsp;h</p>
+    <div class="num n" title="one-day backtest vs the AI-made key, hourly pictures: 8 of 25 flagged areas (32%) emptied within about 2 h, vs 58 of 1,550 (4%) of all not-yet-empty areas (pitch/research/evidence/forecast_backtest_real_v3_cal.py)">8&times;</div>
+    <p class="sub">as often as the average shelf, within ~2&nbsp;h</p>
   </div>
   <div class="card alert" role="img" aria-label="Análise tab: A acabar em breve, zonas previstas ficarem vazias nas próximas 2 horas"><div class="hd"><i class="clock"></i>A acabar em breve</div><p class="rw">Meloa <span>&middot; C&acirc;mara 6371 &middot;</span> previsto <b>19:25</b></p></div>
   </div>
@@ -289,27 +291,28 @@
     <div class="arrow">&rarr;</div>
     <div class="card step"><img class="img" src="assets/warp_strip.jpg" alt="Oranges and bananas, cut out and squared" style="object-position: right center"><h3>Name the fruit</h3><span class="tag">CLIP</span></div>
   </div>
+  <p class="small">+ optional: calibrate with an AI&#8209;made key</p>
 </section>
 
 <!-- 6 · Results (Sergio) -->
 <section class="slide" id="s6" data-title="Our score">
-  <div class="label">Scored with your rules &middot; late-day pictures, held out</div>
+  <div class="label">Scored with your rules &middot; against our AI&#8209;made key &middot; late-day pictures, held out</div>
   <div class="num n" title="models/real_v3_cal, last two pictures per camera, held out, 304 areas: 1.4112 (results/calibration_cv_real_v3_cal.json)">1.4<small>of 2 points per area</small></div>
   <div class="bars">
     <div class="br"><span>Day 0 &middot; no labels</span><div class="bar"><i style="width:49.5%;background:#A9A39A"></i></div><b title="label-free core, last two pictures per camera, held out">0.99</b></div>
     <div class="br"><span>Day 1 &middot; AI&#8209;made key</span><div class="bar"><i></i></div><b title="models/real_v3_cal, last two pictures per camera, held out: 1.4112">1.41</b></div>
   </div>
-  <p class="small" title="hidden set 1.2329 x 289 = 356 to 1.4803 x 289 = 428">Hidden set estimate: <b>355&ndash;430 of 578</b></p>
 </section>
 
 <!-- 8 · Trust (Sergio) -->
 <section class="slide" id="s7" data-title="Can staff trust it?">
-  <h2>Empty shelves don&rsquo;t slip through.</h2>
+  <h2>Empty shelves almost never slip through.</h2>
+  <div class="label">Unseen cameras &middot; checked against the AI&#8209;made key</div>
   <div class="pair">
     <div class="card"><div class="num" title="181 of 182 empty areas, one camera held out">99%</div><p>of empty shelves caught</p></div>
     <div class="card"><div class="num" title="2 of 1,845 correct areas, one camera held out">2</div><p>false wrong-product alarms<br>in 1,845</p></div>
   </div>
-  <p class="limit" title="31 of 117 wrong-product areas, brand-new camera, one camera held out">New camera: finds 1 wrong product in 4 until calibrated.</p>
+  <p class="limit" title="31 of 117 wrong-product areas, brand-new camera, one camera held out">New camera: finds 1 wrong product in 4 at first.</p>
 </section>
 
 <!-- 9 · Cost (Sergio) -->
