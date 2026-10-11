@@ -545,3 +545,23 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.015em; }
 @media print { .watch-list { display: grid; } }
 .risk-ul { list-style: none; padding: 0; margin: 6px 0 0; display: grid; gap: 6px; }
 .risk-ul li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+
+/* -------------------------------------------------------------- 14 status tiles: solid colour by default
+   The four status tiles carry the colour code at full strength (readable from across the aisle):
+   Vazio red-orange, Baixo amber, Produto errado purple, OK green. Tapping one filters the lists:
+   it stays solid and gets a ring, and the other three fade to their light tint. A tile at zero is grey. */
+.counters .counter:is(.s-empty, .s-low, .s-wrong, .s-ok):not(.zero) {
+  background: var(--c); box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 6px 16px color-mix(in srgb, var(--c) 22%, transparent); }
+.counters .counter:is(.s-empty, .s-low, .s-wrong, .s-ok):not(.zero) :is(.n, .lbl) { color: var(--on); }
+.counters .counter:is(.s-empty, .s-low, .s-wrong, .s-ok):not(.zero) .ic { background: var(--on); color: var(--c); box-shadow: none; }
+.counters .counter:is(.s-empty, .s-low, .s-wrong, .s-ok):not(.zero)[aria-pressed="true"] {
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--c), 0 10px 26px color-mix(in srgb, var(--c) 40%, transparent); }
+.counters:has(.counter[aria-pressed="true"]) .counter:is(.s-empty, .s-low, .s-wrong, .s-ok):not(.zero):not([aria-pressed="true"]) {
+  background: var(--tint); box-shadow: var(--shadow-sm); }
+.counters:has(.counter[aria-pressed="true"]) .counter:is(.s-empty, .s-low, .s-wrong, .s-ok):not(.zero):not([aria-pressed="true"]) :is(.n, .lbl) { color: var(--ink); }
+.counters:has(.counter[aria-pressed="true"]) .counter:is(.s-empty, .s-low, .s-wrong, .s-ok):not(.zero):not([aria-pressed="true"]) .ic { background: var(--c); color: var(--on); }
+.counters .counter.zero { background: var(--surface); box-shadow: var(--shadow-sm); }
+@media (prefers-reduced-motion: no-preference) { .counters .counter { transition: background-color .18s ease, box-shadow .18s ease, transform .18s ease; } }
+/* focus: the tile's own colour, never the generic blue ring; the selected tile's ring already marks it */
+.counters .counter:focus-visible { outline: 3px solid var(--c); outline-offset: 4px; }
+.counters .counter[aria-pressed="true"]:focus-visible { outline: none; }
