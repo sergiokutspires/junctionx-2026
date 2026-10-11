@@ -104,6 +104,16 @@
       fx_cauliflower: 'discolour and drop leaves', fx_cucumber: 'turn yellow and go soft', fx_eggplant: 'get brown patches',
       'fx_green beans': 'turn yellow', fx_kiwi: 'go soft', fx_lettuce: 'get brown spots and turn yellow', fx_tomato: 'ripen and go soft',
       fx_watermelon: 'go soft and over-ripe', fx_other: 'ripen or spoil',
+      tab_day: 'Day', day_title: 'The store’s day',
+      day_honest: 'Replay of one day with the dataset’s own pictures ({n} pictures from {c} cameras). The model was calibrated on this day, so this shows the experience, not accuracy.',
+      day_play: 'Play the day', day_pause: 'Pause', day_slider: 'Time of day', day_at: 'Store at {t}',
+      day_todo: 'To do at {t}', day_log: 'What happened', day_log_x: 'Changes between consecutive pictures of each area, newest first. Tap one to see that picture.',
+      day_log_none: 'No changes yet.', day_pulse: 'Store pulse', day_pulse_x: 'Empty, low and wrong-product areas every 30 min. Tap a bar to go there.',
+      day_frame: 'Picture taken {t}', day_nopic: 'No picture yet at this time', day_more: 'and {n} more', day_cam_todo: '{n} to do', day_pick: 'Tap an area or an event',
+      ev_empty: 'went empty', ev_low: 'running low', ev_wrong: 'wrong product on the spot', ev_fixed: 'wrong product fixed', ev_restock: 'restock detected', ev_ok: 'back to OK',
+      close_lbl: 'Closing time', close_group: 'Leave until tomorrow (close to closing)',
+      close_why: 'The store closes at {c}: topping up short or medium shelf-life produce now leaves more of it out overnight, where it spoils. Restock in the morning. Empty spots and wrong products never wait.',
+      close_on: 'Close to closing ({c}): top-ups of perishable produce wait until tomorrow.',
     },
     pt: {
       skip: 'Saltar para o conteúdo', title: 'Controlo de prateleiras', tab_tasks: 'Fazer agora', tab_gondola: 'Gôndolas', tab_products: 'Produtos',
@@ -187,6 +197,16 @@
       fx_cauliflower: 'escurecer e perder folhas', fx_cucumber: 'amarelecer e amolecer', fx_eggplant: 'ganhar manchas castanhas',
       'fx_green beans': 'amarelecer', fx_kiwi: 'amolecer', fx_lettuce: 'ganhar manchas castanhas e amarelecer', fx_tomato: 'amadurecer e amolecer',
       fx_watermelon: 'amolecer e passar do ponto', fx_other: 'amadurecer ou estragar-se',
+      tab_day: 'Dia', day_title: 'O dia da loja',
+      day_honest: 'Repetição de um dia com as próprias imagens do conjunto de dados ({n} imagens de {c} câmaras). O modelo foi calibrado neste dia: isto mostra a experiência, não a precisão.',
+      day_play: 'Reproduzir o dia', day_pause: 'Pausa', day_slider: 'Hora do dia', day_at: 'Loja às {t}',
+      day_todo: 'Por fazer às {t}', day_log: 'O que aconteceu', day_log_x: 'Mudanças entre imagens seguidas de cada zona, as mais recentes primeiro. Toque numa para ver essa imagem.',
+      day_log_none: 'Ainda sem mudanças.', day_pulse: 'Pulso da loja', day_pulse_x: 'Zonas vazias, baixas e com produto errado, a cada 30 min. Toque numa barra para ir para essa hora.',
+      day_frame: 'Imagem das {t}', day_nopic: 'Ainda sem imagem a esta hora', day_more: 'e mais {n}', day_cam_todo: '{n} por fazer', day_pick: 'Toque numa zona ou num evento',
+      ev_empty: 'ficou vazia', ev_low: 'ficou baixa', ev_wrong: 'produto errado no lugar', ev_fixed: 'produto errado corrigido', ev_restock: 'reposição detetada', ev_ok: 'voltou a OK',
+      close_lbl: 'Hora de fecho', close_group: 'Deixar até amanhã (perto do fecho)',
+      close_why: 'A loja fecha às {c}: reforçar agora fruta e legumes de conservação curta ou média deixa mais produto exposto durante a noite, onde se estraga. Repor de manhã. Vazios e produtos errados nunca esperam.',
+      close_on: 'Perto do fecho ({c}): os reforços de produtos perecíveis ficam para amanhã.',
     },
   };
 
@@ -217,7 +237,8 @@
   const LV_CLASS = { empty: 's-empty', half: 's-low', full: 's-ok' };
   const SAME_LV = { empty: 'empty', low: 'half', ok: 'full' };      // status words that already say the level
   const S_ICON = { empty: 'i-empty', low: 'i-low', wrong: 'i-wrong', ok: 'i-ok' };
-  const VIEWS = ['tasks', 'gondola', 'products', 'insights'];
+  const RP = D.replay && D.replay.frames && Object.keys(D.replay.frames).length ? D.replay : null;   /* several frames per camera */
+  const VIEWS = ['tasks', 'gondola', 'products', 'insights'].concat(RP ? ['day'] : []);
 
   const areas = D.areas;
   const areaById = Object.fromEntries(areas.map((a) => [a.id, a]));
@@ -235,7 +256,10 @@
     view: 'tasks', lang: store.get('sensei.lang', (window.SHELF_DATA && window.SHELF_DATA.lang) || 'pt'), theme: store.get('sensei.theme', 'auto'),
     status: null, full: false, cam: 'all', q: '', sort: 'priority', gcam: null, sel: null, psort: 'attention', pdir: 1,
     det: false, dsel: null, dcam: null,   // product boxes: toggle, tapped box index, camera it belongs to
+    close: store.get('sensei.close', '21:00'),          // closing time (closing-time mode)
+    dt: RP ? RP.t1 : 0, dplay: false, dgc: null, dga: null,   // Day view: time shown, playing, camera and area picked
   };
+  if (!/^\d{1,2}:\d{2}$/.test(String(st.close))) st.close = '21:00';
   if (!T[st.lang]) st.lang = 'en';
   let done = store.get('sensei.done.v1', {});
   const scrollMem = {};
@@ -291,6 +315,21 @@
   const camTs = (a) => (camById[a.cam] ? camById[a.cam].ts : D.snapshot_ts);
   const FC_MAX_S = 4 * 3600;   // longer forecasts are not actionable on this shift
   const fcShow = (a) => a.fc != null && a.fc > 0 && a.fc < FC_MAX_S && (a.status === 'low' || a.status === 'wrong');
+  /* Closing-time mode: in the last 2 hours before closing, topping up short / medium shelf-life produce waits until
+     tomorrow (less produce out overnight). Empty spots and wrong products never wait. */
+  const CLOSE_WIN_MIN = 120;
+  const hmToMin = (s) => { const m = /^(\d{1,2}):(\d{2})/.exec(String(s || '')); return m ? (+m[1] % 24) * 60 + +m[2] : null; };
+  const closeMin = () => { const m = hmToMin(st.close); return m == null ? 21 * 60 : m; };
+  const localMin = (ts) => hmToMin(fmt('time').format(new Date(ts * 1000)));
+  const nearClose = (ts) => { if (ts == null) return false; const m = localMin(ts); const c = closeMin(); return m != null && m >= c - CLOSE_WIN_MIN && m < c; };
+  const canWait = (a, status) => (status || a.status) === 'low' && (a.pcls === 'fast' || a.pcls === 'medium');
+  const closeGroup = (list, card) => (list.length ? `<h3 class="group-title g-close">${icon('i-moon')}${t('close_group')} <span class="count">${list.length}</span></h3><p class="close-why">${t('close_why', { c: esc(st.close) })}</p><div class="cards">${list.map(card).join('')}</div>` : '');
+  function closeOpts() {
+    const cur = closeMin(); const opts = [];
+    for (let m = 12 * 60; m <= 24 * 60 - 30; m += 30) opts.push(m);
+    if (opts.indexOf(cur) < 0) opts.push(cur);
+    return opts.sort((x, y) => x - y).map((m) => { const v = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; return `<option value="${v}"${m === cur ? ' selected' : ''}>${v}</option>`; }).join('');
+  }
   const OLD_S = 1800;          // pictures older than this vs the newest one get an age chip
   /* forecast "empty in ~N" counted from the snapshot (the newest picture), not from this camera's older frame */
   const fcLeft = (a) => camTs(a) + a.fc - (D.snapshot_ts != null ? D.snapshot_ts : camTs(a));
@@ -423,6 +462,9 @@
     const el = $('#view-tasks');
     const all = areas.filter(isTask);
     const tasks = areas.filter((a) => isJob(a) && matches(a));                 /* = the Empty + Low + Wrong counters */
+    const closing = nearClose(D.snapshot_ts);
+    const wait = closing ? tasks.filter((a) => canWait(a)).sort((x, y) => y.pri - x.pri || sortRoute(x, y)) : [];
+    const now = tasks.filter((a) => wait.indexOf(a) < 0);
     const freshAll = areas.filter((a) => a.status === 'ok' && freshDue(a) && matches(a));
     const doneN = tasks.filter((a) => done[taskKey(a)]).length;
     const showOk = st.status === 'ok' || st.status === null;
@@ -432,7 +474,9 @@
       <span class="muted" id="prog-txt">${t('progress', { d: doneN, n: tasks.length })}</span></div>
       <div class="seg" role="group" aria-label="${t('sort_by')}">
         <button type="button" data-act="sort" data-v="priority" aria-pressed="${st.sort === 'priority'}">${t('by_priority')}</button>
-        <button type="button" data-act="sort" data-v="route" aria-pressed="${st.sort === 'route'}">${t('by_route')}</button></div></div>`;
+        <button type="button" data-act="sort" data-v="route" aria-pressed="${st.sort === 'route'}">${t('by_route')}</button></div>
+      <label class="close-set">${icon('i-moon')}<span>${t('close_lbl')}</span><select id="close-time">${closeOpts()}</select></label></div>
+      ${closing ? `<p class="close-note">${icon('i-moon')}<span>${t('close_on', { c: esc(st.close) })}</span></p>` : ''}`;
     /* freshness checks never outrank restock or wrong-product tasks: own group, last, most overdue first */
     const fresh = freshAll.slice().sort((x, y) => y.fresh.h / y.fresh.lim - x.fresh.h / x.fresh.lim || sortRoute(x, y));
     const freshGroup = fresh.length ? `<h3 class="group-title">${icon('i-leaf', 'g-fresh')}${t('fr_group')} <span class="count">${fresh.length}</span></h3><div class="cards">${fresh.map(taskCard).join('')}</div>` : '';
@@ -440,20 +484,20 @@
       html += all.length ? `<div class="allgood"><h3>${t('none_match')}</h3></div>`
         : `<div class="allgood">${icon('i-ok')}<h3>${t('all_good')}</h3><p class="muted">${t('all_good_x')}</p></div>`;
     } else if (st.sort === 'priority') {
-      const sorted = tasks.slice().sort((x, y) => y.pri - x.pri || sortRoute(x, y));
+      const sorted = now.slice().sort((x, y) => y.pri - x.pri || sortRoute(x, y));
       /* wrong product first (the item has to be carried elsewhere), then empty */
       const urgent = sorted.filter((a) => a.status === 'wrong').concat(sorted.filter((a) => a.status === 'empty'));
       const soon = sorted.filter((a) => a.status === 'low');
       if (urgent.length) html += `<h3 class="group-title">${t('urgent')} <span class="count">${urgent.length}</span></h3><div class="cards">${urgent.map(taskCard).join('')}</div>`;
       if (soon.length) html += `<h3 class="group-title">${t('soon')} <span class="count">${soon.length}</span></h3><div class="cards">${soon.map(taskCard).join('')}</div>`;
-      html += freshGroup;
+      html += closeGroup(wait, taskCard) + freshGroup;
     } else {
       const byCam = {};
-      tasks.slice().sort(sortRoute).forEach((a) => { (byCam[a.cam] = byCam[a.cam] || []).push(a); });
+      now.slice().sort(sortRoute).forEach((a) => { (byCam[a.cam] = byCam[a.cam] || []).push(a); });
       Object.keys(byCam).forEach((c) => {
         html += `<h3 class="group-title">${t('camera')} ${esc(c)} <span class="count">${byCam[c].length}</span></h3><div class="cards">${byCam[c].sort((x, y) => y.pri - x.pri).map(taskCard).join('')}</div>`;
       });
-      html += freshGroup;
+      html += closeGroup(wait, taskCard) + freshGroup;
     }
     if (showOk && oks.length) html += leaveHtml(oks, st.status === 'ok');
     el.innerHTML = html;
@@ -844,6 +888,152 @@
       <div class="ins-grid">${soonHtml()}${salesHtml()}${adherenceHtml()}</div>${layoutHtml()}`;
   }
 
+  /* ------------------------------------------------------------------ day replay */
+  /* Built in sensei/dashboard.py (_build_replay) when details.json holds several frames per camera: every camera's
+     latest picture at or before the chosen time, the events between pictures and a store pulse. */
+  const SC = { e: 'empty', l: 'low', w: 'wrong', o: 'ok' };
+  const D_MIN = RP ? Math.min(6 * 60, Math.floor((RP.t0 - RP.day0) / 300) * 5) : 0;        // slider range, minutes since local midnight
+  const D_MAX = RP ? Math.max(20 * 60 + 30, Math.ceil((RP.t1 - RP.day0) / 300) * 5) : 0;
+  const D_STEP_S = 360;                 // play: 6 min every 100 ms = about 1 hour per second
+  let dTimer = null; let dFrameKey = ''; let dChipCam = null;
+  const dCams = RP ? Object.keys(RP.frames).sort((x, y) => (x.length - y.length) || (x < y ? -1 : 1)) : [];
+  function dState(ts) {                  // camera -> latest frame at or before ts
+    const out = {};
+    dCams.forEach((c) => { let best = null; RP.frames[c].forEach((f) => { if (f.ts <= ts && (!best || f.ts > best.ts)) best = f; }); if (best) out[c] = best; });
+    return out;
+  }
+  function dItems(state) {               // [{a, s, f}] for every area of every pictured camera
+    const out = [];
+    Object.keys(state).forEach((c) => {
+      const f = state[c]; const ids = RP.order[c] || [];
+      ids.forEach((id, i) => { const s = SC[f.s.charAt(i)]; const a = areaById[id]; if (s && a) out.push({ a, s, f }); });
+    });
+    return out;
+  }
+  const dPlayInner = () => (st.dplay ? `<span class="pp pause" aria-hidden="true"></span>${t('day_pause')}` : `<span class="pp play" aria-hidden="true"></span>${t('day_play')}`);
+  function dPause() { if (dTimer) { clearInterval(dTimer); dTimer = null; } st.dplay = false; const b = $('#d-play'); if (b) b.innerHTML = dPlayInner(); }
+  function dPlay() {
+    if (st.dt >= RP.t1) st.dt = RP.day0 + D_MIN * 60;      /* at or after the last picture: nothing left to play, start over */
+    st.dplay = true; const b = $('#d-play'); if (b) b.innerHTML = dPlayInner();
+    dTimer = setInterval(() => {
+      st.dt = Math.min(RP.day0 + D_MAX * 60, st.dt + D_STEP_S);
+      if (st.dt >= RP.day0 + D_MAX * 60) dPause();
+      updateDay();
+    }, 100);
+  }
+  const evLine = (a) => `${t('camera')} ${esc(a.cam)} · ${t('area')} ${esc(a.num)} · <b>${esc(nm(a).main)}</b>`;
+  const EV_S = { empty: 'empty', low: 'low', wrong: 'wrong', fixed: 'ok', restock: 'ok', ok: 'ok' };
+  const EV_I = { empty: 'i-empty', low: 'i-low', wrong: 'i-wrong', fixed: 'i-ok', restock: 'i-up', ok: 'i-ok' };
+  function dTaskText(it) {
+    if (it.s === 'empty') return t('act_restock');
+    if (it.s === 'low') return t('act_top');
+    const lk = it.f.lk && it.f.lk[it.a.id];
+    const q = lk ? (st.lang === 'pt' ? lk[1] : lk[0]) : '';
+    return q ? `${t('act_move')}: ${t('act_move_x', { p: esc(nm(it.a).main), q: esc(q) })}` : `${t('act_check')}: ${t('expected')} ${esc(nm(it.a).main)}`;
+  }
+  function renderDay() {
+    const el = $('#view-day');
+    const nPics = dCams.reduce((s, c) => s + RP.frames[c].length, 0);
+    el.innerHTML = `<div class="view-head"><h2>${t('day_title')}</h2></div>
+      <p class="day-honest">${t('day_honest', { n: nPics, c: dCams.length })}</p>
+      <div class="day-ctrl"><div class="day-btns"><button type="button" class="day-play" id="d-play" data-act="dplay">${dPlayInner()}</button>
+        <output class="day-clock" id="d-clock"></output></div>
+        <div class="day-slider"><div id="d-pulse" class="day-pulse"></div><label><span class="sr">${t('day_slider')}</span><input type="range" id="d-range" min="${D_MIN}" max="${D_MAX}" step="5" value="${Math.round((st.dt - RP.day0) / 60)}"></label>
+        <div class="day-ticks" aria-hidden="true">${[6, 9, 12, 15, 18, 20].filter((h) => h * 60 >= D_MIN && h * 60 <= D_MAX).map((h) => `<span style="left:calc(10px + (100% - 20px) * ${((h * 60 - D_MIN) / (D_MAX - D_MIN)).toFixed(4)})">${hh(h)}</span>`).join('')}</div></div>
+        <p class="day-cap"><b>${t('day_pulse')}</b><span class="legend">${['empty', 'low', 'wrong'].map((s) => `<span class="s-${s}">${icon(S_ICON[s])}${t('s_' + s)}</span>`).join('')}</span><span class="muted">${t('day_pulse_x')}</span></p></div>
+      <div class="counters day-counters" id="d-counts"></div>
+      <div class="day-grid">
+        <div class="day-main"><section class="ins-card"><div class="cam-chips" id="d-cams" role="group" aria-label="${t('f_camera')}"></div><div id="d-frame"></div></section>
+          <section class="ins-card"><h3 id="d-todo-h">${icon('i-list')}</h3><div id="d-todo" class="day-todo"></div></section></div>
+        <div class="day-side"><section class="ins-card"><h3>${icon('i-clock')}${t('day_log')}</h3><p class="muted small">${t('day_log_x')}</p><ol class="ev-list ev-log" id="d-log"></ol></section></div>
+      </div>`;
+    dFrameKey = ''; dChipCam = null;
+    updateDay();
+  }
+  function updateDay() {
+    const el = $('#view-day'); if (!el || el.hidden || !$('#d-clock')) return;
+    const ts = st.dt; const state = dState(ts); const items = dItems(state);
+    $('#d-clock').textContent = fmtTime(ts);
+    const rg = $('#d-range'); const v = Math.round((ts - RP.day0) / 60); if (rg && +rg.value !== v) rg.value = v;
+    /* counters */
+    const c = { empty: 0, low: 0, wrong: 0, ok: 0 }; items.forEach((it) => { c[it.s]++; });
+    $('#d-counts').innerHTML = STATUS.map((s) => `<div class="counter s-${s}${c[s] ? '' : ' zero'}">${icon(S_ICON[s])}<span class="n">${c[s]}</span><span class="lbl">${t('s_' + s)}</span></div>`).join('');
+    /* camera chips */
+    if (!st.dgc || !RP.frames[st.dgc]) {
+      const worst = dCams.map((cm) => [cm, items.filter((it) => it.a.cam === cm && it.s !== 'ok').length]).sort((x, y) => y[1] - x[1])[0];
+      st.dgc = worst ? worst[0] : dCams[0];
+    }
+    const box = $('#d-cams'); const keep = { cams: box.scrollLeft, log: $('#d-log').scrollTop, todo: $('#d-todo').scrollTop };
+    box.innerHTML = dCams.map((cm) => {
+      const n = items.filter((it) => it.a.cam === cm && it.s !== 'ok').length; const f = state[cm];
+      return `<button type="button" class="cam-chip" data-act="dcam" data-v="${esc(cm)}" aria-pressed="${cm === st.dgc}"><b>${t('camera')} ${esc(cm)}</b><span>${f ? `${n ? t('day_cam_todo', { n }) : t('every_ok')} · ${fmtTime(f.ts)}` : '-'}</span></button>`;
+    }).join('');
+    const act = $('.cam-chip[aria-pressed="true"]', box);
+    if (act && dChipCam !== st.dgc) box.scrollLeft = act.offsetLeft - (box.clientWidth - act.offsetWidth) / 2; else box.scrollLeft = keep.cams;
+    dChipCam = st.dgc;
+    /* frame of the picked camera */
+    const f = state[st.dgc]; const cam = camById[st.dgc];
+    const key = [st.dgc, f ? f.ts : 0, st.dga, st.lang, st.full].join('|');
+    if (key !== dFrameKey) {
+      dFrameKey = key;
+      if (!f || !cam || !cam.w) {
+        $('#d-frame').innerHTML = `<div class="frame-wrap noframe">${t(f ? 'no_picture' : 'day_nopic')}</div>`;
+      } else {
+        const ids = RP.order[st.dgc] || [];
+        const camAreas = ids.map((id) => areaById[id]).filter(Boolean);
+        const vb = viewBoxFor(cam, camAreas);
+        const stOf = (id) => SC[f.s.charAt(ids.indexOf(id))] || 'ok';
+        const polys = camAreas.filter((a) => a.quad).map((a) => { const s = stOf(a.id); return `<polygon class="poly s-${s}${s === 'ok' ? ' ok' : ''}${a.id === st.dga ? ' sel' : ''}" data-act="dpick" data-id="${esc(a.id)}" points="${a.quad.map((p) => p.join(',')).join(' ')}"><title>${esc(`${a.num} · ${nm(a).main}: ${t('s_' + s)}`)}</title></polygon>`; }).join('');
+        const pins = camAreas.filter((a) => a.quad).map((a) => { const s = stOf(a.id); const [px, py] = pinPos(a, vb); return `<button type="button" class="pin s-${s}${a.id === st.dga ? ' sel' : ''}" data-act="dpick" data-id="${esc(a.id)}" style="left:${px.toFixed(2)}%;top:${py.toFixed(2)}%" aria-label="${esc(`${t('area')} ${a.num}, ${nm(a).main}, ${t('s_' + s)}`)}">${icon(S_ICON[s])}<span>${esc(a.num)}</span></button>`; }).join('');
+        const img = f.f ? `<image href="${esc(f.f)}" x="0" y="0" width="${cam.w}" height="${cam.h}" preserveAspectRatio="none"/>` : '';
+        const sa = st.dga && areaById[st.dga] && areaById[st.dga].cam === st.dgc ? areaById[st.dga] : null;
+        const info = sa ? `<p class="day-sel">${badge(stOf(sa.id))} <span>${evLine(sa)}</span></p>` : `<p class="muted small day-sel">${t('day_pick')}</p>`;
+        $('#d-frame').innerHTML = `<div class="frame-wrap" style="aspect-ratio:${vb[2].toFixed(1)}/${vb[3].toFixed(1)}"><svg class="overlay" viewBox="${vb.map((x) => x.toFixed(1)).join(' ')}" preserveAspectRatio="none">${img}${polys}</svg>${pins}
+          <span class="day-stamp">${icon('i-clock')}${t('day_frame', { t: fmtTime(f.ts) })}</span></div>${info}`;
+      }
+    }
+    /* event log, newest first */
+    const evs = RP.events.filter((e) => e[0] <= ts && areaById[e[1]]);
+    const MAXE = 60; const shown = evs.slice(-MAXE).reverse();
+    $('#d-log').innerHTML = shown.length ? shown.map((e) => {
+      const a = areaById[e[1]]; const k = e[2];
+      return `<li><button type="button" class="ev-row s-${EV_S[k]}${ts - e[0] < 3600 ? ' recent' : ''}${st.dga === a.id ? ' sel' : ''}" data-act="dev" data-v="${e[0]}" data-id="${esc(a.id)}"><time>${fmtTime(e[0])}</time>${icon(EV_I[k])}<span>${evLine(a)}: ${t('ev_' + k)}</span></button></li>`;
+    }).join('') + (evs.length > MAXE ? `<li class="muted small">${t('day_more', { n: evs.length - MAXE })}</li>` : '') : `<li class="muted">${t('day_log_none')}</li>`;
+    /* to-do list of that moment (closing-time mode applies at that hour) */
+    const todo = items.filter((it) => it.s !== 'ok');
+    const closing = nearClose(ts);
+    const wait = closing ? todo.filter((it) => canWait(it.a, it.s)) : [];
+    const rest = todo.filter((it) => wait.indexOf(it) < 0).sort((x, y) => ORDER[x.s] - ORDER[y.s] || sortRoute(x.a, y.a));
+    const row = (it) => `<li><button type="button" class="ev-row s-${it.s}" data-act="dpick" data-id="${esc(it.a.id)}">${icon(S_ICON[it.s])}<span><b>${esc(nm(it.a).main)}</b> <small>${t('camera')} ${esc(it.a.cam)} · ${t('area')} ${esc(it.a.num)} · ${dTaskText(it)}</small></span></button></li>`;
+    $('#d-todo-h').innerHTML = `${icon('i-list')}${t('day_todo', { t: fmtTime(ts) })} <span class="count">${todo.length}</span>`;
+    $('#d-todo').innerHTML = (rest.length ? `<ol class="ev-list">${rest.map(row).join('')}</ol>` : `<p class="muted">${t('all_good_x')}</p>`)
+      + (wait.length ? `<h4 class="group-title g-close">${icon('i-moon')}${t('close_group')} <span class="count">${wait.length}</span></h4><p class="close-why">${t('close_why', { c: esc(st.close) })}</p><ol class="ev-list">${wait.map(row).join('')}</ol>` : '');
+    $('#d-log').scrollTop = keep.log; $('#d-todo').scrollTop = keep.todo;     /* re-rendering must not jump the lists */
+    /* store pulse */
+    $('#d-pulse').innerHTML = dPulseSvg(ts);
+  }
+  function dPulseSvg(ts) {
+    const ps = RP.pulse || []; if (!ps.length) return '';
+    const W = 1000; const H = 64; const L = 10; const R = 10;      /* L / R ~ the range thumb inset, so bars sit over their hour */
+    const x0 = RP.day0 + D_MIN * 60; const x1 = RP.day0 + D_MAX * 60;
+    const X = (v) => L + ((v - x0) / Math.max(1, x1 - x0)) * (W - L - R);
+    const max = Math.max(...ps.map((p) => p[1] + p[2] + p[3]), 1);
+    const Y = (v) => (v / max) * (H - 2);
+    const bw = Math.max(3, (1800 / Math.max(1, x1 - x0)) * (W - L - R) * 0.8);
+    let g = '';
+    ps.filter((p) => p[0] >= x0 && p[0] <= x1).forEach((p) => {
+      const x = X(p[0]) - bw / 2; let y = H;
+      [['wrong', p[3]], ['empty', p[1]], ['low', p[2]]].forEach(([s, n]) => {
+        if (!n) return; const h = Y(n); y -= h;
+        g += `<rect class="pb s-${s}${p[0] > ts ? ' later' : ''}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}"/>`;
+      });
+      g += `<rect class="pb-hit" data-act="dseek" data-v="${p[0]}" x="${x.toFixed(1)}" y="0" width="${bw.toFixed(1)}" height="${H}"><title>${fmtTime(p[0])}: ${p[1]} ${t('s_empty')}, ${p[2]} ${t('s_low')}, ${p[3]} ${t('s_wrong')}</title></rect>`;
+    });
+    const cx = X(ts).toFixed(1);
+    g += `<line class="pb-now" x1="${cx}" x2="${cx}" y1="0" y2="${H}"/>`;
+    return `<svg class="pulse" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(t('day_pulse') + ': ' + t('day_pulse_x'))}">${g}</svg>`;
+  }
+
   /* ------------------------------------------------------------------ print sheet */
   function buildPrintSheet() {
     const tasks = areas.filter((a) => isTask(a) && !done[taskKey(a)]).sort(sortRoute);
@@ -882,8 +1072,9 @@
     const dark = isDark();
     $('#theme-btn').innerHTML = icon(dark ? 'i-sun' : 'i-moon');
     const c = counts();
-    $('#counters').hidden = st.view === 'insights';
-    $('#filters').hidden = st.view === 'insights';
+    $('#counters').hidden = st.view === 'insights' || st.view === 'day';
+    $('#filters').hidden = st.view === 'insights' || st.view === 'day';
+    const dayTab = $('.tab[data-tab="day"]'); if (dayTab) dayTab.hidden = !RP;
     $('#counters').classList.add('compact');
     $('#counters').innerHTML = STATUS.map((s) => `<button type="button" class="counter s-${s}${c[s] ? '' : ' zero'}" data-act="status" data-v="${s}" aria-pressed="${st.status === s}">
       ${icon(S_ICON[s])}<span class="n">${c[s]}</span><span class="lbl">${t('s_' + s)}</span></button>`).join('');
@@ -910,11 +1101,13 @@
   }
 
   function render() {
+    if (st.view !== 'day' && st.dplay) dPause();
     renderChrome();
-    VIEWS.forEach((v) => { $('#view-' + v).hidden = v !== st.view; });
+    ['tasks', 'gondola', 'products', 'insights', 'day'].forEach((v) => { const n = $('#view-' + v); if (n) n.hidden = v !== st.view; });
     if (st.view === 'tasks') renderTasks();
     else if (st.view === 'gondola') renderGondola();
     else if (st.view === 'products') renderProducts();
+    else if (st.view === 'day') renderDay();
     else renderInsights();
     buildPrintSheet();
   }
@@ -925,6 +1118,12 @@
     const p = location.hash.replace(/^#\/?/, '').split('/').map(decodeURIComponent);
     st.view = VIEWS.includes(p[0]) ? p[0] : 'tasks';
     jumpTo = st.view === 'insights' && p[1] === 'layout' ? 'ins-layout-card' : null;
+    if (st.view === 'day' && RP) {
+      const m = /^(\d{1,2})(\d{2})$/.exec(p[1] || '');
+      if (m) st.dt = clamp(RP.day0 + (+m[1]) * 3600 + (+m[2]) * 60, RP.day0 + D_MIN * 60, RP.day0 + D_MAX * 60);
+      if (p[2] && RP.frames[p[2]]) st.dgc = p[2];
+      if (p[3] && areaById[p[3]]) st.dga = p[3];
+    }
     if (st.view === 'gondola') {
       if (p[1] && camById[p[1]]) st.gcam = p[1];
       if (p[2] && areaById[p[2]]) { st.sel = p[2]; st.gcam = areaById[p[2]].cam; }
@@ -985,11 +1184,17 @@
     else if (act === 'area') { selectArea(b.dataset.id); }
     else if (act === 'zoom') { st.full = !st.full; renderGondola(); }
     else if (act === 'det') { st.det = !st.det; st.dsel = null; renderGondola(); }
+    else if (act === 'dplay') { if (st.dplay) dPause(); else dPlay(); return; }
+    else if (act === 'dcam') { st.dgc = v; st.dga = null; updateDay(); }
+    else if (act === 'dpick') { const a = areaById[b.dataset.id]; if (a) { st.dgc = a.cam; st.dga = a.id; updateDay(); } }
+    else if (act === 'dev') { dPause(); const a = areaById[b.dataset.id]; st.dt = +v; if (a) { st.dgc = a.cam; st.dga = a.id; } updateDay(); const fr = $('#d-frame'); if (fr && window.innerWidth < 960) fr.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+    else if (act === 'dseek') { dPause(); st.dt = +v; updateDay(); }
     restoreFocus(b);
   });
   document.addEventListener('change', (e) => {
     const el = e.target;
     if (el.id === 'cam-select') { st.cam = el.value; render(); }
+    else if (el.id === 'close-time') { if (hmToMin(el.value) != null) { st.close = el.value; store.set('sensei.close', st.close); render(); } }
     else if (el.dataset && el.dataset.act === 'done') {
       const key = el.dataset.key;
       if (el.checked) done[key] = 1; else delete done[key];
@@ -1000,6 +1205,10 @@
     }
   });
   $('#search').addEventListener('input', (e) => { st.q = e.target.value.trim(); render(); });
+  document.addEventListener('input', (e) => {
+    if (e.target.id !== 'd-range' || !RP) return;
+    dPause(); st.dt = RP.day0 + (+e.target.value) * 60; updateDay();
+  });
   if (window.matchMedia) {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const onChange = () => { if (st.theme === 'auto') renderChrome(); };

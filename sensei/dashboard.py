@@ -23,6 +23,15 @@ Produce biology (``sensei.freshness``, ``docs/produce_biology_reference.csv`` ov
 task when an area has been on display longer than its product's check interval since the last restock seen
 (``area["fresh"]``, product facts in ``payload["bio"]``), and "Layout & waste" pairs of a high ethylene producer next
 to a highly ethylene-sensitive product (``insights["layout"]``). Without the CSVs both are simply absent.
+Each area also carries ``pcls``, the shelf-life class of its planned product: the page's closing-time mode (setting
+"Hora de fecho", default 21:00) moves low top-ups of fast / medium class produce to "leave until tomorrow" in the last
+2 hours before closing; empty and wrong-product tasks never move.
+
+Day replay: when ``details.json`` holds several readable frames per camera (``predict`` on a whole day of pictures),
+``payload["replay"]`` (``_build_replay``) adds a "Day" view: an hour slider with play, every camera's latest picture
+at or before that time (smaller JPEGs in ``img/replay/``), counters and to-do list of the moment, a store pulse
+(``replay_pulse``) and an event log of status changes (``replay_events``). One frame per camera (the normal ``submit``
+case): no replay key, the Day tab stays hidden.
 
 Usage: ``python -m sensei.dashboard --details details.json --data data/raw --out dashboard/ [--zip]
 [--detections cache/colab/sensei_colab_features.zip] [--detect]``
@@ -569,6 +578,134 @@ def product_totals(areas: list[dict]) -> dict[str, dict]:
     return out
 
 
+# --------------------------------------------------------------------------- day replay (several frames per camera)
+
+REPLAY_FRAME_W = 960        # replay frames are smaller than the main frame: the slider shows ~180 of them
+REPLAY_QUALITY = 72
+PULSE_STEP_S = 1800         # store pulse: one sample every 30 min
+STATUS_CODE = {"empty": "e", "low": "l", "wrong": "w", "ok": "o"}
+
+
+def replay_events(series: dict[str, list[tuple[int, str, float | None]]]) -> list[list]:
+    """Status changes between consecutive readable pictures of each area, oldest first: ``[[ts, area_id, kind], ...]``.
+
+    ``series`` maps area id -> ``[(ts, status, fill), ...]`` (any order). Kinds: ``wrong`` (a wrong product
+    appeared), ``fixed`` (the wrong product is gone; if the spot is now empty an ``empty`` event follows), ``empty``
+    (went empty), ``low`` (ok -> low), ``restock`` (empty -> low/ok, or low -> ok with the fill rising by more than
+    ``RESTOCK_JUMP``) and ``ok`` (low -> ok, smaller rise: back to OK). The first picture of an area gives no event.
+    """
+    out: list[list] = []
+    for aid, pts in series.items():
+        pts = sorted(pts, key=lambda p: p[0])
+        for (_, s0, f0), (t1, s1, f1) in zip(pts, pts[1:]):
+            if s0 == s1:
+                continue
+            if s1 == "wrong":
+                out.append([int(t1), aid, "wrong"])
+                continue
+            if s0 == "wrong":
+                out.append([int(t1), aid, "fixed"])
+                if s1 == "empty":
+                    out.append([int(t1), aid, "empty"])
+                continue
+            if s1 == "empty":
+                out.append([int(t1), aid, "empty"])
+            elif s1 == "low":
+                out.append([int(t1), aid, "low" if s0 == "ok" else "restock"])
+            elif s0 == "empty":
+                out.append([int(t1), aid, "restock"])
+            else:                                                   # low -> ok
+                jump = f0 is not None and f1 is not None and f1 - f0 > RESTOCK_JUMP
+                out.append([int(t1), aid, "restock" if jump else "ok"])
+    out.sort(key=lambda e: (e[0], _natural(e[1]), e[2]))
+    return out
+
+
+def replay_state(frames: dict[str, list[dict]], t: int) -> dict[str, dict]:
+    """The latest frame at or before ``t`` of every camera (cameras not yet pictured are absent)."""
+    out = {}
+    for cam, fs in frames.items():
+        best = None
+        for f in fs:
+            if f["ts"] <= t and (best is None or f["ts"] > best["ts"]):
+                best = f
+        if best is not None:
+            out[cam] = best
+    return out
+
+
+def replay_pulse(frames: dict[str, list[dict]], t0: int, t1: int, step: int = PULSE_STEP_S) -> list[list[int]]:
+    """Store pulse: ``[[ts, empty, low, wrong], ...]`` every ``step`` s from ``t0`` to ``t1``, counted over the
+    latest frame of each camera at that time (frames hold ``s``: one status letter per area, see ``STATUS_CODE``)."""
+    out = []
+    t = int(t0)
+    while t <= t1:
+        s = "".join(f["s"] for f in replay_state(frames, t).values())
+        out.append([t, s.count("e"), s.count("l"), s.count("w")])
+        t += step
+    return out
+
+
+def _build_replay(rows: list[dict], areas: list[dict], index: dict, d: dict, out: Path, quality: int) -> dict | None:
+    """Payload of the "Day" view when at least one camera has several readable frames, else None.
+
+    ``{"day0": local midnight, "order": {cam: [area ids]}, "frames": {cam: [{ts, f, s, lk}]}, "events": [...],
+    "pulse": [...]}``: ``s`` holds one status letter per area in ``order`` (``-`` = no row), ``lk`` the likely
+    product of wrong-product areas, ``f`` a downscaled copy of the frame (drawn in the main frame's pixel space).
+    """
+    by_frame: dict[tuple[str, int, str], list[dict]] = {}
+    for r in rows:
+        if not r.get("fallback"):
+            by_frame.setdefault((str(r["camera_id"]), int(r.get("timestamp", -1)), str(r["image_name"])), []).append(r)
+    per_cam: dict[str, int] = {}
+    for cam, _, _ in by_frame:
+        per_cam[cam] = per_cam.get(cam, 0) + 1
+    if not per_cam or max(per_cam.values()) < 2:
+        return None
+    order: dict[str, list[str]] = {}
+    for a in areas:
+        order.setdefault(a["cam"], []).append(a["id"])
+    frames: dict[str, list[dict]] = {}
+    series: dict[str, list[tuple[int, str, float | None]]] = {}
+    for (cam, ts, image_name), frs in sorted(by_frame.items(), key=lambda kv: (kv[0][0], kv[0][1])):
+        if cam not in order or ts < 0:
+            continue
+        st = {str(r["area_id"]): r for r in frs}
+        letters, lk = [], {}
+        for aid in order[cam]:
+            r = st.get(aid)
+            if r is None:
+                letters.append("-")
+                continue
+            s = _status(r)
+            letters.append(STATUS_CODE[s])
+            series.setdefault(aid, []).append((ts, s, r.get("fill")))
+            if s == "wrong" and r.get("likely_product_name"):
+                n = _names(r)
+                lk[aid] = [n.get("len", ""), n.get("lpt", "")]
+        entry: dict[str, Any] = {"ts": ts, "f": None, "s": "".join(letters)}
+        if lk:
+            entry["lk"] = lk
+        src = _find_image(frs[0], index)
+        if src is not None:
+            try:
+                rgb = sdata.to_frame_size(sdata.load_image(src), d.get("frame_size"))
+                stem = _frame_stem(cam, ts, image_name)
+                _save_frame(rgb, out / "img" / "replay" / f"{stem}.jpg", REPLAY_FRAME_W, min(quality, REPLAY_QUALITY))
+                entry["f"] = f"img/replay/{stem}.jpg"
+            except (ValueError, OSError) as exc:
+                log.warning("dashboard: replay frame %s unreadable (%s)", src, exc)
+        frames.setdefault(cam, []).append(entry)
+    stamps = [f["ts"] for fs in frames.values() for f in fs]
+    if not stamps:
+        return None
+    t0, t1 = min(stamps), max(stamps)
+    day0 = int(t0 - round(_local_hour(t0) * 3600))
+    p0 = day0 + ((t0 - day0) // PULSE_STEP_S) * PULSE_STEP_S
+    return {"day0": day0, "t0": t0, "t1": t1, "order": order, "frames": frames,
+            "events": replay_events(series), "pulse": replay_pulse(frames, p0, t1 + PULSE_STEP_S)}
+
+
 def _frame_stem(cam: str, ts: int, image_name: str) -> str:
     return f"{cam}_{ts if ts >= 0 else Path(image_name).stem}"
 
@@ -732,6 +869,9 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
             shelf_wrong = bool(status == "wrong" and r.get("likely_product_name") and r.get("likely_product_id") is not None)
             shelf_pid = str(r["likely_product_id"]) if shelf_wrong else a["pid"]
             b = bio.get(freshness.name_key(r.get("likely_product_name") if shelf_wrong else r.get("product_name")))
+            pb = bio.get(freshness.name_key(r.get("product_name")))
+            if pb and pb.get("cls"):
+                a["pcls"] = pb["cls"]          # shelf-life class of the planned product (closing-time mode)
             if b:
                 bio_out.setdefault(shelf_pid, _bio_public(b))
                 a["bk"] = shelf_pid
@@ -765,6 +905,9 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
         "insights": insights,
         "bio": bio_out,
     }
+    replay = _build_replay(rows, areas, index, d, out, quality)
+    if replay is not None:
+        payload["replay"] = replay
     text = "window.SHELF_DATA = " + json.dumps(payload, ensure_ascii=True, separators=(",", ":")) + ";\n"
     (out / "data.js").write_text(text, encoding="utf-8")
     log.info("dashboard: %d cameras, %d areas %s, %d freshness checks due, %d ethylene pairs -> %s", len(cameras),

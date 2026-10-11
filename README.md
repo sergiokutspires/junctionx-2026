@@ -175,6 +175,66 @@ app is `submission\dashboard\index.html`. Exit code 0 = passed, 1 = written but 
 details are there too.
 </details>
 
+### What's new (11 October)
+
+None of this changes the submission: `predictions.json` from `submit` is byte-identical to the rehearsal file
+before these features, and the model files match [`results/model_manifest.json`](results/model_manifest.json).
+
+**Replay the day (staff app, tab "Dia").** Predict all 181 frames of the dataset day, then build the app:
+
+```powershell
+.venv\Scripts\python -m sensei predict --model models/real_v3_cal --images data/raw/images `
+    --out outputs/day_replay/predictions.json --details outputs/day_replay/details.json
+.venv\Scripts\python -m sensei dashboard --details outputs/day_replay/details.json --data data/raw/images `
+    --out outputs/day_replay/dashboard --detections cache/colab/sensei_colab_features.zip   # boxes optional
+```
+
+Open `outputs/day_replay/dashboard/index.html#/day`. A play button runs the day at about one hour per second
+(06:00 to 20:30); an hour slider with a "store pulse" above it (empty, low and wrong-product areas every 30
+minutes; click a bar to jump); the four counters at that time; each camera's picture at that time with its areas
+coloured by their status then; the to-do list of that moment; and a log of changes, newest first (went empty,
+running low, wrong product, wrong product fixed, restock detected, back to OK; 253 over the day). Clicking an
+event shows that camera's picture with the area highlighted. A link such as `#/day/1514/6376/6376_12` opens
+15:14, camera 6376, area 12. Honest notes: these are the dataset's own pictures and the model was calibrated on
+this day, so the replay shows the experience, not accuracy (the page says so). The tab appears only when a camera
+has more than one picture, so a validation `submit` (one picture per camera) has no "Dia" tab. The downscaled
+replay pictures (960 px wide) add about 20 MB to that folder.
+
+**Closing-time mode (tab "Fazer agora").** A "Hora de fecho" setting (default 21:00, 12:00 to 23:30 in 30-minute
+steps, remembered by that browser). In the 2 hours before closing, "Baixo" top-ups of produce with a short or
+medium shelf life move to "Deixar até amanhã (perto do fecho)" with a one-line reason; empty shelves and wrong
+products never move, and long shelf-life produce stays in the list. "Now" is the time of the newest picture, not
+the wall clock, so a build whose pictures end at 20:16 (the rehearsal) opens in closing mode: Primeiro 25,
+Depois 16, Deixar até amanhã 25. Choose 23:30 to see the plain list (Depois 41). The Day view applies the same
+rule at the hour shown. The rule is a design choice from shelf-life classes; its effect on waste is not measured.
+
+**Area events for an alerts feed:** `python -m sensei watch --images <folder> --out events.jsonl [--confirm K]`
+predicts every frame, compares each area with its previous frame of the same camera and writes one JSON line per
+change (`became_empty`, `became_low`, `restocked`, `back_to_ok`, `wrong_product`, `wrong_product_fixed`, with
+time, camera, area, product, from, to and confidence). `--confirm 2` reports a change only once two frames in a
+row show it. On the 181 real frames: 252 events in 7.4 s (153 with `--confirm 2`). Against the teacher labels of
+the same frames, 87% of the events are exact (area, frame, event) matches and 80% of the labelled events are
+found (88% and 84% with `--confirm 2`); those labels also calibrated the model, so these are in-sample numbers.
+Wrong-product events are the weak spot (3 of 8 found). With one picture per camera (a validation set) there are
+no events. The Day view's log splits "restock" and "back to OK" slightly differently (a large fill jump from low
+to OK counts as a restock there), hence 253 there against 252 here.
+
+**Local HTTP endpoint:** `python -m sensei serve [--port 8765]` (standard library only, binds 127.0.0.1, model
+loaded once and warmed up at start). `POST /analyze` with the JPEG as body and headers `X-Camera-Id` /
+`X-Timestamp` (or `?camera_id=&timestamp=`; without a camera the view is recognised) returns every area's
+status, confidence, levels, likely product and forecast, plus the challenge-format entries for that frame;
+`GET /health`. Measured on 3 real 1280x720 frames: 2.0 to 2.4 s per request on a laptop CPU (while another job
+was running), answers identical to the batch prediction. Not a connector to Sensei's platform: it is the piece
+such a connector would call.
+
+**Reproducibility:** `python tools/reproduce_check.py [--fresh-features]` rebuilds the submission model from the
+public code + labels + the dataset into `models/repro_check` and compares. In 7 rebuilds (2 recomputing every
+feature, about 5 minutes each) the predictions on `data/val_sim` were byte-identical to the rehearsal (0 of 152
+areas changed). The model *files* are identical only to float32 precision: the stock model's k-means runs
+multithreaded, and in 1 of 5 multithreaded runs it settled on a slightly different solution (same predictions).
+With `OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1` two rebuilds are bit-identical to each other.
+Details: [`results/reproduce.md`](results/reproduce.md).
+
 ## The staff app
 
 A single static page that opens without a server or internet, also on a phone. It opens in Portuguese, with an
@@ -182,7 +242,9 @@ English toggle. A shift starts on **Do now**: wrong products and empty shelves f
 the time the picture was taken. **Gondolas** shows each camera view with coloured area outlines and the day's fill line; product boxes and "about N visible units" estimates appear on demand.
 **Products** groups the areas of each product. **Insights** shows what is running out soon, how fast each
 product sells, how well each camera view follows the planogram, and freshness reminders from produce biology.
-Counts are always labelled as estimates.
+**Dia** (only when there are several pictures per camera) replays the day; **Hora de fecho** holds back
+perishable top-ups near closing (see [What's new](#whats-new-11-october)). Counts are always labelled as
+estimates.
 
 ## Repository map
 

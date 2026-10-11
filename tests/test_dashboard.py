@@ -624,3 +624,103 @@ def test_freshness_tasks_render_below_stock_tasks(fake, fake_bio, tmp_path):
     assert dom.find('data-key="1001_10|') > fresh and dom.find('data-key="1001_1|') < fresh
     panel = _edge_dom(index, "#/gondola/1001/1001_10", tmp_path)
     assert "Verificar frescura / rodar stock" in panel and "Estimativa" in panel and "USDA AH-66 Tomato" in panel
+
+
+# --------------------------------------------------------------------------- day replay + closing-time mode
+
+def test_replay_events_cover_every_kind():
+    series = {
+        "1_1": [(300, "low", 0.5), (100, "ok", 0.9), (200, "ok", 0.9), (400, "empty", 0.02), (500, "ok", 0.95)],
+        "1_2": [(100, "ok", 0.9), (200, "wrong", 0.5), (300, "empty", 0.02)],
+        "1_3": [(100, "low", 0.45), (200, "ok", 0.6), (300, "low", 0.5), (400, "ok", 0.95)],
+        "1_4": [(100, "empty", 0.0)],
+    }
+    ev = dashboard.replay_events(series)
+    assert ev == sorted(ev, key=lambda e: (e[0], dashboard._natural(e[1]), e[2]))          # oldest first
+    got = {(e[0], e[1], e[2]) for e in ev}
+    assert got == {(300, "1_1", "low"), (400, "1_1", "empty"), (500, "1_1", "restock"),
+                   (200, "1_2", "wrong"), (300, "1_2", "fixed"), (300, "1_2", "empty"),
+                   (200, "1_3", "ok"), (300, "1_3", "low"), (400, "1_3", "restock")}
+    assert not [e for e in ev if e[1] == "1_4"]                                         # first picture: no event
+
+
+def test_replay_state_and_pulse():
+    frames = {"A": [{"ts": 100, "s": "eo"}, {"ts": 300, "s": "oo"}], "B": [{"ts": 200, "s": "lw"}]}
+    assert dashboard.replay_state(frames, 50) == {}
+    assert {c: f["ts"] for c, f in dashboard.replay_state(frames, 250).items()} == {"A": 100, "B": 200}
+    assert dashboard.replay_pulse(frames, 100, 300, step=100) == [[100, 1, 0, 0], [200, 1, 1, 1], [300, 0, 1, 1]]
+
+
+def test_build_adds_day_replay_with_several_frames(fake, fake_bio, tmp_path):
+    out = tmp_path / "site"
+    dashboard.build(fake, tmp_path / "raw", out, biology=fake_bio)
+    d = read_data_js(out)
+    rp = d["replay"]
+    assert rp["order"] == {"1001": ["1001_1", "1001_2", "1001_10"]}
+    fr = rp["frames"]["1001"]
+    assert [f["ts"] for f in fr] == [TS_OLD, TS_NEW] and [f["s"] for f in fr] == ["o-o", "ewo"]
+    assert fr[1]["lk"] == {"1001_2": ["banana", "Banana"]} and "lk" not in fr[0]
+    for f in fr:                                                                        # downscaled local JPEGs
+        assert f["f"].startswith("img/replay/")
+        with Image.open(out / f["f"]) as im:
+            assert im.size[0] == dashboard.REPLAY_FRAME_W and im.format == "JPEG"
+    assert rp["events"] == [[TS_NEW, "1001_1", "empty"]]
+    assert rp["t0"] == TS_OLD and rp["t1"] == TS_NEW and rp["day0"] <= TS_OLD
+    assert (rp["day0"] - 1750978800) % 86400 == 0                                       # local (Lisbon) midnight
+    assert rp["pulse"][-1][1:] == [1, 0, 1]
+    areas = {a["id"]: a for a in d["areas"]}
+    assert areas["1001_1"]["pcls"] == "medium" and areas["1001_2"]["pcls"] == "slow"     # planned product's class
+
+
+def test_single_frame_per_camera_has_no_replay(tmp_path):
+    img = write_jpg(tmp_path / "raw" / f"{TS_NEW}.jpg")
+    q = [[100, 100], [500, 110], [490, 300], [110, 290]]
+    out = tmp_path / "site"
+    dashboard.build({"rows": [row("1001", TS_NEW, "1001_1", "11", "BANANA CAT I CNT KG", "half", quad=q, img=img)]},
+                    None, out, biology=False)
+    d = read_data_js(out)
+    assert "replay" not in d and not (out / "img" / "replay").exists()
+
+
+def test_ui_has_day_view_and_closing_mode_in_both_languages():
+    js = (UI / "app.js").read_text(encoding="utf-8")
+    html = (UI / "index.html").read_text(encoding="utf-8")
+    assert 'data-tab="day" hidden' in html and 'id="view-day"' in html
+    for en, pt in (("The store’s day", "O dia da loja"), ("What happened", "O que aconteceu"),
+                   ("went empty", "ficou vazia"), ("restock detected", "reposição detetada"),
+                   ("wrong product fixed", "produto errado corrigido"), ("back to OK", "voltou a OK"),
+                   ("Store pulse", "Pulso da loja"), ("not accuracy", "não a precisão"),
+                   ("Closing time", "Hora de fecho"),
+                   ("Leave until tomorrow (close to closing)", "Deixar até amanhã (perto do fecho)")):
+        assert en in js and pt in js, (en, pt)
+    assert "store.get('sensei.close'" in js and "store.set('sensei.close'" in js        # saved with try/catch (store helper)
+    assert ".day-ctrl" in (UI / "style.css").read_text(encoding="utf-8")
+
+
+@pytest.mark.skipif(not EDGE.is_file(), reason="Microsoft Edge not installed")
+def test_closing_time_moves_perishable_top_ups_only(fake_bio, tmp_path):
+    """Real browser, picture at 20:00 Lisbon (default closing 21:00): low banana (medium class) waits, low apple (slow)
+    and the empty banana stay; without replay data the Day tab stays hidden."""
+    ts = 1750978800 + 20 * 3600 + 86400                                                 # 28/06 20:00 local
+    img = write_jpg(tmp_path / "raw" / f"{ts}.jpg")
+    q = [[[100 + 300 * i, 100], [350 + 300 * i, 100], [350 + 300 * i, 300], [100 + 300 * i, 300]] for i in range(3)]
+    rows = [row("1001", ts, "1001_1", "11", "BANANA CAT I CNT KG", "half", quad=q[0], img=img),
+            row("1001", ts, "1001_2", "22", "MAÇÃ GALA KG", "half", quad=q[1], img=img),
+            row("1001", ts, "1001_3", "11", "BANANA CAT I CNT KG", "empty", quad=q[2], img=img)]
+    out = tmp_path / "site"
+    index = dashboard.build({"rows": rows}, None, out, biology=fake_bio)
+    dom = _edge_dom(index, "#/tasks", tmp_path)
+    grp = dom.find("Deixar até amanhã (perto do fecho)")
+    assert grp > 0 and "Perto do fecho (21:00)" in dom
+    assert dom.find('data-key="1001_1|') > grp                                         # banana top-up waits
+    assert 0 < dom.find('data-key="1001_2|') < grp and 0 < dom.find('data-key="1001_3|') < grp
+    assert re.search(r'data-tab="day"[^>]*hidden', dom)
+
+
+@pytest.mark.skipif(not EDGE.is_file(), reason="Microsoft Edge not installed")
+def test_day_view_renders_events(fake, tmp_path):
+    out = tmp_path / "site"
+    index = dashboard.build(fake, tmp_path / "raw", out, biology=False)
+    dom = _edge_dom(index, "#/day", tmp_path)
+    assert "O dia da loja" in dom and "ficou vazia" in dom and 'id="d-range"' in dom and "Pulso da loja" in dom
+    assert not re.search(r'data-tab="day"[^>]*hidden', dom)

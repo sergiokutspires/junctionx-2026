@@ -19,12 +19,25 @@ and one CPU core, and emits the same kind of object your alerts already carry: a
 
 ### 2. How would it plug into our stack?
 
-**Frames and the planogram in, area events out; this is a design, the connector is not built.** Today it reads
-ceiling frames and `planogram.json` from disk and writes your annotation format (compliant, stock level, stock value
-for every area), plus a static staff page we use as a reference UI. The design: read frames from your data API, run as
-one CPU container on the on-prem servers you already have (about a sixth of a core per 14-camera section), and emit
-area events (area_id, state, confidence, since) into the replenishment alerts your staff already get. No GPU, no
-internet, no paid API. We have not built that connector yet.
+**Frames and the planogram in, area events out; the two pieces a connector would call are built, the connector to
+your platform is not.** Today it reads ceiling frames and `planogram.json` and writes your annotation format
+(compliant, stock level, stock value for every area), plus a static staff page we use as a reference UI. Two more
+entry points, both local and standard-library only:
+
+- `python -m sensei serve`: an HTTP endpoint on 127.0.0.1. POST one JPEG with the camera id and timestamp (or no
+  camera: it recognises the view) and get every area's status, confidence and the challenge-format entries back.
+  Measured: about 2 s per frame on a laptop CPU (2.0 to 2.4 s on 3 real frames while another job ran), identical
+  answers to the batch run.
+- `python -m sensei watch`: compares each area with its previous picture and writes one event per change
+  (became empty, became low, restocked, back to OK, wrong product, wrong product fixed), with time, camera, area,
+  product and confidence; `--confirm 2` waits for two pictures in a row. On the dataset day: 252 events; 87% match
+  our AI key exactly and 80% of the key's events are found, in-sample, since the same key calibrated the model.
+  Wrong-product events are weak (3 of 8 found).
+
+The design: your data API calls `serve` for each frame (one CPU container on the on-prem servers you already have,
+about a sixth of a core per 14-camera section), and `watch`-style events go into the replenishment alerts your staff
+already get. No GPU, no internet, no paid API. We have not connected it to your API or measured it at 5-minute
+cadence.
 
 ### 3. What does it take to switch it on in a new store?
 
@@ -209,7 +222,8 @@ labeller and checks our sales-speed estimate. We have not seen your sensor or sa
 ### 20. The app shows 66 tasks. Your platform generates about 9 replenishment tasks a day. Isn't that alert overload?
 
 **Staff see 25 first, and those 66 are one evening snapshot of the whole section.** The header reads "Fazer agora · 66
-tarefas" and groups the list: *Primeiro: produto errado e vazio* (25), *Depois: a ficar baixo* (41), then 13 freshness
+tarefas" and groups the list: *Primeiro: produto errado e vazio* (25), *Depois: a ficar baixo* (16), *Deixar até
+amanhã (perto do fecho)* (25, the closing-time mode of question 21; with it off, *Depois* has 41), then 13 freshness
 checks as extras (*Quando houver tempo: verificar frescura*), all 14 cameras, pictures from 18:07 to 20:16. We do not know how Sensei counts its 9 tasks (store-wide, all
 categories, per day), so we do not compare the two numbers. Next steps we have not built: cap each round, rank by how
 soon the shelf empties, and merge an area's repeated pictures into one task that shows how long the problem has
@@ -217,16 +231,22 @@ lasted. We have not measured tasks per shift or how often a task flips between p
 
 ### 21. Late in the day we let produce shelves run down on purpose. Won't "restock the low shelves" add waste?
 
-**It would if staff followed it blindly, so the next step is a closing-time mode.** After a store's own cut-off, the
-list would show only empty shelves and wrong products, and carry the low ones to the next morning's list. It is a
-next step, not built. Today "low" already sits in the second round (*Depois*), after empty and wrong.
+**It would if staff followed it blindly, so the app has a closing-time mode.** The manager sets *Hora de fecho*
+(default 21:00). In the last 2 hours before it, topping up "low" produce with a short or medium shelf life moves to
+*Deixar até amanhã (perto do fecho)*, with the reason on screen; empty shelves and wrong products never wait, and
+long-life produce stays in the list. In the demo build the pictures end at 20:16, so it is on: 25 of the 41 low
+shelves wait until tomorrow. Honest limits: "now" is the time of the newest picture; the 2-hour window and the
+shelf-life classes are our design choice (classes reviewed by Inês, question 27), and we have not measured the
+effect on waste.
 
 ### 22. What stops the same alert coming back every picture?
 
 **Today, little beyond honesty; that is a known gap.** Uncertain calls say *Confiança: Baixa: confirmar à vista*,
 every card shows when the camera saw it (*Visto às 18:35*), and an age chip (*há 1 h 40 min*) when the picture is
-older than the newest. *Marcar feito* is stored on that phone only. Next (not built): a task closes itself when the
-next picture shows the area filled, and a button that silences an area until the planogram changes, for promotions
+older than the newest. *Marcar feito* is stored on that phone only. The detection side exists: `sensei watch`
+emits "restocked" and "back to OK" events when the next picture shows the area filled, `--confirm 2` suppresses
+one-picture flips, and the app's *Dia* view replays those events over the dataset day. Not built: closing the task
+in *Fazer agora* from those events, and a button that silences an area until the planogram changes, for promotions
 and planned swaps.
 
 ### 23. Why say 1 in 8 areas differ in the morning? Our team is still setting up then.
@@ -275,8 +295,16 @@ melon next to kiwi). It is a layout suggestion, not a measurement from the pictu
   shows the frame, downscaled.
 - **Why the name Fresh Eyes?** It is your challenge title. The staff app itself is called *Controlo de prateleiras*.
 - **What would you do with another week?** Calibrate confidence (check that "Alta" is right more often than
-  "Média"), hand-count 20 to 30 areas to check the unit counts, build the closing-time mode and
-  self-closing tasks, and run on a second store.
+  "Média"), hand-count 20 to 30 areas to check the unit counts, close tasks from the area events, and run on
+  a second store.
+- **Can you rebuild it? Is it reproducible?** Yes for the answers: `tools/reproduce_check.py` rebuilds the model
+  from the public repo, the public AI labels and the dataset; in 7 rebuilds (2 recomputing every feature, about 5
+  minutes each) the predictions were byte-identical to our rehearsal (0 of 152 areas changed). The model files match
+  to float32 precision: multithreaded k-means once settled on a slightly different solution (same answers); with
+  single-threaded math two rebuilds are bit-identical (`results/reproduce.md`). The dataset itself is not in the
+  public repo, because it is your store footage.
+- **What does a day look like?** The *Dia* view replays the 181 dataset pictures with an event log (after the
+  pitch, `demo_script.md`). Same pictures the model was calibrated on: the experience, not accuracy.
 - **"SUBMISSION FORMAT CHECK"?** Our own check that the output file has the brief's format; not a Sensei
   certification.
 - **Who labelled the key?** AI models (Claude Opus 5.5 and Sonnet 5.5 votes, Opus adjudication), three votes per area

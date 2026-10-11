@@ -142,6 +142,22 @@ def cmd_submit(args) -> None:
         sys.exit(code)
 
 
+def cmd_watch(args) -> None:
+    from .events import summary, watch
+    t0 = time.perf_counter()
+    try:
+        events, rows = watch(args.model, args.images, args.out, confirm=args.confirm, device=args.device)
+    except (FileNotFoundError, ValueError) as exc:
+        sys.exit(f"ERROR: {exc}")
+    print(summary(events, rows))
+    print(f"events: {args.out or '(not written: use --out)'}  ({time.perf_counter() - t0:.1f}s)")
+
+
+def cmd_serve(args) -> None:
+    from .serve import serve
+    serve(args.model, port=args.port, device=args.device)
+
+
 # --------------------------------------------------------------------------- argument parser
 
 DEVICE_HELP = "auto (default: CUDA if available, else CPU) | cpu | cuda"
@@ -271,6 +287,26 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--images", help="images to predict (default: --data)")
     p.add_argument("--out", default="outputs", help="output folder (default: outputs)")
     p.set_defaults(func=cmd_run)
+
+    p = add("watch", "area events: compare each area with its previous frame (became_empty, restocked, ...)",
+            "Predict every frame under --images, order each camera's frames by time and emit one JSON line per "
+            "area status change: became_empty, became_low, restocked, back_to_ok, wrong_product, "
+            "wrong_product_fixed. The first frame of an area only sets its baseline.")
+    p.add_argument("--model", default=DEFAULT_MODEL, help=f"fitted model directory (default: {DEFAULT_MODEL})")
+    p.add_argument("--images", required=True, help="image folder (any layout)")
+    p.add_argument("--out", default=None, help="events.jsonl to write (one JSON event per line)")
+    p.add_argument("--confirm", type=int, default=1, metavar="K",
+                   help="report a new status only after K consecutive frames show it (default 1)")
+    p.add_argument("--device", help=DEVICE_HELP)
+    p.set_defaults(func=cmd_watch)
+
+    p = add("serve", "local HTTP endpoint: POST a JPEG to /analyze, get every area's status (127.0.0.1 only)",
+            "Load the model once and answer POST /analyze (JPEG body; headers X-Camera-Id and X-Timestamp or "
+            "query parameters camera_id and timestamp) and GET /health. Standard library only.")
+    p.add_argument("--model", default=DEFAULT_MODEL, help=f"fitted model directory (default: {DEFAULT_MODEL})")
+    p.add_argument("--port", type=int, default=8765, help="port on 127.0.0.1 (default 8765)")
+    p.add_argument("--device", help=DEVICE_HELP)
+    p.set_defaults(func=cmd_serve)
 
     p = add("synth", "write a small synthetic dataset (for tests and demos)",
             "Write a synthetic planogram, camera frames and an answer key for the later frames.")
