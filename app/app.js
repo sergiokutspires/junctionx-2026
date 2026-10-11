@@ -1103,7 +1103,7 @@
     document.documentElement.lang = st.lang;
     document.title = `${t('title')} · ${D.section || ''}`.replace(/ · $/, '');
     $$('[data-i18n]').forEach((n) => { n.textContent = t(n.dataset.i18n); });
-    $('#app-title').textContent = t('title');
+    $('#app-title').innerHTML = esc(t('title')).replace(/\.$/, '<span class="brand-dot">.</span>');
     const camTxt = st.cam === 'all' ? '' : ` · ${t('camera')} ${st.cam}`;
     $('#subtitle').textContent = `${D.section || ''} · ${snapText()}${camTxt}`;
     $('#search').placeholder = t('search_ph');

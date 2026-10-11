@@ -55,4 +55,6 @@ html.ft-instant .ft-spot, html.ft-instant .ft-card { transition: none; }
 @media (prefers-reduced-motion: reduce) {
   .ft-spot, .ft-card { transition: none; }
 }
+/* the public-demo banner is 4 lines on a phone: keep it to one or two */
+@media (max-width: 559px) { .public-note { padding: 6px 12px !important; font-size: 12px !important; line-height: 1.35 !important; } }
 @media print { .ft-pill, .ft-spot, .ft-shade, .ft-card { display: none !important; } }

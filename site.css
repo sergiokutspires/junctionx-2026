@@ -61,6 +61,8 @@ body {
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
 h1, h2, h3 { font-family: var(--font-display); margin: 0; letter-spacing: -.022em; }
+/* Segoe UI Variable (Windows) kerns "y?" and "r-" apart at heavy weights; plain metrics read cleaner */
+h1, h2, h3, .big, .need { font-kerning: none; }
 p { margin: 0; }
 code { font-family: var(--mono); font-size: .9em; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 8px; }
@@ -91,8 +93,8 @@ h3 { font-size: 21px; line-height: 1.2; font-weight: 700; }
   border-bottom: 1px solid var(--line);
 }
 .bar-in { display: flex; align-items: center; justify-content: space-between; height: 56px; }
-.bar-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font: 800 19px/1 var(--font-display); letter-spacing: -.02em; }
-.bar-brand img { width: 32px; height: 32px; }
+.bar-brand { display: inline-flex; align-items: baseline; text-decoration: none; color: var(--text); font: 700 25px/1 var(--font-display); letter-spacing: -.045em; }
+.bar-brand .dot, .foot-word .dot { color: var(--brand-ink, #C32172); }
 .bar-nav { display: flex; align-items: center; gap: 22px; font-size: 14px; }
 .bar-nav a:not(.pill) { text-decoration: none; color: var(--muted); font-weight: 500; }
 .bar-nav a:not(.pill):hover { color: var(--text); }
@@ -116,7 +118,7 @@ h3 { font-size: 21px; line-height: 1.2; font-weight: 700; }
 
 /* ---------------------------------------------------------------- hero */
 .hero { padding: clamp(48px, 9vw, 104px) 0 clamp(64px, 10vw, 120px); text-align: center; overflow: hidden; }
-.hero-logo { width: clamp(76px, 10vw, 104px); height: auto; margin: 0 auto 28px; filter: drop-shadow(0 10px 24px rgba(195, 33, 114, .25)); }
+.hero-logo { width: clamp(132px, 15vw, 184px); height: auto; margin: 0 auto 28px; filter: drop-shadow(0 10px 24px rgba(195, 33, 114, .25)); }
 .hero .eyebrow { color: var(--muted); }
 .hero h1 {
   font-size: clamp(44px, 9.4vw, 104px); line-height: .98; font-weight: 800; letter-spacing: -.045em;
@@ -259,7 +261,7 @@ h3 { font-size: 21px; line-height: 1.2; font-weight: 700; }
 .foot { border-top: 1px solid var(--line); padding: 56px 0 64px; font-size: 15px; }
 .foot-in { display: grid; gap: 28px; }
 .foot-brand { display: flex; gap: 16px; align-items: center; }
-.foot-brand img { width: 56px; height: 56px; flex: none; }
+.foot-word { flex: none; color: var(--text); font: 700 40px/1 var(--font-display); letter-spacing: -.045em; }
 .foot-brand p { color: var(--muted); }
 .foot-brand .team { color: var(--text); font: 800 20px/1.2 var(--font-display); letter-spacing: -.02em; margin-bottom: 2px; }
 .foot-links { display: flex; flex-wrap: wrap; gap: 10px 24px; }

@@ -22,6 +22,8 @@
     return !!(tab && !tab.hidden && getComputedStyle(tab).display !== 'none');
   }
   var inDayCopy = /\/day\/(index\.html)?$/.test(location.pathname);
+  /* "Replay the store's day" should open on the Dia view, not on a to-do list identical to app/ */
+  if (inDayCopy && !location.hash && hasDay()) location.replace('#/day');
 
   /* first wrong/empty task card's area link, remembered so step 4 opens a real problem area */
   var areaHref = null;
@@ -34,7 +36,7 @@
     var s = [];
     var day = [
       { route: '#/day', sel: '#view-day .day-ctrl', title: 'Replay the whole day',
-        text: 'Press play or drag the time slider (06:12 to 19:30): every shelf the cameras saw that day, re-read picture by picture.' },
+        text: 'Press play or drag the time slider: every shelf the cameras saw that day, re-read picture by picture.' },
       { route: null, sel: '#d-counts', title: 'The day, counted',
         text: 'The tiles follow the clock: watch shelves empty and get refilled. The to-do list and log below follow the same time.' }
     ];
@@ -95,6 +97,13 @@
 
   var steps = [], idx = -1, target = null, raf = 0, token = 0;
 
+  /* height of the sticky public-demo banner at the top (0 if absent) */
+  function topInset() {
+    var n = $('.public-note');
+    if (!n) return 0;
+    var r = n.getBoundingClientRect();
+    return r.top <= 1 && r.bottom > 0 ? r.bottom : 0;
+  }
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   function frames() { return wait(50); }   /* setTimeout, not rAF: rAF can stall in background tabs / headless */
   async function findEl(step) {
@@ -141,6 +150,7 @@
     } else if (vh - bottom >= ch + 24) { y = bottom + 12; x = r.left; }
     else if (top >= ch + 24) { y = top - ch - 12; x = r.left; }
     else if (vw - (r.right + pad) >= cw + 24) { x = r.right + pad + 12; y = Math.max(16, Math.min(r.top, vh - ch - 16)); }
+    else if (r.left - pad >= cw + 24) { x = r.left - pad - 12 - cw; y = Math.max(16, Math.min(r.top, vh - ch - 16)); }
     else { x = vw - cw - 24; y = vh - ch - 24; }
     x = Math.max(16, Math.min(x, vw - cw - 16)); y = Math.max(16, Math.min(y, vh - ch - 16));
     card.style.left = Math.round(x) + 'px'; card.style.top = Math.round(y) + 'px';
@@ -161,10 +171,22 @@
     if (step.sel && !el) { go(i + (dir || 1), dir || 1); return; }   /* element missing: skip this step */
     target = el;
     if (el) {
-      var r = el.getBoundingClientRect(), vh = window.innerHeight;
-      var tall = r.height > vh * 0.6;
-      el.scrollIntoView({ block: tall ? 'start' : 'center', behavior: reduce || instant ? 'auto' : 'smooth' });
-      if (tall) window.scrollBy(0, -24);
+      /* phones: put the target at the top (below the sticky privacy banner) so the card docked at the bottom
+         covers as little of it as possible; desktop: centre it, or top-align tall targets */
+      var place = function (smooth) {
+        var q = el.getBoundingClientRect(), h = window.innerHeight;
+        var startAlign = window.innerWidth < 600 || q.height > h * 0.6;
+        var inset = topInset();
+        var y = startAlign ? q.top - inset - 12 : q.top + q.height / 2 - h / 2;
+        window.scrollTo({ top: Math.max(0, window.scrollY + y), behavior: smooth && !(reduce || instant) ? 'smooth' : 'auto' });
+      };
+      place(true);
+      /* the app may reset the scroll after its own render: check again once it has settled */
+      setTimeout(function () {
+        if (my !== token || target !== el) return;
+        var q = el.getBoundingClientRect(), h = window.innerHeight;
+        if (q.top < topInset() || q.top > h * 0.6) place(false);
+      }, 450);
     }
     var real = steps.filter(function (s) { return !s.skip; }).length;
     $('#ft-count').textContent = (i + 1) + ' / ' + real;
