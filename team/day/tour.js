@@ -50,32 +50,32 @@
     var s = [];
     var day = [
       { route: '#/day', sel: '#view-day .day-ctrl', title: 'Replay the whole day',
-        text: 'Press play or drag the time slider: every shelf the cameras saw that day, re-read picture by picture.' },
+        text: 'Press play or drag the slider. The whole day, picture by picture.' },
       { route: null, sel: '#d-counts', title: 'The day, counted',
-        text: 'The tiles follow the clock: watch shelves empty and get refilled. The to-do list and log below follow the same time.' }
+        text: 'Watch shelves empty and get refilled as the clock moves.' }
     ];
     if (inDayCopy && hasDay()) s = s.concat(day);
     s.push(
       { route: '#/tasks', sel: '#counters', title: 'Every area, right now',
-        text: 'Each tile counts the planogram areas of every camera. Vazio = empty, Baixo = low, Produto errado = wrong product.' },
+        text: 'Vazio (empty), Baixo (low), Produto errado (wrong product). Every area, counted.' },
       { route: '#/tasks', sel: '#view-tasks article.task', title: 'Fazer agora: one to-do list',
-        text: 'Wrong products and empty shelves come first. Trocar = swap it back, Repor = restock, Deixar = leave alone. "Por gôndola" groups the same list by shelf.', before: rememberArea },
+        text: 'Repor (restock), Trocar (swap back), Deixar (leave). Most urgent first.', before: rememberArea },
       { route: '#/gondola', sel: '#view-gondola .frame-wrap', title: 'Gôndolas: the camera view',
-        text: 'Each pin is a planogram area, coloured by its status; tap one. These are the real, sharp camera pictures.' },
+        text: 'Each pin is one shelf area, coloured by status. Tap one.' },
       { route: function () { return areaHref || '#/gondola/6215/6215_7'; }, sel: '#panel', need: '#panel .task-head',
         title: 'One area, explained',
-        text: 'What is there, what should be, how full it is, and what to do. When unsure the app says "confirmar à vista" (check by eye).' },
+        text: 'What is there, and what to do. Unsure? "Confirmar à vista" (check by eye).' },
       { route: '#/insights', sel: '#view-insights .c-soon', title: 'Análise: before it runs out',
-        text: '"A acabar em breve" means running out soon: it warns before a shelf goes empty, so staff can restock in time. Rows marked "verificar agora" were due to run out already: check those first.' },
+        text: '"A acabar em breve" (running out soon): restock before the shelf is empty.' },
       { route: null, sel: '.top .seg', title: 'Português or English',
-        text: 'Staff read Portuguese, so that is the default. Judges can switch to English here at any time.' }
+        text: 'Portuguese for staff. English one tap away.' }
     );
     if (!inDayCopy && hasDay()) s = s.concat(day);
     var links = inDayCopy
       ? '<a href="../../">Back to the home page</a><a href="../app/">Open the staff app</a>'
       : '<a href="../../">Back to the home page</a><a href="../day/">Replay the store\'s day</a>';
     s.push({ route: null, sel: null, title: 'That is fresh.',
-      text: 'See every shelf. Fix what matters first. Keep exploring: every tab works offline, on a phone too.', links: links });
+      text: 'See every shelf. Fix what matters first. Works offline, on a phone too.', links: links });
     return s;
   }
 

@@ -565,3 +565,27 @@ h1, h2, h3 { font-family: var(--font-display); letter-spacing: -.015em; }
 /* focus: the tile's own colour, never the generic blue ring; the selected tile's ring already marks it */
 .counters .counter:focus-visible { outline: 3px solid var(--c); outline-offset: 4px; }
 .counters .counter[aria-pressed="true"]:focus-visible { outline: none; }
+
+/* -------------------------------------------------------------- 15 phone rows: stack instead of squeeze
+   Below 600 px an Análise row (name + where on the left, status on the right) used to squeeze the
+   product name into a one-word-per-line column. On a phone each row stacks: name + location on top at
+   full width, the status line below it, left-aligned. Words never break mid-word. Desktop unchanged. */
+@media (max-width: 600px) {
+  .ins-row { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 4px; }
+  .ins-row::before { top: 19px; margin-top: 0; }
+  .ins-main, .ins-val { min-width: 0; }
+  .ins-row :is(.ins-main, .ins-val) :is(b, small) { word-break: normal; overflow-wrap: break-word; hyphens: manual; }
+  .ins-val { text-align: left; align-items: flex-start; flex-direction: row; flex-wrap: wrap; gap: 0 8px; }
+  .ins-val b { white-space: normal; }
+}
+@media (max-width: 600px) {
+  /* Velocidade de vendas: name on top, "16% de uma prateleira por hora" below it on one clean line */
+  .bar-top { flex-direction: column; align-items: flex-start; gap: 0; }
+  .bar-top b { overflow-wrap: break-word; }
+  .bar-top span { text-align: left; max-width: none; flex: none; }
+}
+@media (max-width: 600px) {
+  /* zone detail facts: long catalogue names wrap at spaces, never mid-word */
+  .kv dd { overflow-wrap: break-word; }
+}
+/* -------------------------------------------------------------- end 15 */
