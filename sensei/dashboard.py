@@ -1,4 +1,8 @@
-"""Static staff dashboard: turns ``details.json`` into a folder that opens from ``file://``.
+"""Static staff app: turns ``details.json`` into a folder that opens from ``file://`` (no server, no network).
+
+The app lists what to do now (restock, top up, swap a wrong product back) for the latest picture of every camera,
+shows each gondola with its planogram areas, and adds insights computed from the day's earlier pictures.
+Product boxes, unit counts, freshness badges and layout suggestions are optional extras described below.
 
 ``build(details, data_root, out_dir, cfg)`` copies ``ui/`` (index.html, app.js, style.css), writes
 ``data.js`` (``window.SHELF_DATA = {...};``), downscaled camera frames (<= 1280 px wide, JPEG q80)
@@ -646,7 +650,7 @@ def build(details: str | Path | dict, data_root: str | Path | None, out_dir: str
         c = str(r["camera_id"])
         if r.get("fallback") and c not in latest:
             unreadable[c] = max(unreadable.get(c, -1), int(r.get("timestamp", -1)))
-    for c, ts in unreadable.items():
+    for c in unreadable:
         log.warning("dashboard: camera %s has no readable picture: shown as not checked", c)
     product_areas: dict[str, list[str]] = {}
     for r in cur:

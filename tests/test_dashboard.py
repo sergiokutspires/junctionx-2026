@@ -351,7 +351,7 @@ REAL_DETS = Path(__file__).resolve().parents[1] / "cache" / "colab" / "sensei_co
 def test_real_owl_detections_are_selectable():
     d = dashboard.load_detections(REAL_DETS)
     assert len(d["queries"]) > 30 and len(d["detections"]) >= 100
-    key, boxes = next(iter(d["detections"].items()))
+    _key, boxes = next(iter(d["detections"].items()))
     full = [[0, 0], [1280, 0], [1280, 720], [0, 720]]
     sel = dashboard.select_detections(boxes, [full], (720, 1280))
     assert 0 < len(sel) <= dashboard.DET_MAX_BOXES

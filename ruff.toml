@@ -1,0 +1,8 @@
+# Lint settings for `ruff check` (ruff is a dev tool only; it is not in requirements.txt).
+line-length = 120
+extend-exclude = ["experiments", "colab", "pitch", "outputs", "models", "data", "cache"]
+
+[lint]
+select = ["E", "F", "W", "B"]
+# E501: long lines are allowed (numbers and messages read better on one line); B905: zip() without strict=
+ignore = ["E501", "B905"]

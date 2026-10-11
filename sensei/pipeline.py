@@ -1,4 +1,9 @@
-"""Fit everything from unlabelled images, predict any images, save/load the model.
+"""The end-to-end pipeline: fit from unlabelled images, predict any images, save and load the model.
+
+``fit`` extracts crop features and fits the stock and compliance models without labels; ``calibrate`` adds
+the optional heads fitted on an answer key; ``predict`` / ``predict_dir`` answer every planogram area of
+every image in the challenge format plus a details document for the staff app. An image that cannot be
+read still gets an answer for each of its areas (a fallback), because a missing area costs points.
 
 Model directory layout (json + npz, no pickle):
     config.json, model.json (meta), planogram.json (copy), stock.json/.npz, compliance.json/.npz,
@@ -591,4 +596,5 @@ def calibrate(model_dir: str | Path, label_paths: Sequence[str | Path], cv: bool
 
 
 def remove_heads(model_dir: str | Path) -> None:
+    """Delete ``<model_dir>/heads`` so the model answers label-free again."""
     shutil.rmtree(Path(model_dir) / "heads", ignore_errors=True)

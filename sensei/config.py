@@ -1,4 +1,9 @@
-"""All tunables of the pipeline in one dataclass, saved next to every model as JSON."""
+"""All tunables of the pipeline in one dataclass, saved next to every model as ``config.json``.
+
+A model directory stores the ``Config`` it was fitted with, so ``predict`` always extracts the same features
+as ``fit``. Fields an older model's config lacks take the value that model was fitted with
+(``LEGACY_FEATURE_DEFAULTS``), and unknown fields are ignored with a warning.
+"""
 from __future__ import annotations
 
 import dataclasses
@@ -17,7 +22,7 @@ LEGACY_FEATURE_DEFAULTS: dict[str, Any] = {"int8_clip": False, "int8_dino": Fals
 
 @dataclass
 class Config:
-    """Pipeline settings. Defaults are the zero-label path; see SPEC.md section 4."""
+    """Pipeline settings. The defaults are the label-free path; labels only enter through ``calibrate``."""
 
     backend: str = "deep"            # "deep" (CLIP+DINOv2) | "lite" (handcrafted only, fast, no torch)
     device: str = "auto"             # auto -> cuda if available else cpu
@@ -29,15 +34,16 @@ class Config:
     dino_model: str = "facebook/dinov2-small"
     # inference precision of the image encoders (part of the feature-cache key and of the saved model, so
     # predict always matches fit; CLIP text embeddings stay fp32). int8 = dynamic int8 nn.Linear, CPU only.
-    int8_clip: bool = False          # tested, not used: CLIP image cosine to fp32 only ~0.75, score -0.18
-    int8_dino: bool = False          # tested, not used: late-frame stock score -0.06
-    # bfloat16 autocast for the image encoders that are not int8 (only where bf16 is native, else fp32):
-    # -35% CPU-seconds per image on 1 core, held-out score unchanged within seed noise (tools/benchmark_cost.py)
+    int8_clip: bool = False          # tried, not used: CLIP image cosine to fp32 only ~0.75 (quick test, not saved)
+    int8_dino: bool = False          # tried, not used: lower late-frame stock score (quick test, not saved)
+    # bfloat16 autocast for the image encoders that are not int8 (only where bf16 is native, else fp32). On one
+    # core: 3.23 CPU-s per image against 5.16 in fp32 (-37%; outputs/benchmark/cost_1t_bf16.json vs cost_1t.json,
+    # tools/benchmark_cost.py). The score check was a quick test without a saved result file.
     bf16: bool = True
     # stock
     n_patch_clusters: int = 24
     pca_dims: int = 48
-    level_prior: tuple = (0.15, 0.35, 0.50)  # empty, half, full (used when GMM degenerate)
+    level_prior: tuple = (0.15, 0.35, 0.50)  # empty, half, full: stock posterior of an area with no fit-time fill
     # compliance
     compliance_prior: float = 0.93
     # temporal

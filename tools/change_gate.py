@@ -454,10 +454,10 @@ def print_summary(res: dict) -> None:
     print(f"score AUC for label change: all {res['score']['auc_label_changed_all']}, unanimous {res['score']['auc_label_changed_unanimous']}")
     print("target miss | in-sample skip / miss | leave-one-camera-out skip / miss (n/N) | points lost per area")
     for p in res["operating_points"]:
-        i, l = p["in_sample"], p["leave_one_camera_out"]
+        i, lo = p["in_sample"], p["leave_one_camera_out"]
         print(f"  {100 * p['target_miss_rate']:4.1f}%    {100 * i['skip_share']:5.1f}% / {100 * i['miss_rate']:4.1f}%    "
-              f"{100 * l['skip_share']:5.1f}% / {100 * l['miss_rate']:4.1f}% ({l['changed_skipped']}/{l['changed_pairs']})    "
-              f"{l['points_lost_per_area']:.4f}")
+              f"{100 * lo['skip_share']:5.1f}% / {100 * lo['miss_rate']:4.1f}% ({lo['changed_skipped']}/{lo['changed_pairs']})    "
+              f"{lo['points_lost_per_area']:.4f}")
     c = res["cost"]["gate_per_area_ms"]
     print(f"gate cost: {c['gate_ms_per_area']:.3f} ms/area (warp {c['warp64_ms_per_area']:.3f} + features {c['features_ms_per_area']:.3f} "
           f"+ score {c['score_ms_per_area_pair']:.3f}), +{c['decode_ms_per_frame']:.1f} ms decode per frame")
@@ -477,14 +477,15 @@ def print_summary(res: dict) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--images", default="data/raw/images")
-    ap.add_argument("--planogram", default="data/raw/planogram.json")
-    ap.add_argument("--labels", default="data/labels/teacher_labels_v2.json")
+    ap.add_argument("--images", default="data/raw/images", help="image folder (default: %(default)s)")
+    ap.add_argument("--planogram", default="data/raw/planogram.json", help="planogram (default: %(default)s)")
+    ap.add_argument("--labels", default="data/labels/teacher_labels_v2.json",
+                    help="answer key used to choose and judge the threshold (default: %(default)s)")
     ap.add_argument("--votes", default="data/labels/votes_v2.json", help="only used for the unanimous-votes subset")
     ap.add_argument("--max-miss", type=float, default=0.0, choices=MISS_TARGETS,
                     help="headline target: max share of label-changed pairs the gate may skip (0 = never, in-sample)")
     ap.add_argument("--repeat", type=int, default=3, help="timing passes (best kept)")
-    ap.add_argument("--out", default="outputs/benchmark/change_gate.json")
+    ap.add_argument("--out", default="outputs/benchmark/change_gate.json", help="result JSON (default: %(default)s)")
     a = ap.parse_args()
     res = run(a)
     out = ROOT / a.out

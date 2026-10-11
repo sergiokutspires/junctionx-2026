@@ -1,5 +1,10 @@
 """One-command validation-day run: ``python -m sensei submit --images <folder|.zip|files...>``.
 
+It accepts the hidden images in any form they may arrive in (a folder, a zip, loose files), predicts every
+planogram area with the fitted model, and then re-reads the written predictions.json with its own checks,
+independent of the pipeline, so a format slip is caught before hand-in. The staff app is built last and
+can never fail the submission. ``SUBMIT.bat`` is a double-click wrapper around this command.
+
 Steps: unpack (zip) -> predict (strict) -> validate the written JSON independently of the pipeline
 -> write ``<out>/predictions.json`` (the file to hand in) + ``details.json`` -> staff dashboard in
 ``<out>/dashboard/`` (OWLv2 boxes unless ``--no-detect``; the dashboard can never fail the submission)
@@ -459,7 +464,8 @@ def run(images: Sequence[str | Path], model: str | Path = "models/real_v3_cal", 
                 print(f"HAND IN THIS FILE: {pred_path}", flush=True)
             else:
                 print(f"predictions.json was written but is NOT valid/complete: {pred_path}", flush=True)
-            print("Building the staff app" + (" (with OWLv2 product boxes, about 10 s per camera)..." if detect else "..."),
+            print("Building the staff app" + (" (with OWLv2 product boxes, a few seconds per camera on a multi-core "
+                                              "CPU)..." if detect else "..."),
                   flush=True)
             index = _build_dashboard(details_path, folder, out_dir / "dashboard", detect, detections)
     except (FileNotFoundError, ValueError) as exc:

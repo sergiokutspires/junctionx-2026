@@ -8,6 +8,9 @@ the single votes already in data/labels/teacher_labels_{late,mid}.json (counted 
 votes_v2.json (every vote), disputes_v2.json (no level majority or split compliance) and
 teacher_labels_v2.json (consensus; disputes use adjudications when given, else the median level and
 the majority / "compliant" on ties).
+
+The workflow journal itself is not in the repository; the votes it held are saved in data/labels/votes_v2.json.
+Running this script overwrites the three files above.
 """
 import collections
 import json
@@ -33,14 +36,16 @@ def main(journal: str, adjudications: str | None = None) -> None:
                     votes[f"{cam}|{img}|{aid}"].append({"L": "A", "stock_level": a["stock_level"],
                                                         "compliant": a["planogram_compliant"], "src": name})
     started = {}
-    for line in open(journal, encoding="utf-8"):
+    with open(journal, encoding="utf-8") as fh:
+        lines = fh.readlines()
+    for line in lines:
         e = json.loads(line)
         if e.get("type") == "started":
             started[e["key"]] = e.get("label", "")
         elif e.get("type") == "result" and started.get(e["key"], "").startswith("label:"):
             lab = started[e["key"]]
             cam, rest = lab.split(":")[1].split("#")          # "label:6376#0A:new" -> "6376", "0A"
-            letter = [c for c in rest if c.isalpha()][0]
+            letter = next(c for c in rest if c.isalpha())
             for fr in e["result"]["frames"]:
                 img = fr["image_name"] if fr["image_name"].endswith(".jpg") else fr["image_name"] + ".jpg"
                 for a in fr["areas"]:

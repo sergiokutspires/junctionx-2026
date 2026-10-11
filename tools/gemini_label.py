@@ -158,11 +158,14 @@ def report() -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--frames", choices=["labelled", "unlabelled", "all"])
+    ap.add_argument("--frames", choices=["labelled", "unlabelled", "all"],
+                    help="which frames to label: those with Claude labels (agreement check), the others, or all")
     ap.add_argument("--model", help="Gemini model id (default: newest available pro, else flash)")
     ap.add_argument("--rpm", type=float, default=4.0, help="requests per minute (free tier is low)")
     ap.add_argument("--limit", type=int, help="label at most this many frames")
-    ap.add_argument("--report", action="store_true")
+    ap.add_argument("--report", action="store_true",
+                    help="print the agreement with the Claude labels and write data/labels/gemini_labels.json "
+                         "(the default when --frames is not given)")
     a = ap.parse_args()
     if a.frames:
         run(a.frames, a.model, a.rpm, a.limit)

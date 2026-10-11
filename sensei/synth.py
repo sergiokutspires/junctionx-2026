@@ -1,7 +1,7 @@
 """Synthetic supermarket dataset: fake planogram + ceiling-camera frames + val annotations.
 
 Purpose: tests, demos and end-to-end checks without the real dataset. The scene mimics the
-real one (SPEC 2b): grey floor, crates (mostly teal) seen in perspective, products drawn as
+real one: grey floor, crates (mostly teal) seen in perspective, products drawn as
 many small coloured ellipses (loose) or labelled rectangles (packaged), stock that varies over
 a day with restocks, ~8% of restocked areas holding another product of the same camera,
 occasional hands over the shelves, and one area partly outside the frame.
@@ -492,12 +492,13 @@ def generate_dataset(out_dir: str | Path, n_cameras: int = 4, images_per_camera:
 
 
 def main(argv: list[str] | None = None) -> None:
-    ap = argparse.ArgumentParser(description="Generate a synthetic Sensei dataset")
-    ap.add_argument("--out", required=True)
-    ap.add_argument("--cameras", type=int, default=4)
-    ap.add_argument("--images", type=int, default=12, help="train images per camera")
-    ap.add_argument("--val", type=int, default=2, help="val images per camera")
-    ap.add_argument("--seed", type=int, default=0)
+    ap = argparse.ArgumentParser(description="Write a synthetic dataset (planogram, camera frames, answer key) "
+                                             "for tests and demos")
+    ap.add_argument("--out", required=True, help="output folder")
+    ap.add_argument("--cameras", type=int, default=4, help="number of cameras (default 4)")
+    ap.add_argument("--images", type=int, default=12, help="training images per camera (default 12)")
+    ap.add_argument("--val", type=int, default=2, help="later, labelled images per camera (default 2)")
+    ap.add_argument("--seed", type=int, default=0, help="random seed (default 0)")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     generate_dataset(args.out, args.cameras, args.images, args.seed, args.val)

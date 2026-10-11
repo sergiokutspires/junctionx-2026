@@ -1,5 +1,9 @@
 """Planogram compliance: zero-shot product recognition -> p(compliant) and the likely product.
 
+CLIP compares each crop with text descriptions of every product in the planogram's catalogue, so no
+labelled pictures are needed. An area is called non-compliant only when another product clearly
+wins over the planned one; the product that most likely sits there is named for the staff app.
+
 Primary evidence is CLIP zero-shot recognition at the coarse BASE level (banana vs orange vs
 apple ...): a softmax over the catalog's base prompt ensembles (temperature = CLIP logit_scale)
 with a prior that favours the expected base and, among the alternatives, bases sold on the same
@@ -41,8 +45,8 @@ DEFAULTS: dict[str, float] = {
     "fill_hi": 0.40,         # fill gate: above -> full evidence
     "vis_lo": 0.25,          # visible-fraction gate
     "vis_hi": 0.50,
-    "empty_gate": 0.6,
-    "debias": 0.0,           # subtract this x the per-base median logit over the fit crops (hub correction)       # CLIP p(empty) above this -> prior (no product shown)
+    "empty_gate": 0.6,       # CLIP p(empty) above this -> prior (no product shown)
+    "debias": 0.0,           # subtract this x the per-base median logit over the fit crops (hub correction)
     "likely_cam_bonus": 3.0, # logit bonus of same-camera bases when naming the likely product
     "proto_weight": 0.0,     # weight of image-prototype logits (0 = text only)
     "proto_conf": 0.9,       # confidence needed for a crop to build a base prototype

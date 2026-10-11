@@ -2,7 +2,10 @@
 rem Validation day: double-click, or drag the validation FOLDER / .zip (or the image files) onto this file.
 rem Result: submission\predictions.json (hand this in) and submission\dashboard\index.html (staff app).
 rem Extra options can follow the paths, e.g.  SUBMIT.bat "D:\val.zip" --no-detect
+rem Exit code, as for python -m sensei submit: 0 check passed, 1 check failed, 2 input error.
+rem Set SENSEI_NOPAUSE=1 to skip the final pause when calling this file from a script.
 setlocal
+set "CODE=2"
 cd /d "%~dp0"
 title Sensei - validation run
 if not exist ".venv\Scripts\python.exe" (
@@ -11,6 +14,7 @@ if not exist ".venv\Scripts\python.exe" (
 )
 if "%~1"=="" goto ask
 
+rem Collect the arguments; a trailing backslash (from dragging "C:\folder\") is removed.
 set "ARGS="
 :next
 if "%~1"=="" goto run
@@ -34,9 +38,11 @@ set ARGS="%IMG%"
 
 :run
 .venv\Scripts\python -m sensei submit --images %ARGS%
+set "CODE=%ERRORLEVEL%"
 echo.
-if errorlevel 1 (echo FAILED - read the messages above. Exit code: %ERRORLEVEL%) else (echo Finished OK.)
+if not "%CODE%"=="0" (echo FAILED - read the messages above. Exit code: %CODE%) else (echo Finished OK.)
 
 :done
 echo.
 if not defined SENSEI_NOPAUSE pause
+exit /b %CODE%

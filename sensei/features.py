@@ -1,7 +1,9 @@
-"""Per-crop features: handcrafted descriptors (always) + CLIP / DINOv2 embeddings (deep backend).
+"""Per-crop features: every planogram area of every image is warped to a square crop and described.
 
-torch / transformers are imported lazily inside ``Extractor`` so ``backend="lite"`` works
-without them. See SPEC.md section 4 (features) and the contract addendum.
+Each crop always gets a small handcrafted colour/texture descriptor; the deep backend adds a CLIP image
+embedding, a DINOv2 class embedding and the DINOv2 patch tokens (``CropFeatures`` holds them column-wise).
+Results are cached on disk under ``cache/feats_<hash>/``, keyed by the images and the feature settings.
+torch / transformers are imported lazily inside ``Extractor`` so ``backend="lite"`` works without them.
 """
 from __future__ import annotations
 
@@ -191,7 +193,7 @@ class Extractor:
         if self._torch is None:
             import torch  # noqa: PLC0415 - optional dependency
             if self.device == "cpu":  # SENSEI_THREADS caps the cores (e.g. 1 per camera stream in production)
-                torch.set_num_threads(int(os.environ.get("SENSEI_THREADS", 0)) or os.cpu_count() or 1)
+                torch.set_num_threads(int(os.environ.get("SENSEI_THREADS", "0")) or os.cpu_count() or 1)
             self._torch = torch
         return self._torch
 
@@ -230,13 +232,13 @@ class Extractor:
         return torch.autocast("cuda" if self.device.startswith("cuda") else "cpu", dtype=torch.bfloat16)
 
     @staticmethod
-    def _from_pretrained(cls, name: str):
+    def _from_pretrained(model_cls, name: str):
         """Prefer the local HF cache (no network); download only if missing."""
         try:
-            return cls.from_pretrained(name, local_files_only=True)
+            return model_cls.from_pretrained(name, local_files_only=True)
         except OSError:
             log.info("downloading %s (not in the local cache)", name)
-            return cls.from_pretrained(name)
+            return model_cls.from_pretrained(name)
 
     def _load_clip(self) -> None:
         if self._clip is not None:

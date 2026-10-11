@@ -59,7 +59,7 @@ def test_catalog_real(real_planogram_path, real_areas) -> None:
     assert len(cat) == 94
     assert sum(len(p["areas"]) for p in cat.products.values()) == 152
     assert len(cat.area_product()) == 152
-    for pid, p in cat.products.items():
+    for _pid, p in cat.products.items():
         assert p["english"].strip() and p["base"].strip(), p["name"]
         assert not p["unknown_tokens"], (p["name"], p["unknown_tokens"])
         assert prompts_for(p["name"]), p["name"]

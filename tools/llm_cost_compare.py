@@ -26,6 +26,7 @@ VCPU_HOUR_USD = 0.0892 / 2  # AWS c7i.large on-demand, us-east-1, 2 vCPU
 
 
 def image_tokens(path: Path, long_edge: int = 1568) -> float:
+    """Approximate image tokens of one picture after resizing its long edge to <= ``long_edge`` px."""
     w, h = Image.open(path).size
     s = min(1.0, long_edge / max(w, h))
     return (w * s) * (h * s) / 750
@@ -44,7 +45,8 @@ def main() -> None:
     print(f"per image: ~{tok_in:,.0f} input tokens ({img_tok:,.0f} from the 2 pictures), ~{tok_out:,.0f} output tokens")
     for name, usd in rows.items():
         print(f"  {name:44s} ${usd:.6f} per image   ${usd * 1000:8.3f} per 1,000   x{usd / ours:6.0f}")
-    out = ROOT / "outputs/benchmark"; out.mkdir(parents=True, exist_ok=True)
+    out = ROOT / "outputs/benchmark"
+    out.mkdir(parents=True, exist_ok=True)
     (out / "llm_cost_compare.json").write_text(json.dumps({"input_tokens": tok_in, "output_tokens": tok_out,
                                                            "usd_per_image": rows}, indent=1))
 

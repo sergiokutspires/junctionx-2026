@@ -16,16 +16,19 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 CORNERS = ("top_left", "top_right", "bottom_right", "bottom_left")
-FONT = "C:/Windows/Fonts/arialbd.ttf"
+FONTS = ("arialbd.ttf", "DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf")   # first one Pillow can find
 TILE_W, TILE_H, HEADER = 420, 300, 64
 COLS = 4
 
 
-def font(size):
-    try:
-        return ImageFont.truetype(FONT, size)
-    except OSError:
-        return ImageFont.load_default()
+def font(size: int):
+    """A bold TrueType font of ``size`` px (Arial on Windows, DejaVu / Liberation elsewhere), else Pillow's default."""
+    for name in FONTS:
+        try:
+            return ImageFont.truetype(name, size)
+        except OSError:
+            continue
+    return ImageFont.load_default()
 
 
 def load_areas(planogram):

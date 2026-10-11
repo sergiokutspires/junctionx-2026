@@ -59,7 +59,7 @@ def test_fit_predict_score_lite(synth, lite_model, tmp_path):
     for f in ("config.json", "model.json", "planogram.json", "stock.json", "stock.npz", "compliance.json",
               "series.json", "fit_feats.npz"):
         assert (mdir / f).is_file(), f
-    preds, doc = pipeline.predict_dir(model, synth["val_dir"], tmp_path / "p.json", tmp_path / "d.json")
+    preds, _doc = pipeline.predict_dir(model, synth["val_dir"], tmp_path / "p.json", tmp_path / "d.json")
     recs = discover_images(synth["val_dir"], model.areas_by_cam)
     _check_coverage(preds, model.areas_by_cam, recs)
     truth = _read(synth["annotations"])
@@ -214,7 +214,7 @@ def test_canonical_keys_and_flat_layout(synth, lite_model, tmp_path):
 
 def test_heads_late_shift_passthrough_and_carry(synth, lite_model, tmp_path):
     from sensei.calibrate import load_labels
-    model, mdir = lite_model
+    _model, mdir = lite_model
     labels = load_labels(synth["annotations_train"])
     cam = sorted(labels)[0]
     last_img = max(labels[cam], key=lambda n: int(Path(n).stem))

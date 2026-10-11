@@ -86,10 +86,11 @@ def find_pairs(gap_frac=0.25):
     return pairs
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--gap", type=float, default=0.25)
-    ap.add_argument("--json")
+def main() -> None:
+    ap = argparse.ArgumentParser(description="List ethylene producer -> sensitive neighbour pairs of the planogram.")
+    ap.add_argument("--gap", type=float, default=0.25,
+                    help="neighbour gap as a share of sqrt(area of the smaller polygon) (default: %(default)s)")
+    ap.add_argument("--json", help="also write the pairs to this JSON file")
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8")
     pairs = find_pairs(args.gap)

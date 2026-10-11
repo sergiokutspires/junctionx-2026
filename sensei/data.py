@@ -1,10 +1,15 @@
-"""Planogram loading, image discovery and perspective warping of planogram areas."""
+"""Planogram loading, image discovery and perspective warping of planogram areas.
+
+``load_planogram`` reads the store's planogram.json into ``Area`` records (one quad per area, in frame
+pixels). ``discover_images`` finds camera frames in any folder layout (``<cam>/<ts>.jpg``,
+``<cam>_<ts>.jpg``, train/test folders). ``warp_area`` cuts one area out of a frame as a square crop,
+with a mask of the pixels that lie inside the picture.
+"""
 from __future__ import annotations
 
 import json
 import logging
 import os
-import re
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path

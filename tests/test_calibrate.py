@@ -150,7 +150,7 @@ def test_stock_head_handles_missing_class_and_single_class(data):
 
 
 def test_lite_backend_uses_handcrafted_features():
-    feats, fill, labels, level, *_ = make_data(deep=False)
+    feats, fill, labels, _level, *_ = make_data(deep=False)
     heads = fit_heads(feats, fill, labels, Config(backend="lite"))
     assert heads.layout["hand"] and not heads.pca
     assert heads.stock_proba(feats, fill).shape == (len(feats), 3)
@@ -203,7 +203,7 @@ def test_cross_validate_matches_scoring_on_constant(data):
 def test_time_fold_holds_out_the_latest_frames(data):
     feats, _, labels, *_ = data
     idx, _, _ = label_arrays(feats, labels)
-    (name, train, test), = list(calibrate._folds(feats, idx, "time", 2))
+    (_name, train, test), = list(calibrate._folds(feats, idx, "time", 2))
     last = {int(t) for t in sorted(set(feats.timestamps))[-2:]}
     assert {int(feats.timestamps[r]) for r in test} == last
     cams = np.array(feats.camera_ids)
@@ -271,7 +271,7 @@ def test_export_skips_unknown_areas(tmp_path, tiny_dataset):
 
 
 def test_labels_from_tiles(kit):
-    out, manifest, keys = kit
+    out, manifest, _keys = kit
     tile_labels = {1: "full", "2": {"level": "half", "wrong": True}, 3: {"stock_level": "empty"},
                    4: {"wrong": True},            # no level -> skipped
                    5: 0.5, 99: "full",            # unknown tile -> skipped
@@ -341,7 +341,7 @@ def test_heads_with_band_fills_save_load(data, tmp_path):
 def make_persistent(seed: int = 1):
     """Areas keep their level all day (area-specific), the crop codes identify the area's look, and the
     generic features carry no level signal: only a per-area memory can learn the level."""
-    feats, fill, labels, level, comp, zs_comp = make_data(seed)
+    feats, fill, labels, level, _comp, _zs_comp = make_data(seed)
     rng = np.random.default_rng(seed)
     n = len(feats)
     areas = np.array(feats.area_ids)
@@ -360,8 +360,8 @@ def make_persistent(seed: int = 1):
 
 
 def test_memory_features_are_causal_and_per_area(data):
-    feats, fill, labels, level, comp, _ = data
-    idx, ys, yc = label_arrays(feats, labels)
+    feats, _fill, labels, level, _comp, _ = data
+    _idx, ys, yc = label_arrays(feats, labels)
     mem = calibrate.build_memory(feats, ys, yc, ("codes", "hand"), 24)
     F, has = calibrate.memory_features(mem, feats, [1 / 3] * 3)
     first = feats.timestamps == feats.timestamps.min()
@@ -369,7 +369,7 @@ def test_memory_features_are_causal_and_per_area(data):
     assert F.shape == (len(feats), 6) and np.isfinite(F).all()
     # a crop identical to an earlier labelled crop of its area gets that crop's level (nearest neighbour)
     late = feats.subset([len(feats) - 1])
-    cam, img, area = late.keys[0]
+    _cam, _img, area = late.keys[0]
     src = next(i for i, k in enumerate(feats.keys) if k[2] == area and feats.timestamps[i] == feats.timestamps.min())
     late.patch_codes, late.hand = feats.patch_codes[[src]], feats.hand[[src]]
     Fl, hl = calibrate.memory_features(mem, late, [1 / 3] * 3, tau=0.001, alpha=0.0)
@@ -388,7 +388,7 @@ def test_memory_features_are_causal_and_per_area(data):
 
 
 def test_memory_head_learns_per_area_levels_and_never_touches_unseen_cameras():
-    feats, fill, labels, level = make_persistent()
+    feats, fill, labels, _level = make_persistent()
     on = cross_validate(feats, fill, labels, CFG, schemes=("time", "camera"))
     t, c = on["schemes"]["time"], on["schemes"]["camera"]
     assert t["memory_rows"] == t["areas"] and c["memory_rows"] == 0
@@ -402,7 +402,7 @@ def test_memory_head_learns_per_area_levels_and_never_touches_unseen_cameras():
 
 
 def test_memory_heads_roundtrip_and_fallback(tmp_path):
-    feats, fill, labels, level = make_persistent()
+    feats, fill, labels, _level = make_persistent()
     early = np.flatnonzero(feats.timestamps < sorted(set(feats.timestamps))[-1])
     heads = fit_heads(feats.subset(early), fill[early], labels, CFG)
     assert heads.mem_stock is not None and heads.memory["names"] == ["codes", "hand"]

@@ -1,8 +1,9 @@
 """Per-area time series of fill / level posteriors: neighbour smoothing and depletion forecast.
 
 Rows are plain tuples ``(timestamp, fill, p_levels)`` with ``p_levels`` = (p_empty, p_half, p_full).
-Smoothing is off by default (``cfg.smoothing_weight = 0``, see SPEC 2b); the series mainly
-feeds the dashboard timeline and the "empty in ~N min" forecast.
+Smoothing over neighbouring pictures is off by default (``cfg.smoothing_weight = 0``); the series mainly
+feeds the staff app's per-area timeline and the "empty in ~N min" forecast (a robust slope of the fill
+since the last restock).
 """
 from __future__ import annotations
 

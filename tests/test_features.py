@@ -47,7 +47,7 @@ def test_iter_crops_and_corrupt(tiny_dataset):
     recs = discover_images(root, areas.keys())
     out = list(iter_crops(recs, areas, _lite(crop_size=64)))
     assert len(out) == 6 * 2                   # corrupt image yields nothing
-    key, ts, crop, vis, frac, path = out[0]
+    _key, _ts, crop, vis, _frac, _path = out[0]
     assert crop.shape == (64, 64, 3) and vis.shape == (64, 64)
     partial = [o[4] for o in out if o[0][2] == "1002_1"]
     assert all(0.1 < f < 0.9 for f in partial)  # area partly outside the frame

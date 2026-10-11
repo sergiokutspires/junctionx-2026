@@ -1,6 +1,8 @@
-"""Sensei shelf monitor: planogram compliance and stock levels from ceiling-camera images.
+"""Fresh Eyes shelf monitor (team QuantumLotus, JunctionX Lisbon 2026, Sensei challenge).
 
-Submodules are imported lazily by their users (``sensei.data``, ``sensei.products``,
+Reads ceiling-camera images of a produce section and, for every planogram area, answers the stock
+level (empty / half / full) and whether the planned product is there. ``python -m sensei --help`` lists
+the commands. Submodules are imported lazily by their users (``sensei.data``, ``sensei.products``,
 ``sensei.features`` ...) so that the light parts work without torch installed.
 """
 import logging

@@ -1,4 +1,10 @@
-"""Command line: ``python -m sensei <command> ...`` (see README.md / SPEC.md section 4)."""
+"""Command line: ``python -m sensei <command> ...``.
+
+Each sub-command is a thin wrapper around one module: ``fit`` and ``predict`` call ``sensei.pipeline``,
+``calibrate`` and ``label`` call ``sensei.calibrate``, ``dashboard`` calls ``sensei.dashboard`` and
+``submit`` (the validation-day command) calls ``sensei.submit``. Run ``python -m sensei <command> --help``
+for the options of one command; README.md has worked examples.
+"""
 from __future__ import annotations
 
 import argparse
@@ -15,6 +21,8 @@ if str(ROOT) not in sys.path:   # scoring.py lives in the project root
 from .config import Config  # noqa: E402
 
 log = logging.getLogger("sensei")
+
+DEFAULT_MODEL = "models/real_v3_cal"
 
 
 def _cfg(args: argparse.Namespace) -> Config:
@@ -51,7 +59,7 @@ def _predict(model_dir: str, images: str, out: str, details: str | None, device:
     try:
         model = pipeline.SenseiModel.load(model_dir)
         cfg = model.cfg.replace(device=device) if device else None
-        preds, doc = pipeline.predict_dir(model, images, out, details, cfg)
+        _, doc = pipeline.predict_dir(model, images, out, details, cfg)
     except (FileNotFoundError, ValueError) as exc:
         print(f"ERROR: {exc}\nNothing was written: an empty submission would score -5 per area.",
               file=sys.stderr)
@@ -133,15 +141,25 @@ def cmd_submit(args) -> None:
         sys.exit(code)
 
 
+# --------------------------------------------------------------------------- argument parser
+
+DEVICE_HELP = "auto (default: CUDA if available, else CPU) | cpu | cuda"
+LABELS_HELP = "answer-key file(s) in the challenge format (e.g. data/labels/teacher_labels_v2.json); later files win"
+
+
 def _fit_args(p: argparse.ArgumentParser) -> None:
-    p.add_argument("--data", required=True, help="image root (any layout)")
-    p.add_argument("--planogram", required=True)
-    p.add_argument("--backend", choices=("deep", "lite"))
-    p.add_argument("--max-images-per-camera", type=int)
-    p.add_argument("--device", help="auto | cpu | cuda")
-    p.add_argument("--config", help="Config JSON (fields override the defaults)")
-    p.add_argument("--labels", nargs="+", help="optional annotation files: also fit calibration heads")
-    p.add_argument("--no-cv", action="store_true", help="skip cross-validation when calibrating")
+    p.add_argument("--data", required=True,
+                   help="folder of training images (any layout: <cam>/<ts>.jpg, <cam>_<ts>.jpg, train/test folders)")
+    p.add_argument("--planogram", required=True, help="planogram.json of the store")
+    p.add_argument("--backend", choices=("deep", "lite"),
+                   help="deep = CLIP + DINOv2 (default); lite = handcrafted colour features only (no torch, weaker)")
+    p.add_argument("--max-images-per-camera", type=int, metavar="N",
+                   help="fit on at most N images per camera, evenly spread over time (default 150)")
+    p.add_argument("--device", help=DEVICE_HELP)
+    p.add_argument("--config", metavar="JSON", help="Config JSON file; its fields override the defaults")
+    p.add_argument("--labels", nargs="+", metavar="FILE",
+                   help="optional: " + LABELS_HELP + "; also fits the calibration heads")
+    p.add_argument("--no-cv", action="store_true", help="skip the held-out cross-validation report when calibrating")
 
 
 class _SubParsers(argparse._SubParsersAction):   # noqa: SLF001
@@ -149,82 +167,114 @@ class _SubParsers(argparse._SubParsersAction):   # noqa: SLF001
 
     def add_parser(self, name, **kwargs):
         p = super().add_parser(name, **kwargs)
-        p.add_argument("-q", "--quiet", action="store_true", default=argparse.SUPPRESS, help="warnings only")
+        p.add_argument("-q", "--quiet", action="store_true", default=argparse.SUPPRESS,
+                       help="log warnings only (no progress messages)")
         return p
 
 
 def build_parser() -> argparse.ArgumentParser:
-    ap = argparse.ArgumentParser(prog="python -m sensei", description="Sensei shelf monitor")
-    ap.add_argument("-q", "--quiet", action="store_true", help="warnings only")
+    ap = argparse.ArgumentParser(
+        prog="python -m sensei",
+        description="Fresh Eyes shelf monitor: stock level (empty / half / full) and planogram compliance "
+                    "for every planogram area of ceiling-camera images.",
+        epilog="Validation day: python -m sensei submit --images <folder|.zip>  (or double-click SUBMIT.bat). "
+               "Run python -m sensei <command> --help for the options of one command.")
+    ap.add_argument("-q", "--quiet", action="store_true", help="log warnings only (no progress messages)")
     ap.register("action", "parsers", _SubParsers)
-    sub = ap.add_subparsers(dest="command", required=True)
+    sub = ap.add_subparsers(dest="command", required=True, metavar="<command>")
 
-    p = sub.add_parser("synth", help="write a synthetic dataset")
-    p.add_argument("--out", required=True)
-    p.add_argument("--cameras", type=int, default=4)
-    p.add_argument("--images", type=int, default=12, help="train images per camera")
-    p.add_argument("--val", type=int, default=2, help="val images per camera")
-    p.add_argument("--seed", type=int, default=0)
-    p.set_defaults(func=cmd_synth)
+    def add(name: str, summary: str, description: str | None = None) -> argparse.ArgumentParser:
+        return sub.add_parser(name, help=summary, description=description or summary)
 
-    p = sub.add_parser("fit", help="learn from unlabelled images")
+    p = add("submit", "validation day: images (folder / .zip / files) -> checked predictions.json + staff app",
+            "Predict every planogram area of the given images with a fitted model, check the written "
+            "predictions.json independently (format, every area of every image), then build the staff app. "
+            "Exit code: 0 check passed, 1 check failed (file written but flagged), 2 input error (nothing written).")
+    p.add_argument("--images", required=True, nargs="+", metavar="PATH",
+                   help="a folder, a .zip, or image files (put any other options after the paths)")
+    p.add_argument("--model", default=DEFAULT_MODEL,
+                   help=f"fitted model directory (default: {DEFAULT_MODEL}; models/real_v1 = the label-free fallback)")
+    p.add_argument("--out", default="submission",
+                   help="output folder for predictions.json, details.json and dashboard/ (default: submission)")
+    p.add_argument("--no-detect", action="store_true",
+                   help="skip the optional OWLv2 product boxes and unit counts in the staff app (faster)")
+    p.add_argument("--detections", default=None, metavar="FILE",
+                   help="reuse cached OWLv2 boxes (.zip holding owl_detections.json, or that .json)")
+    p.add_argument("--device", help=DEVICE_HELP)
+    p.add_argument("--password", default=None,
+                   help="password of an encrypted .zip (ZipCrypto only; unzip AES zips by hand)")
+    p.set_defaults(func=cmd_submit)
+
+    p = add("fit", "learn the label-free models from unlabelled images (optionally calibrate on labels)",
+            "Fit the unsupervised stock and compliance models on the images under --data and save them to "
+            "--model. With --labels, also fit the calibration heads (same as running `calibrate` afterwards).")
     _fit_args(p)
     p.add_argument("--model", required=True, help="output model directory")
     p.set_defaults(func=cmd_fit)
 
-    p = sub.add_parser("predict", help="answer every area of every image")
-    p.add_argument("--model", required=True)
-    p.add_argument("--images", required=True)
-    p.add_argument("--out", required=True)
-    p.add_argument("--details")
-    p.add_argument("--device")
+    p = add("calibrate", "fit the calibration heads of a fitted model on labelled frames",
+            "Fit the stock head and the per-area memory on the labelled fit-time crops of --model and save them "
+            "in <model>/heads (used automatically by predict and submit). Also writes calibration_cv.json, "
+            "the held-out scores, unless --no-cv.")
+    p.add_argument("--model", required=True, help="fitted model directory (from `fit`)")
+    p.add_argument("--labels", required=True, nargs="+", metavar="FILE", help=LABELS_HELP)
+    p.add_argument("--no-cv", action="store_true", help="skip the held-out cross-validation report")
+    p.set_defaults(func=cmd_calibrate)
+
+    p = add("predict", "answer every planogram area of every image (no format check, no staff app)",
+            "Write predictions.json (challenge format) and optionally details.json (per-area details for the "
+            "staff app). Use `submit` on validation day: it adds the independent format check.")
+    p.add_argument("--model", required=True, help="fitted model directory")
+    p.add_argument("--images", required=True, help="image folder (any layout)")
+    p.add_argument("--out", required=True, help="predictions.json to write")
+    p.add_argument("--details", help="details.json to write (input of `dashboard`)")
+    p.add_argument("--device", help=DEVICE_HELP)
     p.set_defaults(func=cmd_predict)
 
-    p = sub.add_parser("score", help="local challenge score")
-    p.add_argument("annotations")
-    p.add_argument("predictions")
+    p = add("score", "local challenge score of a predictions file against an answer key",
+            "Score predictions with the brief's rules (scoring.py) and compare with the always-compliant + "
+            "full baseline.")
+    p.add_argument("annotations", help="answer key in the challenge format")
+    p.add_argument("predictions", help="predictions.json to score")
     p.set_defaults(func=cmd_score)
 
-    p = sub.add_parser("dashboard", help="build the static staff dashboard")
-    p.add_argument("--details", required=True)
-    p.add_argument("--data", default=None)
-    p.add_argument("--out", required=True)
-    p.add_argument("--zip", action="store_true")
-    p.add_argument("--detections", default=None,
+    p = add("dashboard", "build the static staff app from details.json",
+            "Build the staff app (a folder that opens from file://, no server, no network) from the details.json "
+            "written by predict or submit.")
+    p.add_argument("--details", required=True, help="details.json from predict / submit")
+    p.add_argument("--data", default=None, help="image folder, used when a row's image_path is missing")
+    p.add_argument("--out", required=True, help="output folder (index.html is written there)")
+    p.add_argument("--zip", action="store_true", help="also write <out>.zip")
+    p.add_argument("--detections", default=None, metavar="FILE",
                    help="OWLv2 product boxes: .zip holding owl_detections.json, or that .json (optional)")
     p.add_argument("--detect", action="store_true",
                    help="run OWLv2 locally on the shown frames lacking boxes (free; slow on CPU)")
     p.set_defaults(func=cmd_dashboard)
 
-    p = sub.add_parser("label", help="export contact sheets + labelling page")
-    p.add_argument("--model", required=True)
-    p.add_argument("--data", required=True)
-    p.add_argument("--out", default="labeling")
-    p.add_argument("--n", type=int, default=150)
+    p = add("label", "export contact sheets and a labelling page for labelling crops by eye",
+            "Optional human labelling route: write contact sheets, crops and labeler.html for a sample of the "
+            "fit-time crops of --model; the labels it exports can be passed to `calibrate`.")
+    p.add_argument("--model", required=True, help="fitted model directory (needs fit_feats.npz)")
+    p.add_argument("--data", required=True, help="image folder the model was fitted on")
+    p.add_argument("--out", default="labeling", help="output folder (default: labeling)")
+    p.add_argument("--n", type=int, default=150, help="crops to sample, stratified by fill (default 150)")
     p.set_defaults(func=cmd_label)
 
-    p = sub.add_parser("calibrate", help="fit calibration heads from labels")
-    p.add_argument("--model", required=True)
-    p.add_argument("--labels", required=True, nargs="+")
-    p.add_argument("--no-cv", action="store_true")
-    p.set_defaults(func=cmd_calibrate)
-
-    p = sub.add_parser("submit", help="validation day: images (folder/zip) -> checked predictions.json + staff app")
-    p.add_argument("--images", required=True, nargs="+", help="folder, .zip, or image files (flags go after the paths)")
-    p.add_argument("--model", default="models/real_v3_cal",
-                   help="model directory (default: models/real_v3_cal; models/real_v1 = label-free fallback)")
-    p.add_argument("--out", default="submission")
-    p.add_argument("--no-detect", action="store_true", help="skip the local OWLv2 product boxes in the staff app")
-    p.add_argument("--detections", default=None, help="cached OWLv2 boxes (.zip/.json) to reuse (optional)")
-    p.add_argument("--device", help="auto | cpu | cuda")
-    p.add_argument("--password", default=None, help="password of an encrypted .zip (ZipCrypto; unzip AES zips by hand)")
-    p.set_defaults(func=cmd_submit)
-
-    p = sub.add_parser("run", help="fit + predict + dashboard")
+    p = add("run", "fit + predict + dashboard in one go (development shortcut)",
+            "Fit a model into <out>/model, predict --images (default: --data) and build <out>/dashboard.")
     _fit_args(p)
     p.add_argument("--images", help="images to predict (default: --data)")
-    p.add_argument("--out", default="outputs")
+    p.add_argument("--out", default="outputs", help="output folder (default: outputs)")
     p.set_defaults(func=cmd_run)
+
+    p = add("synth", "write a small synthetic dataset (for tests and demos)",
+            "Write a synthetic planogram, camera frames and an answer key for the later frames.")
+    p.add_argument("--out", required=True, help="output folder")
+    p.add_argument("--cameras", type=int, default=4, help="number of cameras (default 4)")
+    p.add_argument("--images", type=int, default=12, help="training images per camera (default 12)")
+    p.add_argument("--val", type=int, default=2, help="later, labelled images per camera (default 2)")
+    p.add_argument("--seed", type=int, default=0, help="random seed (default 0)")
+    p.set_defaults(func=cmd_synth)
     return ap
 
 

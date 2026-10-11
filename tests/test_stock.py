@@ -72,7 +72,7 @@ def test_patch_coder_spread_marks_surface_clusters():
 
 
 def test_encode_marks_invisible_patches():
-    feats, patches, _, area_product, _ = _synthetic()
+    feats, patches, _, _area_product, _ = _synthetic()
     coder = S.PatchCoder(5, 8, 0).fit(patches.reshape(-1, D), np.repeat(feats.area_ids, G * G))
     vis = np.ones((len(feats), G * G), bool)
     vis[0, :5] = False
@@ -104,7 +104,7 @@ def test_stock_model_deep_tracks_true_fill(with_text):
 
 
 def test_area_that_never_empties_is_not_stretched():
-    feats, patches, true_fill, area_product, text_emb = _synthetic()
+    feats, patches, _true_fill, area_product, text_emb = _synthetic()
     model = S.StockModel()
     model.fit(feats, area_product, _cfg(), patches=patches, text_emb=text_emb)
     raw = np.where(np.array(feats.area_ids) == "c1_0", 0.96 + 0.02 * np.sin(np.arange(len(feats))), 0.0)

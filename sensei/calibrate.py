@@ -1,13 +1,19 @@
-"""Optional calibration with a few self-labelled crops (SPEC sections 2c and 6).
+"""Optional calibration: small heads fitted on labelled frames, on top of the label-free models.
+
+The shipped heads were fitted on the AI-labelled answer key (data/labels/teacher_labels_v2.json); the
+``label`` command's contact sheets are an optional route for labelling by eye. With the default settings
+only the stock level gets a fitted head (plus a per-area memory of earlier labelled frames); compliance
+keeps the zero-shot p_compliant, except for areas whose latest label was a wrong product and that still
+look the same. The heads are small logistic regressions saved as json + npz (no pickle).
 
 Three parts, all usable without the rest of the pipeline:
 
 * ``export_sheets``  : contact sheets + ``manifest.json/.js`` + crops + ``labeler.html`` for
   labelling by eye. ``labels_from_tiles`` turns tile labels back into annotations format.
-* ``fit_heads``      : cost-sensitive heads on [fill, fill^2, visible, PCA(CLIP), PCA(DINO cls),
-  handcrafted, patch-cluster band histograms, per-band fills (stock only)] (multinomial
-  logistic regression for the stock level, logistic regression for compliance).
-  ``Heads.save`` / ``Heads.load`` use json + npz (no pickle).
+* ``fit_heads``      : heads on [fill, fill^2, visible, PCA(CLIP), PCA(DINO cls), handcrafted,
+  patch-cluster band histograms, per-band fills (stock only)]: multinomial logistic regression for
+  the stock level; for compliance a pass-through of the zero-shot p_compliant by default
+  (``HeadParams.comp_head``), else a logistic regression. ``Heads.save`` / ``Heads.load`` use json + npz.
   With ``HeadParams.memory`` (default) a second stock head also sees a per-area memory: the labelled crops
   of the same area from earlier frames (``memory_features``), stored with the heads as npz.
 * ``cross_validate`` : leave-one-camera-out and time-blocked scores computed with ``scoring.score``.
@@ -415,7 +421,8 @@ class HeadParams:
     #                             (the fitted head scored slightly lower in camera and time CV)
     late_shift: bool = True     # frames after a camera's last labelled frame: prior shift of the stock
     #                             posterior towards the label mix of the last labelled frames (stock
-    #                             drops late in the day; the hidden val frames are later than all labels)
+    #                             drops late in the day; the hidden val frames are ASSUMED to be later
+    #                             than all labels: the brief's only example file name, 20:24, is later)
     carry_tau: float = 0.6      # carry a non-compliant label forward when DINO cos(crop, labelled crop) >= this
     carry_p: float = 0.05       # p_compliant given to a carried non-compliant area
     # per-area memory (the cameras are fixed, so later frames show the same areas): the labelled crops are
@@ -679,7 +686,8 @@ class Heads:
     def late_mask(self, feats: CropFeatures) -> np.ndarray:
         """(N,) True for rows later than their camera's last labelled frame (unknown camera: the
         latest labelled frame overall). A row without a timestamp (< 0, a file name that is not a Unix
-        time) counts as late: the hidden set is known to be later in the day than every labelled frame."""
+        time) counts as late: the hidden set is assumed to be later in the day than every labelled frame
+        (the brief's only example file name, 1751052241.jpg = 20:24 Lisbon, is later than all of ours)."""
         last = self.stock.get("last_ts") or {}
         if not last:
             return np.zeros(len(feats), bool)
@@ -845,8 +853,9 @@ def fit_heads(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Config,
               zs_comp: np.ndarray | None = None, productness: np.ndarray | None = None) -> Heads:
     """Fit both heads on the rows of ``feats`` that have an entry in ``labels``.
 
-    Stock: multinomial logistic regression (decide with ``scoring.best_stock``). Compliance:
-    logistic regression with class weights; a constant prior when one class has fewer than
+    Stock: multinomial logistic regression (decide with ``scoring.best_stock``). Compliance: the
+    unsupervised ``zs_comp`` passed through unchanged when given and ``params.comp_head`` is False (the
+    default); otherwise a logistic regression, or a constant prior when one class has fewer than
     ``params.min_class`` examples. ``zs_*`` (optional) add the unsupervised outputs as features;
     ``productness`` (the patch coder's per-cluster weights, optional) adds per-band fills to the
     stock head (``params.fill_bands``).
@@ -1007,7 +1016,7 @@ def cross_validate(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Con
     constants are: all full/half/empty + compliant, and ``train_prior`` (best_stock of the training
     label frequencies). Returns a json-friendly dict ``{scheme: {"areas", "methods", "per_camera"}}``.
     """
-    idx, ys, yc = label_arrays(feats, labels)
+    idx, ys, _ = label_arrays(feats, labels)
     if len(idx) == 0:
         raise ValueError("none of the labelled areas is in the features")
     base = dict(baseline or {})
@@ -1024,7 +1033,7 @@ def cross_validate(feats: CropFeatures, fill: np.ndarray, labels: dict, cfg: Con
         rows_by_cam: dict[str, list[int]] = {}
         n_mem = 0
         ho = int(scheme[4:]) if scheme.startswith("time") and scheme[4:].isdigit() else holdout_frames
-        for name, train, test in _folds(feats, idx, "camera" if scheme == "camera" else "time", ho):
+        for _, train, test in _folds(feats, idx, "camera" if scheme == "camera" else "time", ho):
             if len(train) == 0 or len(test) == 0:
                 continue
             tr_feats, te_feats = feats.subset(train), feats.subset(test)

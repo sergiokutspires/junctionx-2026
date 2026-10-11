@@ -274,7 +274,6 @@ def test_unanswered_check_uses_paths_not_names(tmp_path):
 
 def test_digit_folder_and_resized_frames(synth, mdir, tmp_path, capsys):
     import cv2
-    import numpy as np
     model = pipeline.SenseiModel.load(mdir)
     assert model.meta.get("frame_size")
     src = discover_images(synth["val_dir"], model.areas_by_cam)[0]

@@ -1,7 +1,11 @@
-"""Stock level: unsupervised per-crop fill in [0, 1] and a posterior over (empty, half, full).
+"""Stock level: a label-free fill estimate in [0, 1] per crop and a posterior over (empty, half, full).
 
-Idea (SPEC section 4): the store's surfaces (teal/green crates, grey metal trays, cardboard,
-white foam liners, the black banana display) look the same under every product, products do not.
+The store's surfaces (teal/green crates, grey metal trays, cardboard, white foam liners, the black banana
+display) look the same under every product, while products do not. So DINOv2 patch tokens are clustered,
+each cluster is scored as "surface" or "product", and the fill of a crop is the product share of its
+visible patches. The fill is then turned into level probabilities with fixed rank thresholds.
+
+Steps:
 
 1. ``PatchCoder``: DINOv2 patch tokens -> PCA -> KMeans clusters. Each cluster gets a
    "productness" weight in [0, 1] from
@@ -15,11 +19,13 @@ white foam liners, the black banana display) look the same under every product, 
    always full is never stretched to look empty.
 4. Level posterior: soft monotone (ordinal-logistic) thresholds in RANK space of the fit-time
    fills (u = empirical CDF of the fill), mixed with a small level prior so tails stay honest.
-   (A 1-D GMM, SPEC step 4, was dropped: the fill distribution is very skewed towards 1 and
-   rank thresholds transfer better between cameras on the teacher labels.)
+   With the default thresholds about the lowest 7% of fit-time fills read as empty and the next 16%
+   as half. (A 1-D Gaussian mixture on the fill was tried first and dropped: the fill distribution is
+   very skewed towards 1 and rank thresholds transfer better between cameras on the teacher labels.)
 
-Defaults were chosen with the teacher labels (data/labels/teacher_labels*.json) as a dev set;
-fitting itself never needs labels. The pipeline applies ``scoring.best_stock`` to the posterior.
+Defaults were chosen with the teacher labels (data/labels/teacher_labels*.json) as a dev set, so they
+assume a similar share of empty shelves; fitting itself never needs labels. The pipeline applies
+``scoring.best_stock`` to the posterior.
 """
 from __future__ import annotations
 
@@ -49,7 +55,7 @@ SURFACE_PROMPTS: list[str] = [
 
 # Defaults for the knobs below can be overridden through ``cfg.extra["stock"]``.
 DEFAULTS: dict[str, Any] = {
-    "n_clusters": None,          # None -> cfg.n_patch_clusters (48 recommended: better than 24)
+    "n_clusters": None,          # None -> cfg.n_patch_clusters (24 in the shipped models)
     "patches_per_crop": 64,      # patch sample per crop for PCA/KMeans
     "spread_threshold": 0.55,    # normalised base-entropy at which spread productness = 0.5
     "spread_temp": 0.08,
@@ -63,7 +69,7 @@ DEFAULTS: dict[str, Any] = {
     "t1": 0.07, "t2": 0.23,      # rank thresholds empty|half and half|full (share of fit crops below)
     "w1": 0.03, "w2": 0.15,      # their logistic widths (rank units)
     "prior_mix": 0.10,           # posterior = (1-mix) * thresholds + mix * level_prior
-    "level_prior": None,         # None -> (0.10, 0.20, 0.70), the real-data mix; see report
+    "level_prior": None,         # None -> REAL_LEVEL_MIX (0.10, 0.20, 0.70), close to the answer key's mix
     "temp": 1.0,                 # multiplies the widths (>1 = less confident)
     # lite backend (handcrafted only) is much weaker: thresholds that keep it at least at the
     # "always full" baseline on the teacher labels

@@ -103,7 +103,7 @@ def test_load_image_formats_and_unicode_path(tmp_path: Path) -> None:
     rgba = np.zeros((8, 8, 4), np.uint8)
     rgba[..., 1] = 200
     rgba[..., 3] = 255
-    ok, buf = cv2.imencode(".png", rgba)  # BGRA: channel 1 = green
+    _ok, buf = cv2.imencode(".png", rgba)  # BGRA: channel 1 = green
     buf.tofile(str(d / "alpha.png"))
     a = load_image(d / "alpha.png")
     assert a.shape == (8, 8, 3) and a[0, 0].tolist() == [0, 200, 0]

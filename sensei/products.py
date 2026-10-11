@@ -1,5 +1,10 @@
 """Portuguese product names -> English, coarse base category, loose/packaged, CLIP prompts.
 
+The planogram only gives store names such as "MAÇÃ GALA CNT CAL 70/80 KG IMP". This module turns them
+into an English description (for CLIP and the English UI), a coarse base fruit or vegetable (the level at
+which compliance is judged) and whether the product is sold loose or packed. ``Catalog`` holds the parsed
+products of one planogram.
+
 ``parse_name("MAÇÃ GALA CNT CAL 70/80 KG IMP")`` ->
 ``{"english": "gala apple", "base": "apple", "variety": "gala", "loose": True, ...}``.
 
@@ -838,6 +843,7 @@ class Catalog:
         return sorted({p["base"] for p in self.products.values()})
 
     def ids_by_base(self) -> dict[str, list[str]]:
+        """Coarse base -> product ids of that base, in catalog order."""
         out: dict[str, list[str]] = {}
         for pid, p in self.products.items():
             out.setdefault(p["base"], []).append(pid)
